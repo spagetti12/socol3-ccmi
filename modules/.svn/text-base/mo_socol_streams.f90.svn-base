@@ -1,0 +1,1696 @@
+MODULE mo_socol_streams
+
+  ! *mo_socol_streams* contains subroutines to define streams of chemical 
+  ! species as monthly means for SOCOL.
+  !
+  ! Martin Schraner, ETH Zurich, September 2008 
+
+  USE mo_doctor,        ONLY: nout
+  USE mo_kind,          ONLY: dp      
+  USE mo_linked_list,   ONLY: HYBRID, NETCDF
+  USE mo_memory_base,   ONLY: new_stream, add_stream_element,  &
+                              default_stream_setting, add_stream_reference, &
+                              delete_stream, t_stream
+  USE mo_socol_namelist, ONLY: interactivelnox  ! eth_as_03062013
+  USE mo_socol_tracers, ONLY: idt_o3,     idt_o,      idt_od,     &
+                              idt_no,     idt_no2,    idt_hno3,   &
+                              idt_no3,    idt_n2o5,   idt_hno4,   &
+                              idt_ho2,    idt_clno3,  idt_clo,    &
+                              idt_n,      idt_oh,     idt_h,      &
+                              idt_cl,     idt_hocl,   idt_odscls, &
+                              idt_odscll, idt_n2o,    idt_ch4,    &
+                              idt_co,     idt_hcl,    idt_h2,     &
+                              idt_h2o2,   idt_h2o,    idt_cl2,    &
+                              idt_cl2o2,  idt_psc1,   idt_psc2,   &
+                              idt_ch3,    idt_ch3o2,  idt_ch3o,   &
+                              idt_ch2o,   idt_hco,    idt_ch3o2h, &
+                              idt_br,     idt_bro,    idt_hbr,    &
+                              idt_hobr,   idt_brno3,  idt_brcl,   &
+                              idt_odsbr,                          &
+                              idt_ch3co3,  idt_pan,    idt_ch3co3h, & ! eth_as_tropchem
+                              idt_ch3cooh, idt_nald,   idt_hcooh,   & ! eth_as_tropchem
+                              idt_hacet,   idt_mgly,   idt_macr,    & ! eth_as_tropchem
+                              idt_macro2,  idt_macro2h,idt_mpan,    & ! eth_as_tropchem
+                              idt_c5h8,    idt_iso2,   idt_iso2h,   & ! eth_as_tropchem
+                              idt_ison                                ! eth_as_tropchem
+  USE mo_time_control,  ONLY: l_trigrad, trigrad, delta_time, lstart
+  USE mo_time_event,    ONLY: io_time_event, TIME_INC_SECONDS, &
+                              TIME_INC_MINUTES, TIME_INC_HOURS , &
+                              TIME_INC_DAYS, TIME_INC_MONTHS, TRIG_LAST
+
+!!$  USE mo_socol_lnox_main, ONLY: lfp, lnox ! eth_ts
+
+
+  IMPLICIT NONE
+
+  PRIVATE
+
+  PUBLIC :: construct_stream_chem_m  ! construct the chem_m stream
+  PUBLIC :: construct_stream_chem2   ! construct the chem2 stream
+  PUBLIC :: destruct_stream_chem_m   ! destruct the chem_m stream
+  PUBLIC :: destruct_stream_chem2    ! destruct the chem2 stream
+  PUBLIC :: init_stream_chem_m       ! initialize the chem_m stream
+  PUBLIC :: init_stream_chem2        ! initialize the chem2 stream
+  PUBLIC :: accumulate_stream_chem_m ! accumulation of monthly mean streams
+
+  TYPE (t_stream), PUBLIC, POINTER :: chem_m    !the chem_m stream
+  TYPE (t_stream), PUBLIC, POINTER :: chem2     !the chem2 stream
+
+  REAL(dp), PUBLIC, POINTER :: t_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: u_m(:,:,:)
+
+  REAL(dp), PUBLIC, POINTER :: o3_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: o_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: no_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: no2_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: hno3_m(:,:,:)
+
+  REAL(dp), PUBLIC, POINTER :: no3_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: n2o5_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: hno4_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: ho2_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: clno3_m(:,:,:)
+
+  REAL(dp), PUBLIC, POINTER :: clo_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: n_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: oh_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: h_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: cl_m(:,:,:)
+
+  REAL(dp), PUBLIC, POINTER :: hocl_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: odscls_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: odscll_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: n2o_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: ch4_m(:,:,:)
+
+  REAL(dp), PUBLIC, POINTER :: co_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: hcl_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: h2_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: h2o2_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: h2o_m(:,:,:)
+
+  REAL(dp), PUBLIC, POINTER :: cl2_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: cl2o2_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: psc1_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: psc2_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: ch3o2h_m(:,:,:)
+
+  REAL(dp), PUBLIC, POINTER :: ch2o_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: bro_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: brno3_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: brcl_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: hbr_m(:,:,:)
+
+  REAL(dp), PUBLIC, POINTER :: hobr_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: odsbr_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: ch3_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: ch3o2_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: ch3o_m(:,:,:)
+
+  REAL(dp), PUBLIC, POINTER :: hco_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: br_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: od_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: totoz_m(:,:)
+  REAL(dp), PUBLIC, POINTER :: totno2_m(:,:)
+
+  REAL(dp), PUBLIC, POINTER :: clox_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: cly_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: ccly_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: bry_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: cbry_m(:,:,:)
+
+  REAL(dp), PUBLIC, POINTER :: noy_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: nox_m(:,:,:)
+
+  REAL(dp), PUBLIC, POINTER :: famfixcl_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: famfixbr_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: famfixn_m(:,:,:)
+
+  REAL(dp), PUBLIC, POINTER :: sedpsc1_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: sedpsc2_m(:,:,:)
+
+  REAL(dp), PUBLIC, POINTER :: sadsts_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: sadpsc1_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: sadpsc2_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: sadrat_m(:,:,:)
+
+  REAL(dp), PUBLIC, POINTER :: clacsts_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: clacpsc1_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: clacpsc2_m(:,:,:)
+
+  ! eth_as_nmvoc+
+  REAL(dp), PUBLIC, POINTER :: co_nmvocbio_m(:,:)
+  REAL(dp), PUBLIC, POINTER :: co_nmvocbb_m(:,:)
+  REAL(dp), PUBLIC, POINTER :: co_nmvocanthrop_m(:,:)  
+  ! eth_as_nmvoc-
+
+  ! eth_as_tropchem+
+  REAL(dp), PUBLIC, POINTER :: ch3co3_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: pan_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: ch3co3h_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: ch3cooh_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: nald_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: hcooh_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: hacet_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: mgly_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: macr_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: macro2_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: macro2h_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: mpan_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: c5h8_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: iso2_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: iso2h_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: ison_m(:,:,:) 
+  ! eth_as_tropchem-
+
+!!$  ! eth_as_jvals+
+!!$  REAL(dp), PUBLIC, POINTER :: jo3d_m(:,:,:)
+!!$  REAL(dp), PUBLIC, POINTER :: jno2_m(:,:,:) 
+!!$  REAL(dp), PUBLIC, POINTER :: jo3d_cldmod_m(:,:,:)
+!!$  REAL(dp), PUBLIC, POINTER :: jno2_cldmod_m(:,:,:) 
+!!$  ! eth_as_jvals-
+
+ ! eth_ts
+  REAL(dp), PUBLIC, POINTER :: lfp_m(:,:)
+  REAL(dp), PUBLIC, POINTER :: lnox_m(:,:)
+
+  !CCMI Reactions, LR 03/06/13
+  REAL(dp), PUBLIC, POINTER :: rxn_1_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_2_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_3_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_4_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_5_m(:,:,:)
+
+  REAL(dp), PUBLIC, POINTER :: rxn_6_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_7_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_8_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_9_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_10_m(:,:,:)
+  
+  REAL(dp), PUBLIC, POINTER :: rxn_11_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_12_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_13_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_14_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_15_m(:,:,:)
+
+  REAL(dp), PUBLIC, POINTER :: rxn_16_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_17_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_18_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_19_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_20_m(:,:,:)
+
+  REAL(dp), PUBLIC, POINTER :: rxn_21_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_22_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_23_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_24_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_25_m(:,:,:)
+
+  REAL(dp), PUBLIC, POINTER :: rxn_26_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_27_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_28_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_29_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_30_m(:,:,:)
+
+  REAL(dp), PUBLIC, POINTER :: rxn_31_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_32_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_33_m(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_34_m(:,:,:)
+
+  REAL(dp), PUBLIC, POINTER :: totoz_d(:,:)
+  REAL(dp), PUBLIC, POINTER :: totno2_d(:,:)
+
+  REAL(dp), PUBLIC, POINTER :: clox_d(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: cly_d(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: ccly_d(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: bry_d(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: cbry_d(:,:,:)
+
+  REAL(dp), PUBLIC, POINTER :: noy_d(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: nox_d(:,:,:)
+
+  REAL(dp), PUBLIC, POINTER :: famfixcl_d(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: famfixbr_d(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: famfixn_d(:,:,:)
+
+  REAL(dp), PUBLIC, POINTER :: sedpsc1_d(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: sedpsc2_d(:,:,:)
+
+  REAL(dp), PUBLIC, POINTER :: sadsts_d(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: sadpsc1_d(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: sadpsc2_d(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: sadrat_d(:,:,:)
+
+  REAL(dp), PUBLIC, POINTER :: clacsts_d(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: clacpsc1_d(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: clacpsc2_d(:,:,:)
+
+  ! eth_as_nmvoc+
+  REAL(dp), PUBLIC, POINTER :: co_nmvocbio_d(:,:)
+  REAL(dp), PUBLIC, POINTER :: co_nmvocbb_d(:,:)
+  REAL(dp), PUBLIC, POINTER :: co_nmvocanthrop_d(:,:)  
+  ! eth_as_nmvoc-
+
+!!$  ! eth_as_jvals+
+!!$  REAL(dp), PUBLIC, POINTER :: jo3d_d(:,:,:)
+!!$  REAL(dp), PUBLIC, POINTER :: jno2_d(:,:,:) 
+!!$  REAL(dp), PUBLIC, POINTER :: jo3d_cldmod_d(:,:,:)
+!!$  REAL(dp), PUBLIC, POINTER :: jno2_cldmod_d(:,:,:)  
+!!$  ! eth_as_jvals-
+
+  ! eth_as_03062013+
+  REAL(dp), PUBLIC, POINTER :: jo2(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: jo3d(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: jno2(:,:,:) 
+  REAL(dp), PUBLIC, POINTER :: jcl2o2(:,:,:) 
+  REAL(dp), PUBLIC, POINTER :: lfp_d(:,:)
+  REAL(dp), PUBLIC, POINTER :: lnox_d(:,:)
+  REAL(dp), PUBLIC, POINTER :: elnox(:,:,:) 
+  REAL(dp), PUBLIC, POINTER :: cu_uvelo(:,:,:) 
+  REAL(dp), PUBLIC, POINTER :: xupdr(:,:,:) 
+
+  REAL(dp), PUBLIC, POINTER :: jpan(:,:,:) 
+  REAL(dp), PUBLIC, POINTER :: jpaa(:,:,:) 
+  REAL(dp), PUBLIC, POINTER :: jmgly(:,:,:) 
+  ! eth_as_03062013-
+
+  !CCMI Reactions, LR, 03/06/13
+  REAL(dp), PUBLIC, POINTER :: rxn_1(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_2(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_3(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_4(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_5(:,:,:)
+
+  REAL(dp), PUBLIC, POINTER :: rxn_6(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_7(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_8(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_9(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_10(:,:,:)
+
+  REAL(dp), PUBLIC, POINTER :: rxn_11(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_12(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_13(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_14(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_15(:,:,:)
+
+  REAL(dp), PUBLIC, POINTER :: rxn_16(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_17(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_18(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_19(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_20(:,:,:)
+
+  REAL(dp), PUBLIC, POINTER :: rxn_21(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_22(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_23(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_24(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_25(:,:,:)
+
+  REAL(dp), PUBLIC, POINTER :: rxn_26(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_27(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_28(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_29(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_30(:,:,:)
+
+  REAL(dp), PUBLIC, POINTER :: rxn_31(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_32(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_33(:,:,:)
+  REAL(dp), PUBLIC, POINTER :: rxn_34(:,:,:)
+!-------------------------------------------------------------------------------
+
+CONTAINS
+
+!-------------------------------------------------------------------------------
+  SUBROUTINE construct_stream_chem_m
+
+    ! Allocates output streams for monthly mean output of MEZON; 
+    ! besides calculates time interval between two chemical time steps 
+    ! (=radiation time steps).
+
+    ! *construct_stream_chem_m* is called from *call_init_submodel_memory*,
+    ! src/call_submodels.f90.
+
+  !--- Create new stream:
+
+  CALL new_stream (chem_m ,'chem_m', filetype=NETCDF, &  !output as netcdf-file
+                   interval=io_time_event(1,TIME_INC_MONTHS,TRIG_LAST,0))      
+
+
+  CALL default_stream_setting (chem_m, lrerun    = .FALSE. , &
+                                       leveltype = HYBRID , &
+                                       table     = 199,     &
+                                       laccu     = .TRUE.)
+
+  CALL add_stream_element (chem_m, 'te_m',     t_m,      lpost=.FALSE.,  &
+                           longname='Temperature',                &
+                           units='K',       code=9 )
+  CALL add_stream_element (chem_m, 'u_m',      u_m,      lpost=.FALSE.,  &
+                           longname='Zonal wind',                 &
+                           units='m/s',     code=10)
+
+  CALL add_stream_element (chem_m, 'O3_m',     o3_m,     lpost=.FALSE.,  &
+                           longname='O3 volume mixing ratio',     &
+                           units='mol/mol', code=11)
+  CALL add_stream_element (chem_m, 'O_m' ,     o_m,      lpost=.FALSE.,  &
+                           longname='O volume mixing ratio',      &
+                           units='mol/mol', code=12)
+  CALL add_stream_element (chem_m, 'NO_m',     no_m,     lpost=.FALSE.,  &
+                           longname='NO volume mixing ratio',     &
+                           units='mol/mol', code=13)
+  CALL add_stream_element (chem_m, 'NO2_m',    no2_m,    lpost=.FALSE.,  &
+                           longname='NO2 volume mixing ratio',    &
+                           units='mol/mol', code=14)
+  CALL add_stream_element (chem_m, 'HNO3_m',   hno3_m,   lpost=.FALSE.,  &
+                           longname='HNO3 volume mixing ratio',   &
+                           units='mol/mol', code=15)
+
+  CALL add_stream_element (chem_m, 'NO3_m',    no3_m,    lpost=.FALSE.,  &
+                           longname='NO3 volume mixing ratio',    &
+                           units='mol/mol', code=16)
+  CALL add_stream_element (chem_m, 'N2O5_m',   n2o5_m,   lpost=.FALSE.,  &
+                           longname='N2O5 volume mixing ratio',   &
+                           units='mol/mol', code=17)
+  CALL add_stream_element (chem_m, 'HNO4_m',   hno4_m,   lpost=.FALSE.,  &
+                           longname='HNO4 volume mixing ratio',   &
+                           units='mol/mol', code=18)
+  CALL add_stream_element (chem_m, 'HO2_m',    ho2_m,    lpost=.FALSE.,  &
+                           longname='HO2 volume mixing ratio',    &
+                           units='mol/mol', code=19)
+  CALL add_stream_element (chem_m, 'ClNO3_m',  clno3_m,  lpost=.FALSE.,  &
+                           longname='ClNO3 volume mixing ratio',  &
+                           units='mol/mol', code=20)
+
+  CALL add_stream_element (chem_m, 'ClO_m',    clo_m,    lpost=.FALSE.,  &
+                           longname='ClO volume mixing ratio',    &
+                           units='mol/mol', code=21)
+  CALL add_stream_element (chem_m, 'N_m',      n_m,      lpost=.FALSE.,  &
+                           longname='N volume mixing ratio',      &
+                           units='mol/mol', code=22)
+  CALL add_stream_element (chem_m, 'OH_m',     oh_m,     lpost=.FALSE.,  &
+                           longname='OH volume mixing ratio',     &
+                           units='mol/mol', code=23)
+  CALL add_stream_element (chem_m, 'H_m',      h_m,      lpost=.FALSE.,  &
+                           longname='H volume mixing ratio',      &
+                           units='mol/mol', code=24)
+  CALL add_stream_element (chem_m, 'Cl_m',     cl_m,     lpost=.FALSE.,  &
+                           longname='Cl volume mixing ratio',     &
+                           units='mol/mol', code=25)
+
+  CALL add_stream_element (chem_m, 'HOCl_m',   hocl_m,   lpost=.FALSE.,  &
+                           longname='HOCl volume mixing ratio',   &
+                           units='mol/mol', code=26)
+  CALL add_stream_element (chem_m, 'ODSCLS_m', odscls_m, lpost=.FALSE.,  &
+                           longname='ODSCLS volume mixing ratio', &
+                           units='mol/mol', code=27)
+  CALL add_stream_element (chem_m, 'ODSCLL_m', odscll_m, lpost=.FALSE.,  &
+                           longname='ODSCLL volume mixing ratio', &
+                           units='mol/mol', code=28)
+  CALL add_stream_element (chem_m, 'N2O_m',    n2o_m,    lpost=.FALSE.,  &
+                           longname='N2O volume mixing ratio',    &
+                           units='mol/mol', code=29)
+  CALL add_stream_element (chem_m, 'CH4_m',    ch4_m,    lpost=.FALSE.,  &
+                           longname='CH4 volume mixing ratio',    &
+                           units='mol/mol', code=30)
+
+  CALL add_stream_element (chem_m, 'CO_m',     co_m,     lpost=.FALSE.,  &
+                           longname='CO volume mixing ratio',     &
+                           units='mol/mol', code=31)
+  CALL add_stream_element (chem_m, 'HCl_m',    hcl_m,    lpost=.FALSE.,  &
+                           longname='HCl volume mixing ratio',    &
+                           units='mol/mol', code=32)
+  CALL add_stream_element (chem_m, 'H2_m',     h2_m,     lpost=.FALSE.,  &
+                           longname='H2 volume mixing ratio',     &
+                           units='mol/mol', code=33)
+  CALL add_stream_element (chem_m, 'H2O2_m',   h2o2_m,   lpost=.FALSE.,  &
+                           longname='H2O2 volume mixing ratio',   &
+                           units='mol/mol', code=34)
+  CALL add_stream_element (chem_m, 'H2O_m',    h2o_m,    lpost=.FALSE.,  &
+                           longname='H2O volume mixing ratio',    &
+                           units='mol/mol', code=35)
+
+  CALL add_stream_element (chem_m, 'Cl2_m',    cl2_m,    lpost=.FALSE.,  &
+                           longname='Cl2 volume mixing ratio',    &
+                           units='mol/mol', code=36)
+  CALL add_stream_element (chem_m, 'Cl2O2_m',  cl2o2_m,  lpost=.FALSE.,  &
+                           longname='Cl2O2 volume mixing ratio',  &
+                           units='mol/mol', code=37)
+  CALL add_stream_element (chem_m, 'PSC1_m',   psc1_m,   lpost=.FALSE.,  &
+                           longname='PSC1 volume mixing ratio',   &
+                           units='mol/mol', code=38)
+  CALL add_stream_element (chem_m, 'PSC2_m',   psc2_m,   lpost=.FALSE.,  &
+                           longname='PSC2 volume mixing ratio',   &
+                           units='mol/mol', code=39)
+  CALL add_stream_element (chem_m, 'CH3O2H_m', ch3o2h_m, lpost=.FALSE.,  &
+                           longname='CH3O2H volume mixing ratio', &
+                           units='mol/mol', code=40)
+
+  CALL add_stream_element (chem_m, 'CH2O_m',   ch2o_m,   lpost=.FALSE.,  &
+                           longname='cH2O volume mixing ratio',   &
+                           units='mol/mol', code=41)
+  CALL add_stream_element (chem_m, 'BrO_m',    bro_m,    lpost=.FALSE.,  &
+                           longname='BrO volume mixing ratio',    &
+                           units='mol/mol', code=42)
+  CALL add_stream_element (chem_m, 'BrNO3_m',  brno3_m,  lpost=.FALSE.,  &
+                           longname='BrNO3 volume mixing ratio',  &
+                           units='mol/mol', code=43)
+  CALL add_stream_element (chem_m, 'BrCl_m',   brcl_m,   lpost=.FALSE.,  &
+                           longname='BrCl volume mixing ratio',   &
+                           units='mol/mol', code=44)
+  CALL add_stream_element (chem_m, 'HBr_m',    hbr_m,    lpost=.FALSE.,  &
+                           longname='HBr volume mixing ratio',    &
+                           units='mol/mol', code=45)
+
+  CALL add_stream_element (chem_m, 'HOBr_m',   hobr_m,   lpost=.FALSE.,  &
+                           longname='HOBr volume mixing ratio',   &
+                           units='mol/mol', code=46)
+  CALL add_stream_element (chem_m, 'ODSBR_m',  odsbr_m,  lpost=.FALSE.,  &
+                           longname='ODSBR volume mixing ratio',  &
+                           units='mol/mol', code=47)
+  CALL add_stream_element (chem_m, 'CH3_m',    ch3_m,    lpost=.FALSE.,  &
+                           longname='CH3 volume mixing ratio',    &
+                           units='mol/mol', code=48)
+  CALL add_stream_element (chem_m, 'CH3O2_m',  ch3o2_m,  lpost=.FALSE.,  &
+                           longname='CH3O2 volume mixing ratio',  &
+                           units='mol/mol', code=49)
+  CALL add_stream_element (chem_m, 'CH3O_m',   ch3o_m,   lpost=.FALSE.,  &
+                           longname='CH3O volume mixing ratio',   &
+                           units='mol/mol', code=50)
+
+  CALL add_stream_element (chem_m, 'HCO_m',    hco_m,    lpost=.FALSE.,  &
+                           longname='HCO volume mixing ratio',    &
+                           units='mol/mol', code=51)
+  CALL add_stream_element (chem_m, 'Br_m',     br_m,     lpost=.FALSE.,  &
+                           longname='Br volume mixing ratio',     &
+                           units='mol/mol', code=52)
+  CALL add_stream_element (chem_m, 'OD_m',     od_m,     lpost=.FALSE.,  &
+                           longname='OD volume mixing ratio',     &
+                           units='mol/mol', code=53)
+
+  CALL add_stream_element (chem_m, 'TOTOZ_m',  totoz_m,  lpost=.FALSE.,  &
+                           longname='Ozone column',               &
+                           units='DU',      code=54)
+  CALL add_stream_element (chem_m, 'TOTNO2_m', totno2_m, lpost=.FALSE.,  &
+                           longname='NO2 Column',                 &
+                           units='molec/cm2', code=55)
+
+  CALL add_stream_element (chem_m, 'ClOx_m',   clox_m,   lpost=.FALSE.,  &
+                           longname='ClOx volume mixing ratio',   &
+                           units='mol/mol', code=56)
+  CALL add_stream_element (chem_m, 'Cly_m',    cly_m,    lpost=.FALSE.,  &
+                           longname='Cly volume mixing ratio',    &
+                           units='mol/mol', code=57)
+  CALL add_stream_element (chem_m, 'CCly_m',   ccly_m,   lpost=.FALSE.,  &
+                           longname='CCly volume mixing ratio',   &
+                           units='mol/mol', code=58)
+  CALL add_stream_element (chem_m, 'Bry_m',    bry_m,    lpost=.FALSE.,  &
+                           longname='Bry volume mixing ratio',    &
+                           units='mol/mol', code=59)
+  CALL add_stream_element (chem_m, 'CBry_m',   cbry_m,   lpost=.FALSE.,  &
+                           longname='CBry volume mixing ratio',   &
+                           units='mol/mol', code=60)
+
+  CALL add_stream_element (chem_m, 'NOy_m',    noy_m,    lpost=.FALSE.,  &
+                           longname='NOy volume mixing ratio',    &
+                           units='mol/mol', code=61)
+  CALL add_stream_element (chem_m, 'NOx_m',    nox_m,    lpost=.FALSE.,  &
+                           longname='NOx volume mixing ratio',    &
+                           units='mol/mol', code=62)
+
+  CALL add_stream_element (chem_m, 'FAMFIXCL_m',famfixcl_m,lpost=.FALSE., &
+                           longname='Cly-family fixer',           &
+                           units='-', code=95)
+  CALL add_stream_element (chem_m, 'FAMFIXBR_m',famfixbr_m,lpost=.FALSE., &
+                           longname='Bry-family fixer',           &
+                           units='-', code=96)
+  CALL add_stream_element (chem_m, 'FAMFIXN_m', famfixn_m, lpost=.FALSE., &
+                           longname='NOy-family fixer',           &
+                           units='-', code=97)
+
+  CALL add_stream_element (chem_m, 'SEDPSC1_m', sedpsc1_m, lpost=.FALSE.,  &
+                           longname='PSC1 sedimentation: HNO3 loss/gain',&
+                           units='molec/cm3/s', code=98)
+  CALL add_stream_element (chem_m, 'SEDPSC2_m', sedpsc2_m, lpost=.FALSE.,  &
+                           longname='PSC2 sedimentation: H2O loss/gain',&
+                           units='molec/cm3/s', code=99)
+
+  CALL add_stream_element (chem_m, 'SADSTS_m', sadsts_m,   lpost=.FALSE.,  &
+                           longname='STS surface area density',&
+                           units='um2/cm3', code=100)
+  CALL add_stream_element (chem_m, 'SADPSC1_m', sadpsc1_m, lpost=.FALSE.,  &
+                           longname='PSC1 surface area density',&
+                           units='um2/cm3', code=101)
+  CALL add_stream_element (chem_m, 'SADPSC2_m', sadpsc2_m, lpost=.FALSE.,  &
+                           longname='PSC2 surface area density',&
+                           units='um2/cm3', code=102)
+  CALL add_stream_element (chem_m, 'SADRAT_m', sadrat_m,   lpost=.FALSE.,  &
+                           longname='STS/SSA surface area ratio',&
+                           units='-', code=103)
+
+  CALL add_stream_element (chem_m, 'CLACSTS_m', clacsts_m, lpost=.FALSE.,  &
+                           longname='Cl activation rate on STS',&
+                           units='1/s', code=104)
+  CALL add_stream_element (chem_m, 'CLACPSC1_m',clacpsc1_m,lpost=.FALSE.,  &
+                           longname='Cl activation rate on PSC1',&
+                           units='1/s', code=105)
+  CALL add_stream_element (chem_m, 'CLACPSC2_m',clacpsc2_m,lpost=.FALSE.,  &
+                           longname='Cl activation rate on PSC2',&
+                           units='1/s', code=106)
+
+  !eth_ts 
+  CALL add_stream_element (chem_m, 'lfp',lfp_m,lpost=.FALSE.,  &
+                           longname='Lightning flash frequency by Price',&
+                           units='1/s', code=107)
+  CALL add_stream_element (chem_m, 'lnox',lnox_m,lpost=.FALSE.,  &
+                           longname='NOx from lightning',&
+                           units='g(NOx)/m**2/s', code=108)
+
+  ! eth_as_nmvoc+
+  CALL add_stream_element (chem_m, 'CO_NMVOC_Biogen_m', co_nmvocbio_m, lpost=.FALSE.,  &
+       longname='CO from biogenic NMVOC emissions',&
+       units='kg(CO)/m2/s', code=109)
+  CALL add_stream_element (chem_m, 'CO_NMVOC_BB_m', co_nmvocbb_m, lpost=.FALSE.,  &
+       longname='CO from biomass burning NMVOC emissions',&
+       units='kg(CO)/m2/s', code=110)
+  CALL add_stream_element (chem_m, 'CO_NMVOC_Anthrop_m', co_nmvocanthrop_m, lpost=.FALSE.,  &
+       longname='CO from anthropogenic NMVOC emissions',&
+       units='kg(CO)/m2/s', code=111)
+  ! eth_as_nmvoc-
+
+  ! eth_as_tropchem+
+  ! C1 and C2 compounds
+  CALL add_stream_element (chem_m, 'CH3CO3_m', ch3co3_m, lpost=.FALSE.,  &
+       longname='Peroxyacetyl radical, volume mixing ratio',&
+       units='mol/mol', code=112)
+
+  CALL add_stream_element (chem_m, 'PAN_m', pan_m, lpost=.FALSE.,  &
+       longname='Peroxyacetylnitrate, volume mixing ratio',&
+       units='mol/mol', code=113)
+
+  CALL add_stream_element (chem_m, 'CH3CO3H_m', ch3co3h_m, lpost=.FALSE.,  &
+       longname='Peroxyacetic acid, volume mixing ratio',&
+       units='mol/mol', code=114)
+
+  CALL add_stream_element (chem_m, 'CH3COOH_m', ch3cooh_m, lpost=.FALSE.,  &
+       longname='Acetic acid, volume mixing ratio',&
+       units='mol/mol', code=115)
+
+  CALL add_stream_element (chem_m, 'NALD_m', nald_m, lpost=.FALSE.,  &
+       longname='Nitrooxyacetaldehyde, volume mixing ratio',&
+       units='mol/mol', code=116)
+
+  CALL add_stream_element (chem_m, 'HCOOH_m', hcooh_m, lpost=.FALSE.,  &
+       longname='Formic acid, volume mixing ratio',&
+       units='mol/mol', code=117)
+
+  ! C3 compounds
+  CALL add_stream_element (chem_m, 'HACET_m', hacet_m, lpost=.FALSE.,  &
+       longname='Hydroxyacetone and other C3 ketones, volume mixing ratio',&
+       units='mol/mol', code=118)
+
+  CALL add_stream_element (chem_m, 'MGLY_m', mgly_m, lpost=.FALSE.,  &
+       longname='Methylglyoxal and other C3 aldehydes, volume mixing ratio',&
+       units='mol/mol', code=119)
+
+  ! C4 compounds
+  CALL add_stream_element (chem_m, 'MACR_m', macr_m, lpost=.FALSE.,  &
+       longname='Methacrolein and other C4 carbonyls, volume mixing ratio',&
+       units='mol/mol', code=120)
+
+  CALL add_stream_element (chem_m, 'MACRO2_m', macro2_m, lpost=.FALSE.,  &
+       longname='Peroxy radicals from MACR+OH, volume mixing ratio',&
+       units='mol/mol', code=121)
+
+  CALL add_stream_element (chem_m, 'MACRO2H_m', macro2h_m, lpost=.FALSE.,  &
+       longname='Hydroperoxides from MACRO2+HO2, volume mixing ratio',&
+       units='mol/mol', code=122)
+
+  CALL add_stream_element (chem_m, 'MPAN_m', mpan_m, lpost=.FALSE.,  &
+       longname='Peroxymethacryloylnitrate, volume mixing ratio',&
+       units='mol/mol', code=123)
+
+  ! C5 compounds
+  CALL add_stream_element (chem_m, 'C5H8_m', c5h8_m, lpost=.FALSE.,  &
+       longname='Isoprene, volume mixing ratio',&
+       units='mol/mol', code=124)
+
+  CALL add_stream_element (chem_m, 'ISO2_m', iso2_m, lpost=.FALSE.,  &
+       longname='Peroxy radicals from C5H8+OH, volume mixing ratio',&
+       units='mol/mol', code=125)
+
+  CALL add_stream_element (chem_m, 'ISO2H_m', iso2h_m, lpost=.FALSE.,  &
+       longname='Beta-Hydroxyhydroperoxides, volume mixing ratio',&
+       units='mol/mol', code=126)
+
+  CALL add_stream_element (chem_m, 'ISON_m', ison_m, lpost=.FALSE.,  &
+       longname='Beta-hydroxyalkylnitrates, volume mixing ratio',&
+       units='mol/mol', code=127)
+  ! eth_as_tropchem-
+
+!!$  ! eth_as_jvals+
+!!$   CALL add_stream_element (chem_m, 'JO3d', jo3d_m, lpost=.FALSE.,  &
+!!$       longname='J values O3->O(1D)',&
+!!$       units='1/s', code=128) 
+!!$   CALL add_stream_element (chem_m, 'JNO2', jno2_m, lpost=.FALSE.,  &
+!!$       longname='J values NO2->NO+O',&
+!!$       units='1/s', code=129) 
+!!$   CALL add_stream_element (chem_m, 'JO3d_cldmod', jo3d_cldmod_m, lpost=.FALSE.,  &
+!!$       longname='J values O3->O(1D), cloud mod',&
+!!$       units='1/s', code=130) 
+!!$   CALL add_stream_element (chem_m, 'JNO2_cldmod', jno2_cldmod_m, lpost=.FALSE.,  &
+!!$       longname='J values NO2->NO+O, cloud mod',&
+!!$       units='1/s', code=131) 
+!!$  ! eth_as_jvals-
+
+  !CCMI reactions, LR, 03/06/13
+  CALL add_stream_element (chem_m, 'RXN_1_m',rxn_1_m,lpost=.FALSE.,  &
+                           longname='Ozone-depleting NOx cycles',   &
+                           units='mol/cm3/s', code=119)
+  CALL add_stream_element (chem_m, 'RXN_2_m',rxn_2_m,lpost=.FALSE.,  &
+                           longname='Ozone-depleting HOx cycles',   &
+                           units='mol/cm3/s', code=120)
+  CALL add_stream_element (chem_m, 'RXN_3_m',rxn_3_m,lpost=.FALSE.,  &
+                           longname='Ozone-depleting Cl cycles',    &
+                           units='mol/cm3/s', code=121)
+  CALL add_stream_element (chem_m, 'RXN_4_m',rxn_4_m,lpost=.FALSE.,  &
+                           longname='Ozone-depleting Br cycles',    &
+                           units='mol/cm3/s', code=122)
+  CALL add_stream_element (chem_m, 'RXN_5_m',rxn_5_m,lpost=.FALSE.,  &
+                           longname='Net chemical ozone production',&
+                           units='mol/cm3/s', code=123)
+
+  CALL add_stream_element (chem_m, 'RXN_6_m',rxn_6_m,lpost=.FALSE.,  &
+                           longname='Sum of the HO2+NO and RO2+NO2 reactions', &
+                           units='mol/cm3/s', code=124)
+  CALL add_stream_element (chem_m, 'RXN_7_m',rxn_7_m,lpost=.FALSE.,  &
+                           longname='Sum of OD+H2O, O3+HO2, O3+OH and C5H8+O3',&
+                           units='mol/cm3/s', code=125)
+  CALL add_stream_element (chem_m, 'RXN_8_m',rxn_8_m,lpost=.FALSE.,  &
+                           longname='NO2+hv->NO+O',                 &
+                           units='mol/cm3/s', code=126)
+  CALL add_stream_element (chem_m, 'RXN_9_m',rxn_9_m,lpost=.FALSE.,  &
+                           longname='OD+H2O->OH+OH',                 &
+                           units='mol/cm3/s', code=127)
+  CALL add_stream_element (chem_m, 'RXN_10_m',rxn_10_m,lpost=.FALSE., &
+                           longname='Total OH loss',                 &
+                           units='mol/cm3/s', code=128)
+  CALL add_stream_element (chem_m, 'RXN_11_m',rxn_11_m,lpost=.FALSE.,&
+                           longname='CO+OH+M->H+CO2+M', &
+                           units='mol/cm3/s', code=129)
+  CALL add_stream_element (chem_m, 'RXN_12_m',rxn_12_m,lpost=.FALSE.,&
+                           longname='CH4+OH->CH3+H2O',               &
+                           units='mol/cm3/s', code=130)
+  CALL add_stream_element (chem_m, 'RXN_13_m',rxn_13_m,lpost=.FALSE.,&
+                           longname='CH4+CL->CH3+HCL',               &
+                           units='mol/cm3/s', code=131)
+  CALL add_stream_element (chem_m, 'RXN_14_m',rxn_14_m,lpost=.FALSE.,&
+                           longname='H2O2 production',               &
+                           units='mol/cm3/s', code=132)
+  CALL add_stream_element (chem_m, 'RXN_15_m',rxn_15_m,lpost=.FALSE., &
+                           longname='Production of all hydrogen peroxides', &
+                           units='mol/cm3/s', code=133)
+
+  CALL add_stream_element (chem_m, 'RXN_16_m',rxn_16_m,lpost=.FALSE., &
+                           longname='HNO3 production',               &
+                           units='mol/cm3/s', code=134)
+  CALL add_stream_element (chem_m, 'RXN_17_m',rxn_17_m,lpost=.FALSE., &
+                           longname='Sum of RO2+NO reactions',       &
+                           units='mol/cm3/s', code=135)
+  CALL add_stream_element (chem_m, 'RXN_18_m',rxn_18_m,lpost=.FALSE., &
+                           longname='Sum of RO2+HO2 reactions',      &
+                           units='mol/cm3/s', code=136)
+  CALL add_stream_element (chem_m, 'RXN_19_m',rxn_19_m,lpost=.FALSE., &
+                           longname='Sum of RO2+RO2 reactions',      &
+                           units='mol/cm3/s', code=137)
+  CALL add_stream_element (chem_m, 'RXN_20_m',rxn_20_m,lpost=.FALSE., &
+                           longname='CH3CO3+NO2+M->PAN+M', &
+                           units='mol/cm3/s', code=138)
+
+  CALL add_stream_element (chem_m, 'RXN_21_m',rxn_21_m,lpost=.FALSE., &
+                           longname='O2 photolysis',                 &
+                           units='mol/cm3/s', code=139)
+  CALL add_stream_element (chem_m, 'RXN_22_m',rxn_22_m,lpost=.FALSE., &
+                           longname='Cl2O2 photolysis',              &
+                           units='mol/cm3/s', code=140)
+  CALL add_stream_element (chem_m, 'RXN_23_m',rxn_23_m,lpost=.FALSE., &
+                           longname='O3+hv->O(1D)',      &
+                           units='mol/cm3/s', code=141)
+  CALL add_stream_element (chem_m, 'RXN_24_m',rxn_24_m,lpost=.FALSE., &
+                           longname='Total O(1D) production',      &
+                           units='mol/cm3/s', code=142)
+  CALL add_stream_element (chem_m, 'RXN_25_m',rxn_25_m,lpost=.FALSE., &
+                           longname='Total ozone production', &
+                           units='mol/cm3/s', code=143)
+
+  CALL add_stream_element (chem_m, 'RXN_26_m',rxn_26_m,lpost=.FALSE., &
+                           longname='Total ozone loss',               &
+                           units='mol/cm3/s', code=144)
+  CALL add_stream_element (chem_m, 'RXN_27_m',rxn_27_m,lpost=.FALSE., &
+                           longname='O3+OH->HO2+O2',       &
+                           units='mol/cm3/s', code=145)
+  CALL add_stream_element (chem_m, 'RXN_28_m',rxn_28_m,lpost=.FALSE., &
+                           longname='O3+HO2->OH+O2',      &
+                           units='mol/cm3/s', code=146)
+  CALL add_stream_element (chem_m, 'RXN_29_m',rxn_29_m,lpost=.FALSE., &
+                           longname='HO2+NO->NO2+OH',      &
+                           units='mol/cm3/s', code=147)
+  CALL add_stream_element (chem_m, 'RXN_30_m',rxn_30_m,lpost=.FALSE., &
+                           longname='CH3O2+NO', &
+                           units='mol/cm3/s', code=148)
+
+  CALL add_stream_element (chem_m, 'RXN_31_m',rxn_31_m,lpost=.FALSE., &
+                           longname='O3+isoprene',               &
+                           units='mol/cm3/s', code=149)
+  CALL add_stream_element (chem_m, 'RXN_32_m',rxn_32_m,lpost=.FALSE., &
+                           longname='Total CH4 loss',       &
+                           units='mol/cm3/s', code=150)
+  CALL add_stream_element (chem_m, 'RXN_33_m',rxn_33_m,lpost=.FALSE., &
+                           longname='Total CO loss',      &
+                           units='mol/cm3/s', code=151)
+  CALL add_stream_element (chem_m, 'RXN_34_m',rxn_34_m,lpost=.FALSE., &
+                           longname='Total OH production',      &
+                           units='mol/cm3/s', code=152)
+
+END SUBROUTINE construct_stream_chem_m
+
+
+  SUBROUTINE construct_stream_chem2
+
+    ! Allocates output streams for 12 h output of MEZON
+
+    ! *construct_stream_chem2* is called from *call_init_submodel_memory*,
+    ! src/call_submodels.f90.
+
+  !--- Create new stream:
+
+  CALL new_stream (chem2 ,'chem2')      
+  
+  ! add entries for geopotential and log surface pressure (used by the
+  ! afterburner):
+  CALL add_stream_reference (chem2, 'geosp'   ,'g3b'   ,lpost=.TRUE.)
+  CALL add_stream_reference (chem2, 'lsp'     ,'sp'    ,lpost=.TRUE.)
+
+  CALL default_stream_setting (chem2, lrerun    = .TRUE. , &
+                                       leveltype = HYBRID , &
+                                       table     = 199,     &
+                                       laccu     = .FALSE.)
+
+  CALL add_stream_element (chem2, 'TOTOZ',   totoz_d,  lpost=.TRUE.,  &
+                           longname='Ozone column',               &
+                           units='DU',      code=54)
+  CALL add_stream_element (chem2, 'TOTNO2',  totno2_d, lpost=.FALSE.,  &
+                           longname='NO2 Column',                 &
+                           units='molec/cm2', code=55)
+
+  CALL add_stream_element (chem2, 'ClOx',   clox_d,   lpost=.FALSE.,  &
+                           lrerun=.FALSE., &
+                           longname='ClOx volume mixing ratio',   &
+                           units='mol/mol', code=56)
+  CALL add_stream_element (chem2, 'Cly',    cly_d,    lpost=.FALSE.,  &
+                           lrerun=.FALSE., &
+                           longname='Cly volume mixing ratio',     &
+                           units='mol/mol', code=57)
+  CALL add_stream_element (chem2, 'CCly',   ccly_d,   lpost=.FALSE.,  &
+                           lrerun=.FALSE., &
+                           longname='CCly volume mixing ratio',      &
+                           units='mol/mol', code=58)
+  CALL add_stream_element (chem2, 'Bry',    bry_d,    lpost=.FALSE.,  &
+                           lrerun=.FALSE., &
+                           longname='Bry volume mixing ratio',     &
+                           units='mol/mol', code=59)
+  CALL add_stream_element (chem2, 'CBry',   cbry_d,   lpost=.FALSE.,  &
+                           lrerun=.FALSE., &
+                           longname='CBry volume mixing ratio',   &
+                           units='mol/mol', code=60)
+
+  CALL add_stream_element (chem2, 'NOy',    noy_d,    lpost=.FALSE.,  &
+                           lrerun=.FALSE., &
+                           longname='NOy volume mixing ratio',    &
+                           units='mol/mol', code=61)
+  CALL add_stream_element (chem2, 'NOx',    nox_d,    lpost=.FALSE.,  &
+                           lrerun=.FALSE., &
+                           longname='NOx volume mixing ratio',   &
+                           units='mol/mol', code=62)
+
+  CALL add_stream_element (chem2, 'FAMFIXCL',famfixcl_d,lpost=.FALSE., &
+                           longname='Cly-family fixer',           &
+                           units='-', code=95)
+  CALL add_stream_element (chem2, 'FAMFIXBR',famfixbr_d,lpost=.FALSE., &
+                           longname='Bry-family fixer',           &
+                           units='-', code=96)
+  CALL add_stream_element (chem2, 'FAMFIXN', famfixn_d, lpost=.FALSE., &
+                           longname='NOy-family fixer',           &
+                           units='-', code=97)
+
+  CALL add_stream_element (chem2, 'SEDPSC1', sedpsc1_d, lpost=.FALSE., &
+                           longname='PSC1 sedimentation: HNO3 loss/gain', &
+                           units='molec/cm3/s', code=98)
+  CALL add_stream_element (chem2, 'SEDPSC2', sedpsc2_d, lpost=.FALSE., &
+                           longname='PSC2 sedimentation: H2O loss/gain', &
+                           units='molec/cm3/s', code=99)
+
+  CALL add_stream_element (chem2, 'SADSTS', sadsts_d,   lpost=.TRUE., &
+                           longname='STS surface area density', &
+                           units='um2/cm3', code=100)
+  CALL add_stream_element (chem2, 'SADPSC1', sadpsc1_d, lpost=.TRUE., &
+                           longname='PSC1 surface area density', &
+                           units='um2/cm3', code=101)
+  CALL add_stream_element (chem2, 'SADPSC2', sadpsc2_d, lpost=.TRUE., &
+                           longname='PSC2 surface area density', &
+                           units='um2/cm3', code=102)
+ CALL add_stream_element (chem2, 'SADRAT', sadrat_d,    lpost=.FALSE., &
+                           longname='STS/SSA surface area ratio', &
+                           units='-', code=103)
+
+  CALL add_stream_element (chem2, 'CLACSTS', clacsts_d, lpost=.FALSE., &
+                           longname='Cl activation rate on STS', &
+                           units='1/s', code=104)
+  CALL add_stream_element (chem2, 'CLACPSC1',clacpsc1_d,lpost=.FALSE., &
+                           longname='Cl activation rate on PSC1', &
+                           units='1/s', code=105)
+  CALL add_stream_element (chem2, 'CLACPSC2',clacpsc2_d,lpost=.FALSE., &
+                           longname='Cl activation rate on PSC2', &
+                           units='1/s', code=106)
+
+
+  ! eth_as_nmvoc+
+  CALL add_stream_element (chem2, 'CO_NMVOC_Biogen', co_nmvocbio_d, lpost=.FALSE.,  &
+       longname='CO from biogenic NMVOC emissions',&
+       units='kg(CO)/m2/s', code=107)
+  CALL add_stream_element (chem2, 'CO_NMVOC_BB', co_nmvocbb_d, lpost=.FALSE.,  &
+       longname='CO from biomass burning NMVOC emissions',&
+       units='kg(CO)/m2/s', code=108)
+  CALL add_stream_element (chem2, 'CO_NMVOC_Anthrop', co_nmvocanthrop_d, lpost=.FALSE.,  &
+       longname='CO from anthropogenic NMVOC emissions',&
+       units='kg(CO)/m2/s', code=109)
+  ! eth_as_nmvoc-
+
+!!$  ! eth_as_jvals+
+!!$   CALL add_stream_element (chem2, 'JO3d', jo3d_d, lpost=.FALSE.,  &
+!!$       longname='J values O3->O(1D)',&
+!!$       units='1/s', code=110) 
+!!$   CALL add_stream_element (chem2, 'JNO2', jno2_d, lpost=.FALSE.,  &
+!!$       longname='J values NO2->NO+O',&
+!!$       units='1/s', code=111) 
+!!$   CALL add_stream_element (chem2, 'JO3d_cldmod', jo3d_cldmod_d, lpost=.FALSE.,  &
+!!$       longname='J values O3->O(1D), cloud mod',&
+!!$       units='1/s', code=112) 
+!!$   CALL add_stream_element (chem2, 'JNO2_cldmod', jno2_cldmod_d, lpost=.FALSE.,  &
+!!$       longname='J values NO2->NO+O, cloud mod',&
+!!$       units='1/s', code=113) 
+!!$  ! eth_as_jvals-
+
+  ! eth_as_03062013+
+   CALL add_stream_element (chem2, 'JO2', jo2, lpost=.TRUE.,  &
+       longname='J-values O2->O+O',&
+       units='1/s', code=110) 
+   CALL add_stream_element (chem2, 'JO3d', jo3d, lpost=.TRUE.,  &
+       longname='J-values  O3->O2+O(1D)',&
+       units='1/s', code=111) 
+   CALL add_stream_element (chem2, 'JNO2', jno2, lpost=.TRUE.,  &
+       longname='J-values NO2->NO+O',&
+       units='1/s', code=112) 
+   CALL add_stream_element (chem2, 'JCl2O2', jcl2o2, lpost=.TRUE.,  &
+       longname='J-values Cl2O2->2Cl',&
+       units='1/s', code=113) 
+
+  CALL add_stream_element (chem2, 'JPAN', jpan, lpost=.TRUE.,  &
+       longname='J-values PAN',&
+       units='1/s', code=153) 
+  CALL add_stream_element (chem2, 'JPAA', jpaa, lpost=.TRUE.,  &
+       longname='J-values PAA',&
+       units='1/s', code=154) 
+  CALL add_stream_element (chem2, 'JMGLY', jmgly, lpost=.TRUE.,  &
+       longname='J-values MGLY',&
+       units='1/s', code=155) 
+
+   CALL add_stream_element (chem2, 'lfp',lfp_d,lpost=.TRUE.,  &
+        longname='Lightning flash frequency by Price',&
+        units='1/s', code=114)
+   CALL add_stream_element (chem2, 'lnox',lnox_d,lpost=.TRUE.,  &
+        longname='NOx from lightning',&
+        units='g(NOx)/m**2/s', code=115)
+   CALL add_stream_element (chem2, 'lnox_emiss',elnox,lpost=.TRUE.,  &
+        longname='NOx from lightning',&
+        units='kg(NOx)/m**2/s', code=116)
+   CALL add_stream_element (chem2, 'cu_uvelo',cu_uvelo,lpost=.TRUE.,  &
+        longname='convective updraft velocity',&
+        units='m/s', code=117)
+   CALL add_stream_element (chem2, 'xupdr',xupdr,lpost=.TRUE.,  &
+        longname='convective mass flux',&
+        units='kg/m2/s', code=118)
+
+   ! eth_as_03062013- 
+
+  !CCMI reactions, LR, 03/06/13
+  CALL add_stream_element (chem2, 'RXN_1',rxn_1,lpost=.TRUE.,       &
+                           longname='Ozone-depleting NOx cycles',   &
+                           units='mol/cm3/s', code=119)
+  CALL add_stream_element (chem2, 'RXN_2',rxn_2,lpost=.TRUE.,  &
+                           longname='Ozone-depleting HOx cycles',   &
+                           units='mol/cm3/s', code=120)
+  CALL add_stream_element (chem2, 'RXN_3',rxn_3,lpost=.TRUE.,  &
+                           longname='Ozone-depleting Cl cycles',    &
+                           units='mol/cm3/s', code=121)
+  CALL add_stream_element (chem2, 'RXN_4',rxn_4,lpost=.TRUE.,  &
+                           longname='Ozone-depleting Br cycles',    &
+                           units='mol/cm3/s', code=122)
+  CALL add_stream_element (chem2, 'RXN_5',rxn_5,lpost=.TRUE.,  &
+                           longname='Net chemical ozone production',&
+                           units='mol/cm3/s', code=123)
+
+  CALL add_stream_element (chem2, 'RXN_6',rxn_6,lpost=.TRUE.,  &
+                           longname='Sum of the HO2+NO and RO2+NO reactions', &
+                           units='mol/cm3/s', code=124)
+  CALL add_stream_element (chem2, 'RXN_7',rxn_7,lpost=.TRUE.,  &
+                           longname='Sum of OD+H2O, O3+HO2, O3+OH and C5H8+O3', &
+                           units='mol/cm3/s', code=125)
+  CALL add_stream_element (chem2, 'RXN_8',rxn_8,lpost=.TRUE.,  &
+                           longname='NO2+hv->NO+O',                 &
+                           units='mol/cm3/s', code=126)
+  CALL add_stream_element (chem2, 'RXN_9',rxn_9,lpost=.TRUE.,  &
+                           longname='OD+H2O->OH+OH',                 &
+                           units='mol/cm3/s', code=127)
+  CALL add_stream_element (chem2, 'RXN_10',rxn_10,lpost=.TRUE., &
+                           longname='Total OH loss',                 &
+                           units='mol/cm3/s', code=128)
+
+  CALL add_stream_element (chem2, 'RXN_11',rxn_11,lpost=.TRUE.,&
+                           longname='CO+OH+M->H+CO2+M', &
+                           units='mol/cm3/s', code=129)
+  CALL add_stream_element (chem2, 'RXN_12',rxn_12,lpost=.TRUE.,&
+                           longname='CH4+OH->CH3+H2O',               &
+                           units='mol/cm3/s', code=130)
+  CALL add_stream_element (chem2, 'RXN_13',rxn_13,lpost=.TRUE.,&
+                           longname='CH4+CL->CH3+HCL',               &
+                           units='mol/cm3/s', code=131)
+  CALL add_stream_element (chem2, 'RXN_14',rxn_14,lpost=.TRUE.,&
+                           longname='H2O2 production',               &
+                           units='mol/cm3/s', code=132)
+  CALL add_stream_element (chem2, 'RXN_15',rxn_15,lpost=.TRUE., &
+                           longname='Production of all hydrogen peroxides', &
+                           units='mol/cm3/s', code=133)
+
+  CALL add_stream_element (chem2, 'RXN_16',rxn_16,lpost=.TRUE., &
+                           longname='HNO3 production',               &
+                           units='mol/cm3/s', code=134)
+  CALL add_stream_element (chem2, 'RXN_17',rxn_17,lpost=.TRUE., &
+                           longname='Sum of RO2+NO reactions',       &
+                           units='mol/cm3/s', code=135)
+  CALL add_stream_element (chem2, 'RXN_18',rxn_18,lpost=.TRUE., &
+                           longname='Sum of RO2+HO2 reactions',      &
+                           units='mol/cm3/s', code=136)
+  CALL add_stream_element (chem2, 'RXN_19',rxn_19,lpost=.TRUE., &
+                           longname='Sum of RO2+RO2 reactions',      &
+                           units='mol/cm3/s', code=137)
+  CALL add_stream_element (chem2, 'RXN_20',rxn_20,lpost=.TRUE., &
+                           longname='CH3CO3+NO2+M->PAN+M', &
+                           units='mol/cm3/s', code=138)
+
+  CALL add_stream_element (chem2, 'RXN_21',rxn_21,lpost=.TRUE., &
+                           longname='O2 photolysis',                 &
+                           units='mol/cm3/s', code=139)
+  CALL add_stream_element (chem2, 'RXN_22',rxn_22,lpost=.TRUE., &
+                           longname='Cl2O2 photolysis',              &
+                           units='mol/cm3/s', code=140)
+  CALL add_stream_element (chem2, 'RXN_23',rxn_23,lpost=.TRUE., &
+                           longname='O3+hv->O(1D)',      &
+                           units='mol/cm3/s', code=141)
+  CALL add_stream_element (chem2, 'RXN_24',rxn_24,lpost=.TRUE., &
+                           longname='Total O(1D) production',      &
+                           units='mol/cm3/s', code=142)
+  CALL add_stream_element (chem2, 'RXN_25',rxn_25,lpost=.TRUE., &
+                           longname='Total ozone production', &
+                           units='mol/cm3/s', code=143)
+
+  CALL add_stream_element (chem2, 'RXN_26',rxn_26,lpost=.TRUE., &
+                           longname='Total ozone loss',               &
+                           units='mol/cm3/s', code=144)
+  CALL add_stream_element (chem2, 'RXN_27',rxn_27,lpost=.TRUE., &
+                           longname='O3+OH->HO2+O2',       &
+                           units='mol/cm3/s', code=145)
+  CALL add_stream_element (chem2, 'RXN_28',rxn_28,lpost=.TRUE., &
+                           longname='O3+HO2->OH+O2',      &
+                           units='mol/cm3/s', code=146)
+  CALL add_stream_element (chem2, 'RXN_29',rxn_29,lpost=.TRUE., &
+                           longname='HO2+NO->NO2+OH',      &
+                           units='mol/cm3/s', code=147)
+  CALL add_stream_element (chem2, 'RXN_30',rxn_30,lpost=.TRUE., &
+                           longname='CH3O2+NO', &
+                           units='mol/cm3/s', code=148)
+
+  CALL add_stream_element (chem2, 'RXN_31',rxn_31,lpost=.TRUE., &
+                           longname='O3+isoprene',               &
+                           units='mol/cm3/s', code=149)
+  CALL add_stream_element (chem2, 'RXN_32',rxn_32,lpost=.TRUE., &
+                           longname='Total CH4 loss',       &
+                           units='mol/cm3/s', code=150)
+  CALL add_stream_element (chem2, 'RXN_33',rxn_33,lpost=.TRUE., &
+                           longname='Total CO loss',      &
+                           units='mol/cm3/s', code=151)
+  CALL add_stream_element (chem2, 'RXN_34',rxn_34,lpost=.TRUE., &
+                           longname='Total OH production',      &
+                           units='mol/cm3/s', code=152)
+
+END SUBROUTINE construct_stream_chem2
+
+
+SUBROUTINE destruct_stream_chem_m
+
+  ! Deallocates memory.
+
+  ! *destruct_stream_chem_m* is called from *call_free_submodel_memory*,
+  ! src/call_submodels.f90.
+
+  CALL delete_stream(chem_m)
+
+END SUBROUTINE destruct_stream_chem_m
+
+
+SUBROUTINE destruct_stream_chem2
+
+  ! Deallocates memory.
+
+  ! *destruct_stream_chem2* is called from *call_free_submodel_memory*,
+  ! src/call_submodels.f90.
+
+  CALL delete_stream(chem2)
+
+END SUBROUTINE destruct_stream_chem2
+
+
+SUBROUTINE init_stream_chem_m
+
+  ! Initializes streams with zero.
+
+  ! *init_stream_chem_m* is called from *call_init_tracers*,
+  ! src/call_submodels.f90.
+
+  t_m(:,:,:)        = 0._dp
+  u_m(:,:,:)        = 0._dp
+
+  o3_m(:,:,:)       = 0._dp
+  o_m(:,:,:)        = 0._dp
+  no_m(:,:,:)       = 0._dp
+  no2_m(:,:,:)      = 0._dp
+  hno3_m(:,:,:)     = 0._dp
+
+  no3_m(:,:,:)      = 0._dp
+  n2o5_m(:,:,:)     = 0._dp
+  hno4_m(:,:,:)     = 0._dp
+  ho2_m(:,:,:)      = 0._dp
+  clno3_m(:,:,:)    = 0._dp
+
+  clo_m(:,:,:)      = 0._dp
+  n_m(:,:,:)        = 0._dp
+  oh_m(:,:,:)       = 0._dp
+  h_m(:,:,:)        = 0._dp
+  cl_m(:,:,:)       = 0._dp
+
+  hocl_m(:,:,:)     = 0._dp
+  odscls_m(:,:,:)   = 0._dp
+  odscll_m(:,:,:)   = 0._dp
+  n2o_m(:,:,:)      = 0._dp
+  ch4_m(:,:,:)      = 0._dp
+
+  co_m(:,:,:)       = 0._dp
+  hcl_m(:,:,:)      = 0._dp
+  h2_m(:,:,:)       = 0._dp
+  h2o2_m(:,:,:)     = 0._dp
+  h2o_m(:,:,:)      = 0._dp
+
+  cl2_m(:,:,:)      = 0._dp
+  cl2o2_m(:,:,:)    = 0._dp
+  psc1_m(:,:,:)     = 0._dp
+  psc2_m(:,:,:)     = 0._dp
+  ch3o2h_m(:,:,:)   = 0._dp
+
+  ch2o_m(:,:,:)     = 0._dp
+  bro_m(:,:,:)      = 0._dp
+  brno3_m(:,:,:)    = 0._dp
+  brcl_m(:,:,:)     = 0._dp
+  hbr_m(:,:,:)      = 0._dp
+
+  hobr_m(:,:,:)     = 0._dp
+  odsbr_m(:,:,:)    = 0._dp
+  ch3_m(:,:,:)      = 0._dp
+  ch3o2_m(:,:,:)    = 0._dp
+  ch3o_m(:,:,:)     = 0._dp
+
+  hco_m(:,:,:)      = 0._dp
+  br_m(:,:,:)       = 0._dp
+  od_m(:,:,:)       = 0._dp
+
+  totoz_m(:,:)      = 0._dp
+  totno2_m(:,:)     = 0._dp
+
+  clox_m(:,:,:)     = 0._dp
+  cly_m(:,:,:)      = 0._dp
+  ccly_m(:,:,:)     = 0._dp
+  bry_m(:,:,:)      = 0._dp
+  cbry_m(:,:,:)     = 0._dp
+
+  noy_m(:,:,:)      = 0._dp
+  nox_m(:,:,:)      = 0._dp
+
+  famfixcl_m(:,:,:) = 0._dp
+  famfixbr_m(:,:,:) = 0._dp
+  famfixn_m(:,:,:)  = 0._dp
+
+  sedpsc1_m(:,:,:)  = 0._dp
+  sedpsc2_m(:,:,:)  = 0._dp
+
+  sadsts_m(:,:,:)   = 0._dp
+  sadpsc1_m(:,:,:)  = 0._dp
+  sadpsc2_m(:,:,:)  = 0._dp
+  sadrat_m(:,:,:)   = 1._dp
+
+  clacsts_m(:,:,:)  = 0._dp
+  clacpsc1_m(:,:,:) = 0._dp
+  clacpsc2_m(:,:,:) = 0._dp
+
+  !eth_ts
+  lfp_m(:,:) = 0._dp
+  lnox_m(:,:) = 0._dp
+
+  ! eth_as_nmvoc+
+  co_nmvocbio_m(:,:) = 0._dp
+  co_nmvocbb_m(:,:) = 0._dp
+  co_nmvocanthrop_m(:,:) = 0._dp
+  ! eth_as_nmvoc-
+
+  ! eth_as_tropchem+
+  ch3co3_m(:,:,:)  = 0._dp
+  pan_m(:,:,:)     = 0._dp
+  ch3co3h_m(:,:,:) = 0._dp
+  ch3cooh_m(:,:,:) = 0._dp
+  nald_m(:,:,:)    = 0._dp
+  hcooh_m(:,:,:)   = 0._dp
+  hacet_m(:,:,:)   = 0._dp
+  mgly_m(:,:,:)    = 0._dp
+  macr_m(:,:,:)    = 0._dp
+  macro2_m(:,:,:)  = 0._dp
+  macro2h_m(:,:,:) = 0._dp
+  mpan_m(:,:,:)    = 0._dp
+  c5h8_m(:,:,:)    = 0._dp
+  iso2_m(:,:,:)    = 0._dp
+  iso2h_m(:,:,:)   = 0._dp
+  ison_m(:,:,:)    = 0._dp
+  ! eth_as_tropchem-
+
+!!$  ! eth_as_jvals+
+!!$  jo3d_m(:,:,:)    = 0._dp
+!!$  jno2_m(:,:,:)    = 0._dp
+!!$  jo3d_cldmod_m(:,:,:)    = 0._dp
+!!$  jno2_cldmod_m(:,:,:)    = 0._dp
+!!$  ! eth_as_jvals-  
+
+  !CCMI reactions, LR, 03/06/13
+  rxn_1_m(:,:,:) = 0._dp
+  rxn_2_m(:,:,:) = 0._dp
+  rxn_3_m(:,:,:) = 0._dp
+  rxn_4_m(:,:,:) = 0._dp
+  rxn_5_m(:,:,:) = 0._dp
+
+  rxn_6_m(:,:,:) = 0._dp
+  rxn_7_m(:,:,:) = 0._dp
+  rxn_8_m(:,:,:) = 0._dp
+  rxn_9_m(:,:,:) = 0._dp
+  rxn_10_m(:,:,:) = 0._dp
+
+  rxn_11_m(:,:,:) = 0._dp
+  rxn_12_m(:,:,:) = 0._dp
+  rxn_13_m(:,:,:) = 0._dp
+  rxn_14_m(:,:,:) = 0._dp
+  rxn_15_m(:,:,:) = 0._dp
+
+  rxn_16_m(:,:,:) = 0._dp
+  rxn_17_m(:,:,:) = 0._dp
+  rxn_18_m(:,:,:) = 0._dp
+  rxn_19_m(:,:,:) = 0._dp
+  rxn_20_m(:,:,:) = 0._dp
+
+  rxn_21_m(:,:,:) = 0._dp
+  rxn_22_m(:,:,:) = 0._dp
+  rxn_23_m(:,:,:) = 0._dp
+  rxn_24_m(:,:,:) = 0._dp
+  rxn_25_m(:,:,:) = 0._dp
+
+  rxn_26_m(:,:,:) = 0._dp
+  rxn_27_m(:,:,:) = 0._dp
+  rxn_28_m(:,:,:) = 0._dp
+  rxn_29_m(:,:,:) = 0._dp
+  rxn_30_m(:,:,:) = 0._dp
+
+  rxn_31_m(:,:,:) = 0._dp
+  rxn_32_m(:,:,:) = 0._dp
+  rxn_33_m(:,:,:) = 0._dp
+  rxn_34_m(:,:,:) = 0._dp  
+
+END SUBROUTINE init_stream_chem_m
+
+
+SUBROUTINE init_stream_chem2
+
+  ! Initializes streams with zero.
+
+  ! *init_stream_chem2* is called from *call_init_tracers*,
+  ! src/call_submodels.f90.
+
+  IF (lstart) THEN     ! use restart fields otherwise
+     totoz_d(:,:)      = 0._dp
+     totno2_d(:,:)     = 0._dp
+  ENDIF
+
+  clox_d(:,:,:)     = 0._dp
+  cly_d(:,:,:)      = 0._dp
+  ccly_d(:,:,:)     = 0._dp
+  bry_d(:,:,:)      = 0._dp
+  cbry_d(:,:,:)     = 0._dp
+
+  noy_d(:,:,:)      = 0._dp
+  nox_d(:,:,:)      = 0._dp
+
+  lfp_d(:,:) = 0._dp
+  lnox_d(:,:) = 0._dp
+  elnox(:,:,:) = 0._dp
+  xupdr(:,:,:) = 0._dp
+  cu_uvelo(:,:,:) = 0._dp
+
+  IF (lstart) THEN     ! use restart fields otherwise
+     famfixcl_d(:,:,:) = 0._dp
+     famfixbr_d(:,:,:) = 0._dp
+     famfixn_d(:,:,:)  = 0._dp
+     
+     sedpsc1_d(:,:,:)  = 0._dp
+     sedpsc2_d(:,:,:)  = 0._dp
+
+     sadsts_d(:,:,:)   = 0._dp
+     sadpsc1_d(:,:,:)  = 0._dp
+     sadpsc2_d(:,:,:)  = 0._dp
+     sadrat_d(:,:,:)   = 1._dp
+
+     clacsts_d(:,:,:)  = 0._dp
+     clacpsc1_d(:,:,:) = 0._dp
+     clacpsc2_d(:,:,:) = 0._dp
+     
+     ! eth_as_nmvoc+
+     co_nmvocbio_d(:,:) = 0._dp
+     co_nmvocbb_d(:,:) = 0._dp
+     co_nmvocanthrop_d(:,:) = 0._dp
+     ! eth_as_nmvoc-
+
+!!$     ! eth_as_jvals+
+!!$     jo3d_d(:,:,:)        = 0._dp
+!!$     jno2_d(:,:,:)        = 0._dp
+!!$     jo3d_cldmod_d(:,:,:) = 0._dp
+!!$     jno2_cldmod_d(:,:,:) = 0._dp
+!!$     ! eth_as_jvals-
+
+     ! eth_as_03062013+
+     jo3d(:,:,:) = 0._dp
+     jno2(:,:,:) = 0._dp
+     jo2(:,:,:) = 0._dp
+     jcl2o2(:,:,:) = 0._dp
+
+     jpan(:,:,:) = 0._dp
+     jpaa(:,:,:) = 0._dp
+     jmgly(:,:,:) = 0._dp
+     ! eth_as_03062013-
+
+     !CCMI reactions, LR, 03/06/13
+     rxn_1(:,:,:) = 0._dp
+     rxn_2(:,:,:) = 0._dp
+     rxn_3(:,:,:) = 0._dp
+     rxn_4(:,:,:) = 0._dp
+     rxn_5(:,:,:) = 0._dp
+
+     rxn_6(:,:,:) = 0._dp
+     rxn_7(:,:,:) = 0._dp
+     rxn_8(:,:,:) = 0._dp
+     rxn_9(:,:,:) = 0._dp
+     rxn_10(:,:,:) = 0._dp
+
+     rxn_11(:,:,:) = 0._dp
+     rxn_12(:,:,:) = 0._dp
+     rxn_13(:,:,:) = 0._dp
+     rxn_14(:,:,:) = 0._dp 
+     rxn_15(:,:,:) = 0._dp
+
+     rxn_16(:,:,:) = 0._dp
+     rxn_17(:,:,:) = 0._dp
+     rxn_18(:,:,:) = 0._dp
+     rxn_19(:,:,:) = 0._dp
+     rxn_20(:,:,:) = 0._dp
+
+     rxn_21(:,:,:) = 0._dp
+     rxn_22(:,:,:) = 0._dp
+     rxn_23(:,:,:) = 0._dp
+     rxn_24(:,:,:) = 0._dp
+     rxn_25(:,:,:) = 0._dp
+
+     rxn_26(:,:,:) = 0._dp
+     rxn_27(:,:,:) = 0._dp
+     rxn_28(:,:,:) = 0._dp
+     rxn_29(:,:,:) = 0._dp
+     rxn_30(:,:,:) = 0._dp
+
+     rxn_31(:,:,:) = 0._dp
+     rxn_32(:,:,:) = 0._dp
+     rxn_33(:,:,:) = 0._dp
+     rxn_34(:,:,:) = 0._dp
+
+  ENDIF
+ 
+END SUBROUTINE init_stream_chem2
+
+
+SUBROUTINE accumulate_stream_chem_m (kproma, kbdim, klev, ktrac, krow, &
+     pxtm1, pxtte)
+
+  ! This subroutine accumulates the current value of a variable at every time 
+  ! step, such that finally monthly streams can be calculated.
+
+  ! *accumulate_stream_chem_m* is called from *call_diagn*, 
+  ! src/call_submodels
+
+  USE mo_memory_g1a,           ONLY: tm1
+  USE mo_memory_g2a,           ONLY: um1
+  USE mo_scan_buffer,          ONLY: tte
+
+  ! Scalar arguments
+  INTEGER, INTENT(in) :: kproma, kbdim, klev, ktrac, krow
+
+  ! Array arguments
+  REAL(dp), INTENT(in) :: pxtm1(kbdim,klev,ktrac), pxtte(kbdim,klev,ktrac)
+
+
+  ! Executable statements:
+
+  t_m(1:kproma,:,krow) = t_m(1:kproma,:,krow) + delta_time * &
+       (tm1(1:kproma,:,krow) + delta_time * tte(1:kproma,:,krow)) 
+  u_m(1:kproma,:,krow) = u_m(1:kproma,:,krow) + delta_time * &
+       um1(1:kproma,:,krow) 
+
+  o3_m(1:kproma,:,krow)       = o3_m(1:kproma,:,krow)       + delta_time * &
+       (pxtm1(1:kproma,:,idt_o3)     + delta_time * pxtte(1:kproma,:,idt_o3))
+  o_m(1:kproma,:,krow)        = o_m(1:kproma,:,krow)        + delta_time * &
+       (pxtm1(1:kproma,:,idt_o)      + delta_time * pxtte(1:kproma,:,idt_o))
+  no_m(1:kproma,:,krow)       = no_m(1:kproma,:,krow)       + delta_time * &
+       (pxtm1(1:kproma,:,idt_no)     + delta_time * pxtte(1:kproma,:,idt_no))
+  no2_m(1:kproma,:,krow)      = no2_m(1:kproma,:,krow)      + delta_time * &
+       (pxtm1(1:kproma,:,idt_no2)    + delta_time * pxtte(1:kproma,:,idt_no2))
+  hno3_m(1:kproma,:,krow)     = hno3_m(1:kproma,:,krow)     + delta_time * &
+       (pxtm1(1:kproma,:,idt_hno3)   + delta_time * pxtte(1:kproma,:,idt_hno3))
+
+  no3_m(1:kproma,:,krow)      = no3_m(1:kproma,:,krow)      + delta_time * &
+       (pxtm1(1:kproma,:,idt_no3)    + delta_time * pxtte(1:kproma,:,idt_no3))
+  n2o5_m(1:kproma,:,krow)     = n2o5_m(1:kproma,:,krow)     + delta_time * &
+       (pxtm1(1:kproma,:,idt_n2o5)   + delta_time * pxtte(1:kproma,:,idt_n2o5))
+  hno4_m(1:kproma,:,krow)     = hno4_m(1:kproma,:,krow)     + delta_time * &
+       (pxtm1(1:kproma,:,idt_hno4)   + delta_time * pxtte(1:kproma,:,idt_hno4))
+  ho2_m(1:kproma,:,krow)      = ho2_m(1:kproma,:,krow)      + delta_time * &
+       (pxtm1(1:kproma,:,idt_ho2)    + delta_time * pxtte(1:kproma,:,idt_ho2))
+  clno3_m(1:kproma,:,krow)    = clno3_m(1:kproma,:,krow)    + delta_time * &
+       (pxtm1(1:kproma,:,idt_clno3)  + delta_time * pxtte(1:kproma,:,idt_clno3))
+
+  clo_m(1:kproma,:,krow)      = clo_m(1:kproma,:,krow)      + delta_time * &
+       (pxtm1(1:kproma,:,idt_clo)    + delta_time * pxtte(1:kproma,:,idt_clo))
+  n_m(1:kproma,:,krow)        = n_m(1:kproma,:,krow)        + delta_time * &
+       (pxtm1(1:kproma,:,idt_n)      + delta_time * pxtte(1:kproma,:,idt_n))
+  oh_m(1:kproma,:,krow)       = oh_m(1:kproma,:,krow)       + delta_time * &
+       (pxtm1(1:kproma,:,idt_oh)     + delta_time * pxtte(1:kproma,:,idt_oh))
+  h_m(1:kproma,:,krow)        = h_m(1:kproma,:,krow)        + delta_time * &
+       (pxtm1(1:kproma,:,idt_h)      + delta_time * pxtte(1:kproma,:,idt_h))
+  cl_m(1:kproma,:,krow)       = cl_m(1:kproma,:,krow)       + delta_time * &
+       (pxtm1(1:kproma,:,idt_cl)     + delta_time * pxtte(1:kproma,:,idt_cl))
+
+  hocl_m(1:kproma,:,krow)     = hocl_m(1:kproma,:,krow)     + delta_time * &
+       (pxtm1(1:kproma,:,idt_hocl)   + delta_time * pxtte(1:kproma,:,idt_hocl))
+  odscls_m(1:kproma,:,krow)   = odscls_m(1:kproma,:,krow)   + delta_time * &
+       (pxtm1(1:kproma,:,idt_odscls) + delta_time * pxtte(1:kproma,:,idt_odscls))
+  odscll_m(1:kproma,:,krow)   = odscll_m(1:kproma,:,krow)   + delta_time * &
+       (pxtm1(1:kproma,:,idt_odscll) + delta_time * pxtte(1:kproma,:,idt_odscll))
+  n2o_m(1:kproma,:,krow)      = n2o_m(1:kproma,:,krow)      + delta_time * &
+       (pxtm1(1:kproma,:,idt_n2o)    + delta_time * pxtte(1:kproma,:,idt_n2o))
+  ch4_m(1:kproma,:,krow)      = ch4_m(1:kproma,:,krow)      + delta_time * &
+       (pxtm1(1:kproma,:,idt_ch4)    + delta_time * pxtte(1:kproma,:,idt_ch4))
+
+  co_m(1:kproma,:,krow)       = co_m(1:kproma,:,krow)       + delta_time * &
+       (pxtm1(1:kproma,:,idt_co)     + delta_time * pxtte(1:kproma,:,idt_co))
+  hcl_m(1:kproma,:,krow)      = hcl_m(1:kproma,:,krow)      + delta_time * &
+       (pxtm1(1:kproma,:,idt_hcl)    + delta_time * pxtte(1:kproma,:,idt_hcl))
+  h2_m(1:kproma,:,krow)       = h2_m(1:kproma,:,krow)       + delta_time * &
+       (pxtm1(1:kproma,:,idt_h2)     + delta_time * pxtte(1:kproma,:,idt_h2))
+  h2o2_m(1:kproma,:,krow)     = h2o2_m(1:kproma,:,krow)     + delta_time * &
+       (pxtm1(1:kproma,:,idt_h2o2)   + delta_time * pxtte(1:kproma,:,idt_h2o2))
+  h2o_m(1:kproma,:,krow)      = h2o_m(1:kproma,:,krow)      + delta_time * &
+       (pxtm1(1:kproma,:,idt_h2o)    + delta_time * pxtte(1:kproma,:,idt_h2o))
+
+  cl2_m(1:kproma,:,krow)      = cl2_m(1:kproma,:,krow)      + delta_time * &
+       (pxtm1(1:kproma,:,idt_cl2)    + delta_time * pxtte(1:kproma,:,idt_cl2))
+  cl2o2_m(1:kproma,:,krow)    = cl2o2_m(1:kproma,:,krow)    + delta_time * &
+       (pxtm1(1:kproma,:,idt_cl2o2)  + delta_time * pxtte(1:kproma,:,idt_cl2o2))
+  psc1_m(1:kproma,:,krow)     = psc1_m(1:kproma,:,krow)     + delta_time * &
+       (pxtm1(1:kproma,:,idt_psc1)   + delta_time * pxtte(1:kproma,:,idt_psc1))
+  psc2_m(1:kproma,:,krow)     = psc2_m(1:kproma,:,krow)     + delta_time * &
+       (pxtm1(1:kproma,:,idt_psc2)   + delta_time * pxtte(1:kproma,:,idt_psc2))
+  ch3o2h_m(1:kproma,:,krow)   = ch3o2h_m(1:kproma,:,krow)   + delta_time * &
+       (pxtm1(1:kproma,:,idt_ch3o2h) + delta_time * pxtte(1:kproma,:,idt_ch3o2h))
+
+  ch2o_m(1:kproma,:,krow)     = ch2o_m(1:kproma,:,krow)     + delta_time * &
+       (pxtm1(1:kproma,:,idt_ch2o)   + delta_time * pxtte(1:kproma,:,idt_ch2o))
+  bro_m(1:kproma,:,krow)      = bro_m(1:kproma,:,krow)      + delta_time * &
+       (pxtm1(1:kproma,:,idt_bro)    + delta_time * pxtte(1:kproma,:,idt_bro))
+  brno3_m(1:kproma,:,krow)    = brno3_m(1:kproma,:,krow)    + delta_time * &
+       (pxtm1(1:kproma,:,idt_brno3)  + delta_time * pxtte(1:kproma,:,idt_brno3))
+  brcl_m(1:kproma,:,krow)     = brcl_m(1:kproma,:,krow)     + delta_time * &
+       (pxtm1(1:kproma,:,idt_brcl)   + delta_time * pxtte(1:kproma,:,idt_brcl))
+  hbr_m(1:kproma,:,krow)      = hbr_m(1:kproma,:,krow)      + delta_time * &
+       (pxtm1(1:kproma,:,idt_hbr)    + delta_time * pxtte(1:kproma,:,idt_hbr))
+
+  hobr_m(1:kproma,:,krow)     = hobr_m(1:kproma,:,krow)     + delta_time * &
+       (pxtm1(1:kproma,:,idt_hobr)   + delta_time * pxtte(1:kproma,:,idt_hobr))
+  odsbr_m(1:kproma,:,krow)    = odsbr_m(1:kproma,:,krow)    + delta_time * &
+       (pxtm1(1:kproma,:,idt_odsbr)  + delta_time * pxtte(1:kproma,:,idt_odsbr))
+  ch3_m(1:kproma,:,krow)      = ch3_m(1:kproma,:,krow)      + delta_time * &
+       (pxtm1(1:kproma,:,idt_ch3)    + delta_time * pxtte(1:kproma,:,idt_ch3))
+  ch3o2_m(1:kproma,:,krow)    = ch3o2_m(1:kproma,:,krow)    + delta_time * &
+       (pxtm1(1:kproma,:,idt_ch3o2)  + delta_time * pxtte(1:kproma,:,idt_ch3o2))
+  ch3o_m(1:kproma,:,krow)     = ch3o_m(1:kproma,:,krow)     + delta_time * &
+       (pxtm1(1:kproma,:,idt_ch3o)   + delta_time * pxtte(1:kproma,:,idt_ch3o))
+
+  hco_m(1:kproma,:,krow)      = hco_m(1:kproma,:,krow)      + delta_time * &
+       (pxtm1(1:kproma,:,idt_hco)    + delta_time * pxtte(1:kproma,:,idt_hco))
+  br_m(1:kproma,:,krow)       = br_m(1:kproma,:,krow)       + delta_time * &
+       (pxtm1(1:kproma,:,idt_br)     + delta_time * pxtte(1:kproma,:,idt_br))
+  od_m(1:kproma,:,krow)       = od_m(1:kproma,:,krow)       + delta_time * &
+       (pxtm1(1:kproma,:,idt_od)     + delta_time * pxtte(1:kproma,:,idt_od))
+
+  totoz_m(:,krow)  = totoz_m(:,krow)  + delta_time * totoz_d(:,krow)
+  totno2_m(:,krow) = totno2_m(:,krow) + delta_time * totno2_d(:,krow)
+
+  clox_m(1:kproma,:,krow)     = clox_m(1:kproma,:,krow)     + delta_time * &
+       clox_d(1:kproma,:,krow)
+  cly_m(1:kproma,:,krow)      = cly_m(1:kproma,:,krow)      + delta_time * &
+       cly_d(1:kproma,:,krow)
+  ccly_m(1:kproma,:,krow)     = ccly_m(1:kproma,:,krow)     + delta_time * &
+       ccly_d(1:kproma,:,krow)
+  bry_m(1:kproma,:,krow)      = bry_m(1:kproma,:,krow)      + delta_time * &
+       bry_d(1:kproma,:,krow)
+  cbry_m(1:kproma,:,krow)     = cbry_m(1:kproma,:,krow)     + delta_time * &
+       cbry_d(1:kproma,:,krow)
+
+  noy_m(1:kproma,:,krow)      = noy_m(1:kproma,:,krow)      + delta_time * &
+       noy_d(1:kproma,:,krow)
+  nox_m(1:kproma,:,krow)      = nox_m(1:kproma,:,krow)      + delta_time * &
+       nox_d(1:kproma,:,krow)
+
+  famfixcl_m(1:kproma,:,krow) = famfixcl_m(1:kproma,:,krow) + delta_time * &
+       famfixcl_d(1:kproma,:,krow)
+  famfixbr_m(1:kproma,:,krow) = famfixbr_m(1:kproma,:,krow) + delta_time * &
+       famfixbr_d(1:kproma,:,krow)
+  famfixn_m(1:kproma,:,krow)  = famfixn_m(1:kproma,:,krow)  + delta_time * &
+       famfixn_d(1:kproma,:,krow)
+
+  sedpsc1_m(1:kproma,:,krow)  = sedpsc1_m(1:kproma,:,krow)  + delta_time * &
+       sedpsc1_d(1:kproma,:,krow)
+  sedpsc2_m(1:kproma,:,krow)  = sedpsc2_m(1:kproma,:,krow)  + delta_time * &
+       sedpsc2_d(1:kproma,:,krow)
+
+  sadsts_m(1:kproma,:,krow)   = sadsts_m(1:kproma,:,krow)   + delta_time * &
+       sadsts_d(1:kproma,:,krow)
+  sadpsc1_m(1:kproma,:,krow)  = sadpsc1_m(1:kproma,:,krow)  + delta_time * &
+       sadpsc1_d(1:kproma,:,krow)
+  sadpsc2_m(1:kproma,:,krow)  = sadpsc2_m(1:kproma,:,krow)  + delta_time * &
+       sadpsc2_d(1:kproma,:,krow)
+  sadrat_m(1:kproma,:,krow)   = sadrat_m(1:kproma,:,krow)   + delta_time * &
+       sadrat_d(1:kproma,:,krow)
+
+  clacsts_m(1:kproma,:,krow)  = clacsts_m(1:kproma,:,krow)  + delta_time * &
+       clacsts_d(1:kproma,:,krow)
+  clacpsc1_m(1:kproma,:,krow) = clacpsc1_m(1:kproma,:,krow) + delta_time * &
+       clacpsc1_d(1:kproma,:,krow)
+  clacpsc2_m(1:kproma,:,krow) = clacpsc2_m(1:kproma,:,krow) + delta_time * &
+       clacpsc2_d(1:kproma,:,krow)
+
+  !eth_ts
+  if (interactivelnox) then
+     lfp_m(1:kproma,krow) = lfp_m(1:kproma,krow) + delta_time * &
+          lfp_d(1:kproma,krow)
+     lnox_m(1:kproma,krow) = lnox_m(1:kproma,krow) + delta_time * &
+          lnox_d(1:kproma,krow) !*60._dp
+  end if
+
+  ! eth_as_nmvoc+
+  co_nmvocbio_m(1:kproma,krow) = co_nmvocbio_m(1:kproma,krow) + delta_time * &
+      co_nmvocbio_d(1:kproma,krow)
+  co_nmvocbb_m(1:kproma,krow) = co_nmvocbb_m(1:kproma,krow) + delta_time * &
+      co_nmvocbb_d(1:kproma,krow)
+  co_nmvocanthrop_m(1:kproma,krow) = co_nmvocanthrop_m(1:kproma,krow) + delta_time * &
+      co_nmvocanthrop_d(1:kproma,krow)
+  ! eth_as_nmvoc-
+
+  ! eth_as_tropchem+
+  ! C1 and C2 compounds
+  ch3co3_m(1:kproma,:,krow) = ch3co3_m(1:kproma,:,krow) + delta_time * &
+       (pxtm1(1:kproma,:,idt_ch3co3) + delta_time * pxtte(1:kproma,:,idt_ch3co3))
+
+  pan_m(1:kproma,:,krow) = pan_m(1:kproma,:,krow) + delta_time * &
+       (pxtm1(1:kproma,:,idt_pan) + delta_time * pxtte(1:kproma,:,idt_pan))
+
+  ch3co3h_m(1:kproma,:,krow) = ch3co3h_m(1:kproma,:,krow) + delta_time * &
+       (pxtm1(1:kproma,:,idt_ch3co3h) + delta_time * pxtte(1:kproma,:,idt_ch3co3h))  
+
+  ch3cooh_m(1:kproma,:,krow) = ch3cooh_m(1:kproma,:,krow) + delta_time * &
+       (pxtm1(1:kproma,:,idt_ch3cooh) + delta_time * pxtte(1:kproma,:,idt_ch3cooh))   
+
+  nald_m(1:kproma,:,krow) = nald_m(1:kproma,:,krow) + delta_time * &
+       (pxtm1(1:kproma,:,idt_nald) + delta_time * pxtte(1:kproma,:,idt_nald))
+
+  hcooh_m(1:kproma,:,krow) = hcooh_m(1:kproma,:,krow) + delta_time * &
+       (pxtm1(1:kproma,:,idt_hcooh) + delta_time * pxtte(1:kproma,:,idt_hcooh))
+
+  ! C3 compounds
+  hacet_m(1:kproma,:,krow) = hacet_m(1:kproma,:,krow) + delta_time * &
+       (pxtm1(1:kproma,:,idt_hacet) + delta_time * pxtte(1:kproma,:,idt_hacet))
+
+  mgly_m(1:kproma,:,krow) = mgly_m(1:kproma,:,krow) + delta_time * &
+       (pxtm1(1:kproma,:,idt_mgly) + delta_time * pxtte(1:kproma,:,idt_mgly))
+
+  ! C4 compounds
+  macr_m(1:kproma,:,krow) = macr_m(1:kproma,:,krow) + delta_time * &
+       (pxtm1(1:kproma,:,idt_macr) + delta_time * pxtte(1:kproma,:,idt_macr))
+
+  macro2_m(1:kproma,:,krow) = macro2_m(1:kproma,:,krow) + delta_time * &
+       (pxtm1(1:kproma,:,idt_macro2) + delta_time * pxtte(1:kproma,:,idt_macro2))
+
+  macro2h_m(1:kproma,:,krow) = macro2h_m(1:kproma,:,krow) + delta_time * &
+       (pxtm1(1:kproma,:,idt_macro2h) + delta_time * pxtte(1:kproma,:,idt_macro2h))
+
+  mpan_m(1:kproma,:,krow) = mpan_m(1:kproma,:,krow) + delta_time * &
+       (pxtm1(1:kproma,:,idt_mpan) + delta_time * pxtte(1:kproma,:,idt_mpan))
+
+  ! C5 compounds
+  c5h8_m(1:kproma,:,krow) = c5h8_m(1:kproma,:,krow) + delta_time * &
+       (pxtm1(1:kproma,:,idt_c5h8) + delta_time * pxtte(1:kproma,:,idt_c5h8))
+
+  iso2_m(1:kproma,:,krow) = iso2_m(1:kproma,:,krow) + delta_time * &
+       (pxtm1(1:kproma,:,idt_iso2) + delta_time * pxtte(1:kproma,:,idt_iso2))
+
+  iso2h_m(1:kproma,:,krow) = iso2h_m(1:kproma,:,krow) + delta_time * &
+       (pxtm1(1:kproma,:,idt_iso2h) + delta_time * pxtte(1:kproma,:,idt_iso2h))
+
+  ison_m(1:kproma,:,krow) = ison_m(1:kproma,:,krow) + delta_time * &
+       (pxtm1(1:kproma,:,idt_ison) + delta_time * pxtte(1:kproma,:,idt_ison))
+  ! eth_as_tropchem-
+
+!!$  ! eth_as_jvals+
+!!$  jo3d_m(1:kproma,:,krow) = jo3d_m(1:kproma,:,krow) + delta_time * &
+!!$       jo3d_d(1:kproma,:,krow)
+!!$  
+!!$  jno2_m(1:kproma,:,krow) = jno2_m(1:kproma,:,krow) + delta_time * &
+!!$       jno2_d(1:kproma,:,krow) 
+!!$
+!!$  jo3d_cldmod_m(1:kproma,:,krow) = jo3d_cldmod_m(1:kproma,:,krow) + delta_time * &
+!!$       jo3d_cldmod_d(1:kproma,:,krow)
+!!$  
+!!$  jno2_cldmod_m(1:kproma,:,krow) = jno2_cldmod_m(1:kproma,:,krow) + delta_time * &
+!!$       jno2_cldmod_d(1:kproma,:,krow)  
+!!$  ! eth_as_jvals-
+
+  !CCMI reactions, LR, 03/06/13
+  rxn_1_m(1:kproma,:,krow) = rxn_1_m(1:kproma,:,krow) + delta_time * &
+       rxn_1(1:kproma,:,krow)
+  rxn_2_m(1:kproma,:,krow) = rxn_2_m(1:kproma,:,krow) + delta_time * &
+       rxn_2(1:kproma,:,krow)
+  rxn_3_m(1:kproma,:,krow) = rxn_3_m(1:kproma,:,krow) + delta_time * &
+       rxn_3(1:kproma,:,krow)
+  rxn_4_m(1:kproma,:,krow) = rxn_4_m(1:kproma,:,krow) + delta_time * &
+       rxn_4(1:kproma,:,krow)
+  rxn_5_m(1:kproma,:,krow) = rxn_5_m(1:kproma,:,krow) + delta_time * &
+       rxn_5(1:kproma,:,krow)
+
+  rxn_6_m(1:kproma,:,krow) = rxn_6_m(1:kproma,:,krow) + delta_time * &
+       rxn_6(1:kproma,:,krow)
+  rxn_7_m(1:kproma,:,krow) = rxn_7_m(1:kproma,:,krow) + delta_time * &
+       rxn_7(1:kproma,:,krow)
+  rxn_8_m(1:kproma,:,krow) = rxn_8_m(1:kproma,:,krow) + delta_time * &
+       rxn_8(1:kproma,:,krow)
+  rxn_9_m(1:kproma,:,krow) = rxn_9_m(1:kproma,:,krow) + delta_time * &
+       rxn_9(1:kproma,:,krow)
+  rxn_10_m(1:kproma,:,krow) = rxn_10_m(1:kproma,:,krow) + delta_time * &
+       rxn_10(1:kproma,:,krow)
+
+  rxn_11_m(1:kproma,:,krow) = rxn_11_m(1:kproma,:,krow) + delta_time * &
+       rxn_11(1:kproma,:,krow)
+  rxn_12_m(1:kproma,:,krow) = rxn_12_m(1:kproma,:,krow) + delta_time * &
+       rxn_12(1:kproma,:,krow)
+  rxn_13_m(1:kproma,:,krow) = rxn_13_m(1:kproma,:,krow) + delta_time * &
+       rxn_13(1:kproma,:,krow)
+  rxn_14_m(1:kproma,:,krow) = rxn_14_m(1:kproma,:,krow) + delta_time * &
+       rxn_14(1:kproma,:,krow)
+  rxn_15_m(1:kproma,:,krow) = rxn_15_m(1:kproma,:,krow) + delta_time * &
+       rxn_15(1:kproma,:,krow)
+
+  rxn_16_m(1:kproma,:,krow) = rxn_16_m(1:kproma,:,krow) + delta_time * &
+       rxn_16(1:kproma,:,krow)
+  rxn_17_m(1:kproma,:,krow) = rxn_17_m(1:kproma,:,krow) + delta_time * &
+       rxn_17(1:kproma,:,krow)
+  rxn_18_m(1:kproma,:,krow) = rxn_18_m(1:kproma,:,krow) + delta_time * &
+       rxn_18(1:kproma,:,krow)
+  rxn_19_m(1:kproma,:,krow) = rxn_19_m(1:kproma,:,krow) + delta_time * &
+       rxn_19(1:kproma,:,krow)
+  rxn_20_m(1:kproma,:,krow) = rxn_20_m(1:kproma,:,krow) + delta_time * &
+       rxn_20(1:kproma,:,krow)
+  rxn_21_m(1:kproma,:,krow) = rxn_21_m(1:kproma,:,krow) + delta_time * &
+       rxn_21(1:kproma,:,krow)
+  rxn_22_m(1:kproma,:,krow) = rxn_22_m(1:kproma,:,krow) + delta_time * &
+       rxn_22(1:kproma,:,krow)
+  rxn_23_m(1:kproma,:,krow) = rxn_23_m(1:kproma,:,krow) + delta_time * &
+       rxn_23(1:kproma,:,krow)
+  rxn_24_m(1:kproma,:,krow) = rxn_24_m(1:kproma,:,krow) + delta_time * &
+       rxn_24(1:kproma,:,krow)
+  rxn_25_m(1:kproma,:,krow) = rxn_25_m(1:kproma,:,krow) + delta_time * &
+       rxn_25(1:kproma,:,krow)
+
+  rxn_26_m(1:kproma,:,krow) = rxn_26_m(1:kproma,:,krow) + delta_time * &
+       rxn_26(1:kproma,:,krow)
+  rxn_27_m(1:kproma,:,krow) = rxn_27_m(1:kproma,:,krow) + delta_time * &
+       rxn_27(1:kproma,:,krow)
+  rxn_28_m(1:kproma,:,krow) = rxn_28_m(1:kproma,:,krow) + delta_time * &
+       rxn_28(1:kproma,:,krow)
+  rxn_29_m(1:kproma,:,krow) = rxn_29_m(1:kproma,:,krow) + delta_time * &
+       rxn_29(1:kproma,:,krow)
+  rxn_30_m(1:kproma,:,krow) = rxn_30_m(1:kproma,:,krow) + delta_time * &
+       rxn_30(1:kproma,:,krow)
+
+  rxn_31_m(1:kproma,:,krow) = rxn_31_m(1:kproma,:,krow) + delta_time * &
+       rxn_31(1:kproma,:,krow)
+  rxn_32_m(1:kproma,:,krow) = rxn_32_m(1:kproma,:,krow) + delta_time * &
+       rxn_32(1:kproma,:,krow)
+  rxn_33_m(1:kproma,:,krow) = rxn_33_m(1:kproma,:,krow) + delta_time * &
+       rxn_33(1:kproma,:,krow)
+  rxn_34_m(1:kproma,:,krow) = rxn_34_m(1:kproma,:,krow) + delta_time * &
+       rxn_34(1:kproma,:,krow)
+
+END SUBROUTINE accumulate_stream_chem_m
+          
+END MODULE mo_socol_streams

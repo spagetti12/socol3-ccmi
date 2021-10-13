@@ -1,0 +1,121 @@
+cat > namelist.echam << EOF
+&RUNCTL
+  LSOCOL=${LSOCOL}
+  LRESUME=${RERUN}
+  OUT_DATAPATH = "$DPATH"
+  OUT_EXPNAME  = "$EXPNO"
+  OUT_FILETYPE = ${RAW_FILETYPE_ECHAM}
+  TRAC_FILETYPE = ${RAW_FILETYPE_CHEM}
+  DT_START  = ${EXPERIMENTSYEAR},01,01,12,0,0
+  DT_STOP   = ${EXPERIMENTEYEAR},12,01,0,0,0
+  NO_CYCLES = 1
+  PUTDATA   = 6,'hours','first',0
+  PUTRERUN  = 1, 'months', 'last', 0
+  DELTA_TIME = 900
+  LAMIP=.TRUE.
+  LMIDATM=.TRUE.
+  LABORT=.FALSE.
+  NPROCA=${NPROCA}
+  NPROCB=${NPROCB}
+  NPROMA=${NPROMA}
+  IZCALC_START=1600
+  IZCALC_STOP = ${EXPERIMENTSYEAR}
+/
+&SOCOLCTL
+  LCHEM=${LCHEM}
+  CYEAR=${CYEAR:-${EXPERIMENTSYEAR}}
+  LNMVOC_ACCMIP = .TRUE.
+  LCH4_FLUX = .FALSE.
+  LO3ORIG = .FALSE.
+  INTERACTIVELNOX=.TRUE.
+  LPCO2=.FALSE.
+  GCR = .FALSE.
+  SPE = .TRUE.
+  EEP = .TRUE.
+/
+&O3ORIGCTL
+  I_INTEGRATE = 1
+  I_TRAC_ORIG = 21
+  SN_O3ORIG = 'O3ONPBL_1','O3ONMBL_2','O3OTRBL_3','O3OSMBL_4','O3OSPBL_5','O3ONPFT_6','O3ONMFT_7','O3OTRFT_8','O3OSMFT_9','O3OSPFT_10','O3ONPLS_11','O3ONMLS_12','O3OTRLS_13','O3OTRMS_14',
+              'O3OSMLS_15','O3OSPLS_16','O3ONPUS_17','O3ONMUS_18','O3OTRUS_19','O3OSMUS_20','O3OSPUS_21'
+
+  L_ERR = .FALSE.
+/
+&DYNCTL
+  VCHECK=235.
+  SPDRAG=0.926E-4
+/
+&RADCTL
+  IAERO=10
+  LGADSRH=.TRUE.
+/
+&SET_STREAM_ELEMENT  name = 'amlcorac' lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'friac'    lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'ustri'    lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'vstri'    lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'ustrw'    lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'vstrw'    lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'ustrl'    lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'vstrl'    lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'ahfliac'  lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'ahflwac'  lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'ahfllac'  lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'evapiac'  lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'evapwac'  lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'evaplac'  lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'az0i'     lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'az0w'     lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'az0l'     lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'ahfsiac'  lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'ahfswac'  lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'ahfslac'  lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'alsoi'    lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'alsow'    lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'alsol'    lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'ahfice'   lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'qres'     lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'apmeb'    lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'ws'       lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'relhum'   lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'runoff'   lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'drain'    lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'u10'      lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'v10'      lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'dew2'     lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'wind10'   lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'slm'      lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'ustr'     lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'vstr'     lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'wl'       lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'vdisgw'   lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'grndflux' lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'tsoil'    lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'ahfcon'   lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'ahfres'   lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'siced'    lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'gld'      lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'sni'      lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'wimax'    lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'snmel'    lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'apmegl'   lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'snacl'    lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'fao'      lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'rgcgn'    lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'wsmx'     lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'glac'     lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'snc'      lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'swnirac'   lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'swdifnirac'   lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'swvisac'   lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'swdifvisac'   lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'ocu'   lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'ocv'   lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'abso4'   lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'ao3'   lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'tradl'   lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'sradl'   lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'trafl'   lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'srafl'   lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'tslm1'   lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'vdis'   lpost = 0  /
+EOF

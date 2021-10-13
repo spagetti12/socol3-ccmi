@@ -1,0 +1,25 @@
+# CRAY MPP - DKRZ
+
+# Enable CC and F90 only, if not the standard compiler should be used 
+
+ARCH       = CRAY_MPP
+
+MPIROOT    = 
+MPI_LIB    = 
+
+NETCDFROOT = /usr/local
+
+#CC      = cc
+CFLAGS   = -O2
+
+#F90     = f90
+#FFLAGS  = 
+F90FLAGS = 
+
+DEFOPT   = -D
+
+MODOPT   = -p
+
+LIBS     = ../lib/libsupport.a
+
+SRCDIRS  =

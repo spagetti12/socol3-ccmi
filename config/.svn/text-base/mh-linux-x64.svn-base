@@ -1,0 +1,25 @@
+# AMD64/EMT64/Linux
+#
+# PGI pgf95 6.1-1/OpenMPI 1.2b3, tornado@MPI/DKRZ
+#
+F90      = pgf95
+FFLAGS   = -O3 -Kieee -fastsse -Mnontemporal -Mnorecursive -Mextend -Mpreprocess -tp amd64e
+F90FLAGS = -O3 -Kieee -fastsse -Mnontemporal -Mnorecursive -Mextend -Mpreprocess -tp amd64e
+LIBS     = -L../lib -lsupport -llapack -lblas
+SRCDIRS  = blas lapack
+MPIROOT  = /sw/sles9-x64/voltaire/openmpi-1.2b3-pgi
+
+ARCH       = LINUX
+
+MPI_LIB    = -lmpi_f77 -lmpi -lopen-rte -lmca_common_sm -lopen-pal
+
+NETCDFROOT = /sw/sles9-x64/netcdf-3.6.1
+
+CC       = gcc
+CFLAGS   = -O -DNAGf90Fortran
+
+DEFOPT   = -D
+MODOPT   = -I
+
+
+

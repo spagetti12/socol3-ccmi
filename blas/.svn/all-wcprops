@@ -1,0 +1,245 @@
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/blas
+END
+dcabs1.f
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/blas/dcabs1.f
+END
+dsymv.f
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/blas/dsymv.f
+END
+dspr.f
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/blas/dspr.f
+END
+dtbmv.f
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/blas/dtbmv.f
+END
+dznrm2.f
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/blas/dznrm2.f
+END
+xerbla.f
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/blas/xerbla.f
+END
+dsyr2k.f
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/blas/dsyr2k.f
+END
+dcopy.f
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/blas/dcopy.f
+END
+dger.f
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/blas/dger.f
+END
+dtbsv.f
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/blas/dtbsv.f
+END
+dnrm2.f
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/blas/dnrm2.f
+END
+dtrmm.f
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/blas/dtrmm.f
+END
+daxpy.f
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/blas/daxpy.f
+END
+dscal.f
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/blas/dscal.f
+END
+dgemm.f
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/blas/dgemm.f
+END
+dtrsm.f
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/blas/dtrsm.f
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/blas/Makefile
+END
+dtpmv.f
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/blas/dtpmv.f
+END
+dspr2.f
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/blas/dspr2.f
+END
+ddot.f
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/blas/ddot.f
+END
+dsyrk.f
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/blas/dsyrk.f
+END
+drotmg.f
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/blas/drotmg.f
+END
+dtrmv.f
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/blas/dtrmv.f
+END
+dgbmv.f
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/blas/dgbmv.f
+END
+dtpsv.f
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/blas/dtpsv.f
+END
+lsame.f
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/blas/lsame.f
+END
+dgemv.f
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/blas/dgemv.f
+END
+dtrsv.f
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/blas/dtrsv.f
+END
+dsyr2.f
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/blas/dsyr2.f
+END
+dzasum.f
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/blas/dzasum.f
+END
+idamax.f
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/blas/idamax.f
+END
+drot.f
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/blas/drot.f
+END
+dasum.f
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/blas/dasum.f
+END
+dsbmv.f
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/blas/dsbmv.f
+END
+dswap.f
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/blas/dswap.f
+END
+drotg.f
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/blas/drotg.f
+END
+dsyr.f
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/blas/dsyr.f
+END
+drotm.f
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/blas/drotm.f
+END
+dsymm.f
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/blas/dsymm.f
+END
+dspmv.f
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/blas/dspmv.f
+END

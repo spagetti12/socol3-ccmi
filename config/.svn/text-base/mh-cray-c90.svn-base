@@ -1,0 +1,25 @@
+# CRAY PVP - DKRZ
+
+# Enable CC and F90 only, if not the standard compiler should be used 
+
+ARCH       = CRAY_PVP
+
+MPIROOT    = 
+MPI_LIB    = 
+
+NETCDFROOT = /pool/netCDF/netCDF-3.4
+
+#CC      = cc
+CFLAGS   = -O2
+
+#F90     = f90
+#FFLAGS  = 
+F90FLAGS = -emZ -F -Wl,-S300000+20000 -DECLIB
+
+DEFOPT   = -D
+
+MODOPT   = -p
+
+LIBS     = ../lib/libsupport.a /pool/POST/echam/model/bin/eclib
+
+SRCDIRS  = 

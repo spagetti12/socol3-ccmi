@@ -1,0 +1,941 @@
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules
+END
+mo_doctor.f90
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_doctor.f90
+END
+mo_gwspectrum.f90
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_gwspectrum.f90
+END
+mo_linked_list.f90
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_linked_list.f90
+END
+mo_memory_g2a.f90
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_memory_g2a.f90
+END
+mo_buffer_fft.f90
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_buffer_fft.f90
+END
+mo_socol_readfile.f90
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/repos/users/stenkea/!svn/ver/901/echam5_socol_ccmi/modules/mo_socol_readfile.f90
+END
+mo_rrtab.f90
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_rrtab.f90
+END
+mo_ohclim.f90
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_ohclim.f90
+END
+mo_scan_buffer.f90
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_scan_buffer.f90
+END
+Makefile.fast
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/Makefile.fast
+END
+mo_call_trans.f90
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_call_trans.f90
+END
+mo_gl1.f90
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_gl1.f90
+END
+mo_grib.f90
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_grib.f90
+END
+mo_lpj_streams.f90
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/repos/users/stenkea/!svn/ver/900/echam5_socol_ccmi/modules/mo_lpj_streams.f90
+END
+mo_socol_co_nox.f90
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_socol_co_nox.f90
+END
+mo_post.f90
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_post.f90
+END
+mo_spitfire.f90
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_spitfire.f90
+END
+mo_nudging_pattern.f90
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_nudging_pattern.f90
+END
+mo_diag_tendency.f90
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_diag_tendency.f90
+END
+mo_base_types.f90
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_base_types.f90
+END
+mo_lw_clop.f90
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_lw_clop.f90
+END
+mo_socol_o3orig.f90
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/repos/users/stenkea/!svn/ver/904/echam5_socol_ccmi/modules/mo_socol_o3orig.f90
+END
+mo_memory_g3b.f90
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/repos/users/stenkea/!svn/ver/900/echam5_socol_ccmi/modules/mo_memory_g3b.f90
+END
+mo_socol_sun.f90
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/repos/users/stenkea/!svn/ver/894/echam5_socol_ccmi/modules/mo_socol_sun.f90
+END
+mo_tracdef.f90
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_tracdef.f90
+END
+mo_param_switches.f90
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_param_switches.f90
+END
+mo_socol_constants.f90
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_socol_constants.f90
+END
+mo_socol_deposition.f90
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_socol_deposition.f90
+END
+mo_semi_impl.f90
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_semi_impl.f90
+END
+mo_aero_tanre.f90
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_aero_tanre.f90
+END
+mo_netcdfstream.f90
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_netcdfstream.f90
+END
+mo_socol_qbo.f90
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_socol_qbo.f90
+END
+mo_hydrology.f90
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_hydrology.f90
+END
+mo_tracer.f90
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_tracer.f90
+END
+mo_nmi.f90
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_nmi.f90
+END
+mo_greenhouse_gases.f90
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_greenhouse_gases.f90
+END
+mo_sub_echam.f90
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_sub_echam.f90
+END
+mo_nudging_constants.f90
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_nudging_constants.f90
+END
+mo_couple.f90
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_couple.f90
+END
+mo_time_manager.f90
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_time_manager.f90
+END
+mo_socol_time_control.f90
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_socol_time_control.f90
+END
+m_alloc_mods.f90
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/m_alloc_mods.f90
+END
+mo_column.f90
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_column.f90
+END
+mo_physc2.f90
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_physc2.f90
+END
+mo_geoloc.f90
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_geoloc.f90
+END
+mo_sst.f90
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_sst.f90
+END
+mo_socol_namelist.f90
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/repos/users/stenkea/!svn/ver/901/echam5_socol_ccmi/modules/mo_socol_namelist.f90
+END
+mo_midatm.f90
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_midatm.f90
+END
+mo_namelist.f90
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_namelist.f90
+END
+mo_decomposition.f90
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_decomposition.f90
+END
+mo_constants.f90
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_constants.f90
+END
+mo_transpose.f90
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_transpose.f90
+END
+mo_forecast_switches.f90
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_forecast_switches.f90
+END
+mo_control.f90
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/repos/users/stenkea/!svn/ver/893/echam5_socol_ccmi/modules/mo_control.f90
+END
+mo_socol_isotope.f90
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_socol_isotope.f90
+END
+mo_rrtftr.f90
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_rrtftr.f90
+END
+mo_real_timer.f90
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_real_timer.f90
+END
+mo_nudging_buffer.f90
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_nudging_buffer.f90
+END
+mo_aero_gads.f90
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_aero_gads.f90
+END
+mo_mpi.f90
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_mpi.f90
+END
+mo_socol_photo.f90
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/repos/users/stenkea/!svn/ver/900/echam5_socol_ccmi/modules/mo_socol_photo.f90
+END
+mo_diag_dynamics.f90
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_diag_dynamics.f90
+END
+mo_diag_amip2.f90
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_diag_amip2.f90
+END
+mo_exception.f90
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_exception.f90
+END
+mo_time_event.f90
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_time_event.f90
+END
+mo_sub_nml.f90
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_sub_nml.f90
+END
+mo_memory_g1a.f90
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_memory_g1a.f90
+END
+mo_netcdf.f90
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_netcdf.f90
+END
+mo_io.f90
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/repos/users/stenkea/!svn/ver/893/echam5_socol_ccmi/modules/mo_io.f90
+END
+mo_socol_ghg_ods.f90
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/repos/users/stenkea/!svn/ver/898/echam5_socol_ccmi/modules/mo_socol_ghg_ods.f90
+END
+mo_memory_sp.f90
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_memory_sp.f90
+END
+mo_nudging_utils.f90
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_nudging_utils.f90
+END
+mo_socol_streams.f90
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/repos/users/stenkea/!svn/ver/904/echam5_socol_ccmi/modules/mo_socol_streams.f90
+END
+mo_spectral.f90
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_spectral.f90
+END
+mo_timer.f90
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_timer.f90
+END
+mo_fft992.f90
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_fft992.f90
+END
+mo_test_trans.f90
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_test_trans.f90
+END
+mo_tmp_buffer.f90
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_tmp_buffer.f90
+END
+mo_nudging.f90
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_nudging.f90
+END
+mo_ssodrag.f90
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_ssodrag.f90
+END
+mo_memory_g2b.f90
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_memory_g2b.f90
+END
+mo_timestamp.f90
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_timestamp.f90
+END
+mo_machine.f90
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_machine.f90
+END
+mo_so4.f90
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_so4.f90
+END
+mo_vsop87.f90
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_vsop87.f90
+END
+mo_upper_sponge.f90
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_upper_sponge.f90
+END
+mo_memory_streams.f90
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_memory_streams.f90
+END
+mo_memory_ls.f90
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_memory_ls.f90
+END
+mo_cloud.f90
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_cloud.f90
+END
+mo_solmon.f90
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_solmon.f90
+END
+mo_ssortns.f90
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_ssortns.f90
+END
+mo_socol_chem.f90
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/repos/users/stenkea/!svn/ver/900/echam5_socol_ccmi/modules/mo_socol_chem.f90
+END
+mo_advection.f90
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_advection.f90
+END
+mo_orbit.f90
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_orbit.f90
+END
+mo_hdiff.f90
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_hdiff.f90
+END
+mo_filename.f90
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_filename.f90
+END
+mo_clim.f90
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_clim.f90
+END
+mo_legendre.f90
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_legendre.f90
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/repos/users/stenkea/!svn/ver/902/echam5_socol_ccmi/modules/Makefile
+END
+mo_o3_lwb.f90
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_o3_lwb.f90
+END
+mo_truncation.f90
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_truncation.f90
+END
+mo_gaussgrid.f90
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_gaussgrid.f90
+END
+mo_convect_tables.f90
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_convect_tables.f90
+END
+mo_tpcore.f90
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_tpcore.f90
+END
+mo_socol_gcmfields.f90
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_socol_gcmfields.f90
+END
+mo_memory_g3a.f90
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_memory_g3a.f90
+END
+mo_socol_no_gcm_condens_pscs.f90
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_socol_no_gcm_condens_pscs.f90
+END
+mo_util_string.f90
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_util_string.f90
+END
+mo_socol_dimensions.f90
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/repos/users/stenkea/!svn/ver/900/echam5_socol_ccmi/modules/mo_socol_dimensions.f90
+END
+mo_socol_ch4_streams.f90
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/repos/users/stenkea/!svn/ver/900/echam5_socol_ccmi/modules/mo_socol_ch4_streams.f90
+END
+mo_memory_f.f90
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_memory_f.f90
+END
+mo_socol_ch4.f90
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_socol_ch4.f90
+END
+mo_interpo.f90
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_interpo.f90
+END
+mo_semi_lagrangian.f90
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_semi_lagrangian.f90
+END
+mo_hyb.f90
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_hyb.f90
+END
+mo_nudging_io.f90
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_nudging_io.f90
+END
+mo_field.f90
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_field.f90
+END
+mo_port_test.f90
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_port_test.f90
+END
+mo_rrta_140gp.f90
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_rrta_140gp.f90
+END
+Makefile_or
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/Makefile_or
+END
+mo_socol_grid_calculations.f90
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_socol_grid_calculations.f90
+END
+mo_socol_hetero.f90
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/repos/users/stenkea/!svn/ver/904/echam5_socol_ccmi/modules/mo_socol_hetero.f90
+END
+mo_parrrtm.f90
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_parrrtm.f90
+END
+mo_sw.f90
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_sw.f90
+END
+mo_time_control.f90
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_time_control.f90
+END
+mo_diag_radiation.f90
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_diag_radiation.f90
+END
+mo_rrtrf.f90
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_rrtrf.f90
+END
+mo_tropopause.f90
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/repos/users/stenkea/!svn/ver/896/echam5_socol_ccmi/modules/mo_tropopause.f90
+END
+mo_socol_tracers.f90
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/repos/users/stenkea/!svn/ver/904/echam5_socol_ccmi/modules/mo_socol_tracers.f90
+END
+mo_parameters.f90
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/repos/users/stenkea/!svn/ver/898/echam5_socol_ccmi/modules/mo_parameters.f90
+END
+mo_physc1.f90
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_physc1.f90
+END
+mo_diff.f90
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_diff.f90
+END
+mo_socol_tropoaerosols.f90
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/repos/users/stenkea/!svn/ver/895/echam5_socol_ccmi/modules/mo_socol_tropoaerosols.f90
+END
+mo_socol_interpo.f90
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_socol_interpo.f90
+END
+mo_socol_nmvoc.f90
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/repos/users/stenkea/!svn/ver/897/echam5_socol_ccmi/modules/mo_socol_nmvoc.f90
+END
+mo_o3clim.f90
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_o3clim.f90
+END
+mo_time_base.f90
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_time_base.f90
+END
+mo_memory_gl.f90
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_memory_gl.f90
+END
+mo_socol_scav.f90
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_socol_scav.f90
+END
+mo_cumulus_flux.f90
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_cumulus_flux.f90
+END
+mo_global_op.f90
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_global_op.f90
+END
+mo_memory_g1b.f90
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_memory_g1b.f90
+END
+mo_rrtbg2.f90
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_rrtbg2.f90
+END
+mo_memory_base.f90
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_memory_base.f90
+END
+mo_time_conversion.f90
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_time_conversion.f90
+END
+mo_socol_strataerosols.f90
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/repos/users/stenkea/!svn/ver/904/echam5_socol_ccmi/modules/mo_socol_strataerosols.f90
+END
+mo_vegetation.f90
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_vegetation.f90
+END
+mo_sw_clop.f90
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_sw_clop.f90
+END
+mo_radiation.f90
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_radiation.f90
+END
+mo_rrtwn.f90
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_rrtwn.f90
+END
+mo_nudging_init.f90
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_nudging_init.f90
+END
+mo_fft991.f90
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_fft991.f90
+END
+mo_socol_ionization.f90
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/repos/users/stenkea/!svn/ver/901/echam5_socol_ccmi/modules/mo_socol_ionization.f90
+END
+mo_nudging_sst.f90
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_nudging_sst.f90
+END
+mo_kind.f90
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_kind.f90
+END
+mo_albedo.f90
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/modules/mo_albedo.f90
+END

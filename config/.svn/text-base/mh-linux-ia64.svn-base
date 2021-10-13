@@ -1,0 +1,23 @@
+# Intel IA64/Linux
+#
+F90      = ifort
+FFLAGS   = -O3 -mp1 -tpp2  
+F90FLAGS = -O2 -mp1 -tpp2 -Qoption,link,--noinhibit-exec -Vaxlib -fpp  
+LIBS     = -L../lib -lsupport -llapack -lblas
+SRCDIRS  = blas lapack 
+MPIROOT    =
+
+ARCH       = LINUX
+
+MPI_LIB    =
+
+NETCDFROOT = /pf/m/m214089/local/ia64
+
+CC       = icc
+CFLAGS   = -O -DNAGf90Fortran
+
+DEFOPT   = -D
+MODOPT   = -I
+
+
+

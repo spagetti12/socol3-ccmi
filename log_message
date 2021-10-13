@@ -1,0 +1,13 @@
+socolctl.inc - new namelist parameters: lch4_ipcc, ch4emissfac 
+stepon.f90 - read in CMDL CH4 climatology
+socol_boundary_conditions.f90 - new CH4 emission inventories (EDGAR, RETRO, GFED)
+socol_chemini.f90 - merge lastest 2 revisions
+socol_mezon.f90 - estimate CH4 surface flux using CH4 climatology
+mo_socol_namelist.f90 - new namelist parameters: lch4_ipcc, ch4emissfac 
+mo_control.f90 - input unit for CMDL CH4 climatology
+mo_io.f90 - input unit for CMDL CH4 climatology
+mo_socol_chem.f90 - merge lastest 2 revisions
+Makefile - ?
+mo_gaussgrid.f90 - ?
+mo_socol_ch4_streams.f90 - estimate CH4 surface flux using CH4 climatology
+mo_socol_ch4.f90 - new CH4 emission inventories (EDGAR, RETRO, GFED) 

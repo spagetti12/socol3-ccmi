@@ -1,0 +1,88 @@
+# Solaris/Fujitsu
+#------------------------------------------------------------------------
+# Enable CC and F90 only, if not the standard compiler should be used 
+
+ARCH       = solaris
+
+case `uname -n` in
+yin)
+    MPIROOT    = /opt/SUNWhpc
+    MPI_LIB    = -L\$(MPIROOT)/lib/sparcv9 -R\$(MPIROOT)/lib/sparcv9 -lmpi
+    ;;
+yang)
+    MPIROOT    = /opt/SUNWhpc
+    MPI_LIB    = -L\$(MPIROOT)/lib/sparcv9 -R\$(MPIROOT)/lib/sparcv9 -lmpi
+    ;;
+yun)
+    MPIROOT    = /usr/local/mpich2-1.0.2p1-32
+    MPI_LIB    = -L\$(MPIROOT)/lib -R\$(MPIROOT)/lib -lmpich -lnsl -lsocket
+    ;;
+*)
+    MPIROOT    =
+    MPI_LIB    =
+    ;;
+esac
+
+case `uname -n` in
+yin)
+    NETCDFROOT = /pf/m/m214089/yin/local/SunOS64
+    ;;
+yang)
+    NETCDFROOT = /scratch/local2/m214/m214089/local/SunOS64
+    ;;
+yun)
+    NETCDFROOT = /usr/local
+    ;;
+*)  	
+    NETCDFROOT = 
+    ;;
+esac
+
+#----------------------------------------------------------------------------
+# NAG f95
+#
+#CC       = cc
+#CFLAGS   = -O -g
+#F90      = NAGf95
+#FFLAGS   = -O -g
+#F90FLAGS = -C -mismatch -gline -g -maxcontin=99 -fpp -DNAG
+#
+#LIBS     = -L../lib -lsupport -llapack -lblas
+#
+#SRCDIRS  = blas lapack
+#
+#MODOPT   = -I
+#
+#----------------------------------------------------------------------------
+# Sun Compiler Collection
+#
+CC       = cc
+CFLAGS   = -O -dalign -g -xarch=v9b -xchip=ultra3cu
+F90      = f95
+FFLAGS   = -O4 -dalign -g -xarch=v9b -xchip=ultra3cu 
+F90FLAGS = -O4 -dalign -g -xarch=v9b -xchip=ultra3cu -fpp
+#
+LIBS     = -L../lib -lsupport -llapack -lblas
+#
+SRCDIRS  = blas lapack
+#
+MODOPT   = -M
+#
+#------------------------------------------------------------------------------
+# Fujitsu compiler
+#
+#CC       = cc
+#CFLAGS   = -O
+#F90      = frt
+#FFLAGS   = -Am -X9 -Kfast,V8PLUS -Kfastlib -fw
+#F90FLAGS = -Am -X9 -Kfast,V8PLUS -Kfastlib -fi -Ecf -x 1000 -Cpp -DLF
+#
+#LIBS     = -L../lib -lsupport -llapackmt -lblasmt
+#
+#SRCDIRS  =
+#
+#MODOPT   = -M
+#
+#------------------------------------------------------------------------------
+
+DEFOPT   = -D

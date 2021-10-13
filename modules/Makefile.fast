@@ -1,0 +1,99 @@
+# Generated automatically by createMakefiles.pl
+ 
+SRCS =	m_alloc_mods.f90 mo_advection.f90 mo_aero_gads.f90 mo_aero_tanre.f90 \
+        mo_albedo.f90 mo_base_types.f90 mo_buffer_fft.f90 mo_call_trans.f90 \
+        mo_clim.f90 mo_cloud.f90 mo_column.f90 mo_constants.f90 \
+        mo_control.f90 mo_convect_tables.f90 mo_couple.f90 \
+        mo_cumulus_flux.f90 mo_decomposition.f90 mo_diag_amip2.f90 \
+        mo_diag_dynamics.f90 mo_diag_radiation.f90 mo_diag_tendency.f90 \
+        mo_diff.f90 mo_doctor.f90 mo_exception.f90 mo_fft991.f90 \
+        mo_fft992.f90 mo_field.f90 mo_filename.f90 mo_forecast_switches.f90 \
+        mo_gaussgrid.f90 mo_geoloc.f90 mo_gl1.f90 mo_global_op.f90 \
+        mo_greenhouse_gases.f90 mo_grib.f90 mo_gwspectrum.f90 mo_hdiff.f90 \
+        mo_hyb.f90 mo_hydrology.f90 mo_interpo.f90 mo_io.f90 mo_kind.f90 \
+        mo_legendre.f90 mo_linked_list.f90 mo_lw_clop.f90 mo_machine.f90 \
+        mo_memory_base.f90 mo_memory_f.f90 mo_memory_g1a.f90 \
+        mo_memory_g1b.f90 mo_memory_g2a.f90 mo_memory_g2b.f90 \
+        mo_memory_g3a.f90 mo_memory_g3b.f90 mo_memory_gl.f90 mo_memory_ls.f90 \
+        mo_memory_sp.f90 mo_memory_streams.f90 mo_midatm.f90 mo_mpi.f90 \
+        mo_namelist.f90 mo_netcdf.f90 mo_netcdfstream.f90 mo_nmi.f90 \
+        mo_nudging.f90 mo_nudging_buffer.f90 mo_nudging_constants.f90 \
+        mo_nudging_init.f90 mo_nudging_io.f90 mo_nudging_pattern.f90 \
+        mo_nudging_sst.f90 mo_nudging_utils.f90 mo_o3_lwb.f90 mo_o3clim.f90 \
+        mo_orbit.f90 mo_param_switches.f90 mo_parameters.f90 mo_parrrtm.f90 \
+        mo_physc1.f90 mo_physc2.f90 mo_port_test.f90 mo_post.f90 \
+        mo_radiation.f90 mo_real_timer.f90 mo_rrta_140gp.f90 mo_rrtab.f90 \
+        mo_rrtbg2.f90 mo_rrtftr.f90 mo_rrtrf.f90 mo_rrtwn.f90 \
+        mo_scan_buffer.f90 mo_semi_impl.f90 mo_semi_lagrangian.f90 mo_so4.f90 \
+        mo_solmon.f90 mo_spectral.f90 mo_spitfire.f90 \
+        mo_ssodrag.f90 mo_ssortns.f90 mo_sst.f90 mo_sub_echam.f90 \
+        mo_sub_nml.f90 mo_sw.f90 mo_sw_clop.f90 mo_test_trans.f90 \
+        mo_time_base.f90 mo_time_control.f90 mo_time_conversion.f90 \
+        mo_time_event.f90 mo_time_manager.f90 mo_timer.f90 mo_timestamp.f90 \
+        mo_tmp_buffer.f90 mo_tpcore.f90 mo_tracdef.f90 mo_tracer.f90 \
+        mo_transpose.f90 mo_tropopause.f90 mo_truncation.f90 \
+        mo_upper_sponge.f90 mo_util_string.f90 mo_vegetation.f90 \
+        mo_vsop87.f90 mo_socol_ch4.f90 mo_socol_chem.f90 mo_socol_constants.f90 \
+        mo_socol_co_nox.f90 mo_socol_dimensions.f90 mo_socol_deposition.f90 \
+        mo_socol_gcmfields.f90 mo_socol_ghg_ods.f90 \
+        mo_socol_grid_calculations.f90 mo_socol_hetero.f90 \
+        mo_socol_interpo.f90 mo_socol_isotope.f90 mo_socol_namelist.f90 mo_socol_qbo.f90 \
+        mo_socol_readfile.f90 mo_socol_strataerosols.f90 mo_socol_streams.f90 \
+        mo_socol_sun.f90 mo_socol_time_control.f90 mo_socol_tropoaerosols.f90 \
+        mo_socol_tracers.f90 mo_socol_ch4_streams.f90 mo_socol_no_gcm_condens_pscs.f90 \
+        mo_socol_photo.f90 mo_ohclim.f90 mo_socol_scav.f90 mo_socol_nmvoc.f90
+
+OBJS := $(SRCS:.f90=.o)
+
+all: $(OBJS)
+
+clean:
+	rm -f $(OBJS) *.mod
+
+.SUFFIXES: $(SUFFIXES) .f90
+
+%.o: %.f90
+	$(F90) $(F90FLAGS) -c $<
+
+
+ifeq ($(strip $(ARCH)), SX)
+mo_spitfire.o: mo_spitfire.f90
+	$(F90) $(F90FLAGS) -pi auto exp=minmod exp=medan exp=putyslice exp=cfdot1dp2 exp=cfint1x2 line=2000 -c mo_spitfire.f90
+mo_tpcore.o: mo_tpcore.f90
+#warning: Don't change line to 2000. This will give wrong code on the SX!!!
+	$(F90) $(F90FLAGS) -pi auto exp=xmist,fxppm,kmppm,lmppm,xtp noexp=map1_ppm_gp,ppm2m,steepz nest=3 line=1000 -c mo_tpcore.f90
+mo_transpose.o: mo_transpose.f90
+	$(F90) $(F90FLAGS) -Npi -c mo_transpose.f90
+endif
+
+
+ifeq ($(strip $(ARCH)), ES)
+mo_spitfire.o: mo_spitfire.f90
+	$(F90) $(F90FLAGS) -pi auto exp=minmod exp=medan exp=putyslice exp=cfdot1dp2 exp=cfint1x2 line=2000 -c mo_spitfire.f90
+mo_tpcore.o: mo_tpcore.f90
+#warning: Don't change line to 2000. This will give wrong code on the SX!!!
+	$(F90) $(F90FLAGS) -pi auto exp=xmist,fxppm,kmppm,lmppm,xtp noexp=map1_ppm_gp,ppm2m,steepz nest=3 line=1000 -c mo_tpcore.f90
+mo_transpose.o: mo_transpose.f90
+	$(F90) $(F90FLAGS) -Npi -c mo_transpose.f90
+endif
+
+ifeq ($(strip $(ARCH)), CRAY_PVP)
+mo_buffer_fft.o: mo_buffer_fft.f90
+	$(F90) $(F90FLAGS) -Ovector1 -c mo_buffer_fft.f90
+mo_grib.o: mo_grib.f90
+	$(F90) $(F90FLAGS) -Ovector1 -c mo_grib.f90
+endif
+
+ifeq ($(strip $(ARCH)), CRAY_X1)
+	$(F90) $(F90FLAGS) -Ovector1 -Oscalar1 -Ostream1 -c mo_io.f90
+endif
+
+ifeq ($(strip $(ARCH)), CRAY_XT3)
+mo_transpose.o: mo_transpose.f90
+	( F90FLAGS=" " ; $(F90) -O2  -c mo_transpose.f90 )
+endif
+
+ifeq ($(strip $(ARCH)), CRAY_XD1)
+mo_transpose.o: mo_transpose.f90
+	( F90FLAGS=" " ; $(F90) -O2  -c mo_transpose.f90 )
+endif

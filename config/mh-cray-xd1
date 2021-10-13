@@ -1,0 +1,25 @@
+# CRAY XD1 PGI compiler
+#
+F90      = mpif90 -D__XD1__ -Kieee -tp=amd64 -Mpreprocess
+FFLAGS   = -fastsse  
+F90FLAGS = -fastsse
+LIBS     = -L../lib -lsupport -llapack -lblas
+SRCDIRS  = blas lapack
+MPIROOT    =
+
+ARCH       = CRAY_XD1
+
+MPI_LIB    =
+
+NETCDFROOT = /usr/people/eckhard/echam5/netcdf-3.5.1-pgi-r8
+NETCDFROOT = /opt/benchmark/1.2/netcdf/3.6.0-p1
+
+CC       = pgcc
+CFLAGS   = -fastsse -DpgiFortran
+
+DEFOPT   = -D
+MODOPT   = -module 
+ 
+
+
+

@@ -1,0 +1,25 @@
+# HPUX/storjorm (MPI)
+
+# Enable CC and F90 only, if not the standard compiler should be used 
+
+ARCH       = hpux
+
+MPIROOT    = 
+MPI_LIB    = 
+
+NETCDFROOT = /home/luis
+
+CC       = cc
+CFLAGS   = -Aa -Ae
+
+#F90      = f90
+FFLAGS   = +O3 
+F90FLAGS = +O3 +r8 +cpp=yes +U77
+
+DEFOPT   = -D
+
+MODOPT   = -I
+
+LIBS     = -L../lib -lsupport -llapack -lblas -lm
+
+SRCDIRS  = lapack blas

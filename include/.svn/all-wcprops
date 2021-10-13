@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/include
+END
+runctl.inc
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/repos/users/stenkea/!svn/ver/892/echam5_socol_ccmi/include/runctl.inc
+END
+postctl.inc
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/include/postctl.inc
+END
+dynctl.inc
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/include/dynctl.inc
+END
+columnctl.inc
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/include/columnctl.inc
+END
+socolctl.inc
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/repos/users/stenkea/!svn/ver/900/echam5_socol_ccmi/include/socolctl.inc
+END
+USE_mo_oasis.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/include/USE_mo_oasis.h
+END
+qboctl.inc
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/include/qboctl.inc
+END
+physctl.inc
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/include/physctl.inc
+END

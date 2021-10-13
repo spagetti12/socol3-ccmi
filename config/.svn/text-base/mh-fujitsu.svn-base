@@ -1,0 +1,29 @@
+# Fujitsu/VPP700 - ECMWF
+
+# Enable CC and F90 only, if not the standard compiler should be used 
+
+ARCH       = fujitsu
+
+#MPIROOT    = /usr/lang/mpi2
+#MPI_LIB    = -lmpi -lmp -lcvp -Wl,-P
+MPIROOT    = 
+MPI_LIB    = 
+
+NETCDFROOT = /home/ms/spdekplb/hmk
+
+CC       = vcc
+CFLAGS   = -O -Wv,-m3 -K4
+
+#F90     = frt
+FFLAGS   = -Am -CcdRR8 -X9 -Kfast,arraystack3 -Of -Wv,-Of,-qm,-ilfunc,-m3
+F90FLAGS = -Am -CcdRR8 -X9 -Kfast,arraystack3 -Of -Wv,-Of,-qm,-ilfunc,-m3 -Cpp 
+
+DEFOPT   = -Wp,-D
+
+MODOPT   = -I
+
+LIBS     = -V -L../lib -lsupport -llapack -lblas \
+           -L/usr/local/lib -lcvp 
+
+SRCDIRS  = blas lapack
+

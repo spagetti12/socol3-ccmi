@@ -1,0 +1,257 @@
+MODULE mo_socol_lnox_main
+!
+!
+!         Calculation of lightning produced NOx
+!          
+!         Lightnings are calculated using parameterization based on convective cloud top height. (Price & Rind, 1992)
+!
+!       Authors :
+!          Timofei Sukhodolov PMOD / ETH IAC, 2013
+ 
+USE mo_kind,                      ONLY: dp
+USE mo_mpi,                       ONLY: p_pe, p_io
+USE mo_control,                   ONLY: nlev
+
+  IMPLICIT NONE
+  
+!!$  REAL(dp), DIMENSION(:,:), ALLOCATABLE :: lfp       ! flash frequency in air column ff [s^-1] Price
+!!$  REAL(dp), DIMENSION(:,:), ALLOCATABLE :: lnox       ! NOx from lightning [g(NOx)/m**2/s]
+  REAL(dp), ALLOCATABLE :: lightn_fac(:,:,:)          ! lightning factors
+
+
+  PUBLIC :: socol_lnox
+  PUBLIC :: lnox_initialize
+  PUBLIC :: lnox_close
+
+  REAL(dp) :: PLT(16,4)
+  data plt/1.0, 2.1, 3.9, 5.8, 7.7, 9.3, 10.5, 11.0, & !lnox vertical profiles
+     11.0, 10.4, 9.2, 7.5, 5.5, 3.4, 1.5, 0.2, &
+               2.4, 5.0, 7.4, 9.3, 10.6, 11.4, 11.5, 11.0, &
+     9.9, 8.3, 6.3, 4.2, 2.2, 0.5, 0.0, 0.0, &
+               0.2, 0.5, 0.6, 1.4, 2.7, 4.0, 5.0, 6.2, 8.6, &
+     10.3, 11.6, 12.4, 12.7, 12.4, 7.6, 3.8, &
+               0.6, 1.5, 2.9, 4.3, 5.4, 6.7, 7.7, 8.5, 9.6, &
+     10.2, 10.5, 10.2, 8.2, 6.5, 4.5, 2.7/
+
+CONTAINS
+
+!==================================================================================
+subroutine socol_lnox(kproma,  ptenh,   klev,   kbdim,    klevp1,              &
+                      paphp1,  kcbot,  kctop,    krow,      pten)
+!
+! calculation of lightning flashes and NOx produced in these flashes
+! 
+! subroutine is called from cumastr.f90
+!
+USE mo_constants,     ONLY: rd, g
+USE mo_memory_g3b,    ONLY: slm                          !surface type
+USE mo_geoloc,        ONLY: gboxarea_2d, philat_2d       !grid box area, latitude
+USE mo_socol_streams,     ONLY: lfp, lnox
+
+IMPLICIT NONE
+
+INTEGER,  INTENT(IN) :: kproma, krow, kbdim,  klev, klevp1
+
+REAL(dp) :: ptenh(kbdim,klev),       paphp1(kbdim,klevp1),                  &  !temperature, pressure
+            grheight(kbdim, klev),   pten(kbdim,klev)                          !gridbox height, temperature
+
+INTEGER  :: kcbot(kbdim),            kctop(kbdim),                          &  !cloud top level, bottom level
+            cu_freeze(kbdim)                                                   !0deg level
+
+
+INTEGER  :: jl, jk, jt, level
+INTEGER, PARAMETER :: nox_per_flash=2900                                       !nox emission per flash in tropics  
+
+REAL(dp) :: zrhoa
+
+
+    REAL :: zcth                 ! cloud top height [m]
+    REAL :: zcbh                 ! cloud bottom height [m]
+    REAL :: zcdh                 ! 0degC height [m]
+    REAL :: zcdhkm               ! 0degC height [km]
+    REAL :: zcthkm               ! cloud top height [km]
+    REAL :: pg                   ! cloud to ground lightning fraction
+    REAL :: ffp                  ! flash frequency in air column ff [s^-1] Price
+
+!  Calculate layers depth
+    DO jl = 1, kproma
+       DO jk = klev, 1, -1
+          zrhoa=paphp1(jl,jk)/(ptenh(jl,jk)*rd)
+          grheight(jl,jk) =  (paphp1(jl,jk+1)-paphp1(jl,jk))/(zrhoa*g)
+       ENDDO
+    ENDDO
+
+    do jl=1,kproma
+!  Determine 0C cloud level for calculating fraction
+!  of InterCloud lightning
+        cu_freeze(jl)=REAL(kctop(jl),dp)
+        do jk=kctop(jl),kcbot(jl)
+          if (pten(jl,jk).le.273.15_dp) cu_freeze(jl)=REAL(jk,dp)
+        enddo
+    enddo
+
+  lfp(1:kproma,krow) =  0._dp
+  lnox(1:kproma,krow) =  0._dp
+
+    vector_loop: DO jl=1,kproma
+
+      ! if convective activity, calculate NOx prod. from lightning
+      convect: IF ((kctop(jl) /= 0) .AND. (kctop(jl) < kcbot(jl)).AND.(pten(jl,39) > 233.)) THEN
+     
+          ! calculate
+          ! - cloud top height     : zcth [m],
+          ! - cloud bottom height  : zcbh [m]
+          ! - cloudheight below 0C : zcdh [m]
+          zcth=0.
+          zcbh=0.
+          zcdh=0.
+          
+          DO level=klev,kctop(jl),-1
+             zcth=zcth+grheight(jl,level)
+          END DO
+          DO level=klev,kcbot(jl),-1
+             zcbh=zcbh+grheight(jl,level)
+          END DO
+          DO level=kctop(jl),cu_freeze(jl)
+             zcdh=zcdh+grheight(jl,level)
+          END DO
+          
+          !******************************************
+          ! Calculate flash frequencies in air column
+
+          !******************************************
+
+          ffp = 0._dp
+
+          !convert zcth from m to km
+          zcthkm=zcth*1.e-3
+
+          if (paphp1(jl,kctop(jl)-1) < 40000.) then
+               IF (slm(jl,krow) >= 0.1) THEN
+                  ! land
+                  ffp = zcthkm**4.9 * 3.44e-5
+               ELSE
+                  ! sea and ice
+                  ffp = zcthkm**1.73 * 6.4e-4
+               END IF
+          endif
+  
+          !************************************************
+          ! Calculate cloud to ground lightning fraction pg
+          ! (in case IC and CG are distinguished)
+          !   (lightning = flash frequency)
+          !************************************************
+
+             ! IC + CG
+             IF (zcdh < 5500.) THEN
+                ! only CG if 0degC level is below 5.5 km
+                pg=1.
+             ELSE
+                IF (zcdh < 14000.) THEN
+                   ! 0degC level is below 14 km
+                   zcdhkm=zcdh*1.e-3
+                   pg=0.021*zcdhkm-0.648
+                   pg=pg*zcdhkm+7.49
+                   pg=pg*zcdhkm-36.54
+                   pg=pg*zcdhkm+63.09
+                   pg=1./pg
+                ELSE
+                   ! constant fraction of 2% CG in clouds where
+                   ! 0degC level is above 14 km
+                   pg=0.02
+                END IF
+             END IF
+
+             lfp(jl,krow) =  ffp * cosd(philat_2d(jl,krow))/cosd(30.)*lightn_fac(jl,krow,1) / 60._dp ! 1/min -> 1/s
+
+            !***********************************************
+            !calculation of NOx 
+            !flashes/s => g[NOx]/m**2/s
+            !***********************************************
+!!$             lnox(jl,krow)=lfp(jl,krow)/gboxarea_2d(jl,krow)/60
+             lnox(jl,krow)=lfp(jl,krow)/gboxarea_2d(jl,krow)
+              
+             if ((philat_2d(jl,krow).ge.-20).and.(philat_2d(jl,krow).le.20)) lnox(jl,krow)=lnox(jl,krow)*nox_per_flash
+             if (((philat_2d(jl,krow).gt.-40).and.(philat_2d(jl,krow).lt.-20)).or.((philat_2d(jl,krow).gt.20).and.(philat_2d(jl,krow).lt.40))) &
+             lnox(jl,krow)=lnox(jl,krow)*nox_per_flash*(1+0.05*(abs(philat_2d(jl,krow))-20))
+             if ((philat_2d(jl,krow).ge.40).or.(philat_2d(jl,krow).le.-40)) lnox(jl,krow)=lnox(jl,krow)*nox_per_flash*2.
+     
+       END IF convect ! convective activity
+
+	if (lfp(jl,krow).ne.lfp(jl,krow).or.lfp(jl,krow).lt.1e-10.or.lfp(jl,krow).gt.1e10) lfp(jl,krow)=0._dp
+       if (lnox(jl,krow).ne.lnox(jl,krow).or.lnox(jl,krow).lt.1e-10.or.lnox(jl,krow).gt.1e15) lnox(jl,krow)=0._dp
+
+     END DO vector_loop
+end subroutine socol_lnox
+! ***********************************************************************
+
+subroutine lnox_initialize
+!
+! initialization of lightning parameterization
+! called from stepon
+
+  USE mo_decomposition, ONLY:  local_decomposition
+  USE mo_time_control,  ONLY: current_date, get_date_components, next_date
+  USE mo_socol_readfile,     ONLY: socol_read_netcdf
+
+  IMPLICIT NONE
+  INTEGER :: icurrentyear, inextyear, icurrentmonth,  inextmonth, inextday, icurrentday
+  CHARACTER(25), PARAMETER :: lightn = 'lightn_fac'
+  CHARACTER(31) :: varname
+  CHARACTER(50) :: varname_longname
+
+!!$  allocate(lfp(local_decomposition%nproma, local_decomposition%ngpblks))
+!!$  allocate(lnox(local_decomposition%nproma, local_decomposition%ngpblks))
+
+  IF (p_pe == p_io) write(*,*)'lnox initialization'
+ 
+  CALL get_date_components (next_date,  month=inextmonth, year=inextyear,  &
+       day=inextday                                               )
+
+  varname = 'LFAC'
+  varname_longname = 'Lightning factors'
+  CALL socol_read_netcdf(lightn, varname, 'LONLAT', mo=inextmonth,&
+  varname_longname=varname_longname, data3d=lightn_fac)
+
+!  write(*,*)sum(lightn_fac(:,:,0)),sum(lightn_fac(:,:,1)),sum(lightn_fac(:,:,2))
+!  stop 'TIMO'
+  end subroutine lnox_initialize
+
+! ***********************************************************************
+
+  subroutine lnox_close
+!
+! called from stepon
+!
+!!$  DEALLOCATE(lfp)
+!!$  DEALLOCATE(lnox)
+
+  DEALLOCATE(lightn_fac)
+  end subroutine lnox_close
+! ***********************************************************************
+
+  SUBROUTINE LNT1(FIN,ZIN,NZIN,FOUT,ZOUT,NZOUT)
+!
+!interpolation of vertical lnox profiles
+!called from socol_boundary_conditions
+  INTEGER :: I, II, NZIN, NZOUT
+  REAL(dp) :: FIN(NZIN),ZIN(NZIN),FOUT(NZOUT),ZOUT(NZOUT)
+  REAL(dp) :: ZXP, ZXM, ZNZ
+  DO 1 I=1,NZOUT
+  II=1
+  DO WHILE(ZIN(II)+0.1.LT.ZOUT(I))
+  II=II+1
+  IF(II.GT.NZIN) GOTO 1
+  ENDDO
+  IF(II.EQ.1)II=II+1
+  ZXP=ZIN(II)-ZOUT(I)
+  ZXM=ZOUT(I)-ZIN(II-1)
+  ZNZ=1./(ZIN(II)-ZIN(II-1))
+  FOUT(I)=(FIN(II-1)*ZXP+FIN(II)*ZXM)*ZNZ
+ 1 CONTINUE
+
+  END SUBROUTINE LNT1
+! ***********************************************************************
+
+END MODULE mo_socol_lnox_main
+! ***********************************************************************

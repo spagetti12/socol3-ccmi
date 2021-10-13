@@ -1,0 +1,94 @@
+export
+
+SHELL = /bin/sh
+ 
+ARCH  = @ARCH@
+
+srcdir = @srcdir@
+top_srcdir = @top_srcdir@
+VPATH = @srcdir@
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+
+bindir = @bindir@
+sbindir = @sbindir@
+libexecdir = @libexecdir@
+datadir = @datadir@
+sysconfdir = @sysconfdir@
+libdir = @libdir@
+includedir = @includedir@
+oldincludedir = @oldincludedir@
+infodir = @infodir@
+mandir = @mandir@
+
+sharedstatedir = @sharedstatedir@
+localstatedir = @localstatedir@
+
+program_transform_name = @program_transform_name@
+
+MPIROOT        = @MPIROOT@
+MPI_LIB        = @MPI_LIB@
+MPI_INCLUDE    = @MPI_INCLUDE@
+
+NETCDFROOT     = @NETCDFROOT@
+NETCDF_LIB     = @NETCDF_LIB@
+NETCDF_INCLUDE = @NETCDF_INCLUDE@
+
+LIB      = @LIBS@
+LIBS     = $(LIB) $(NETCDF_LIB) $(MPI_LIB)
+
+MODOPT   = @MODOPT@
+MODULES  = ../modules
+
+INCLUDE  = ../include
+INCLUDES = $(MODOPT)$(MODULES) -I$(INCLUDE) $(NETCDF_INCLUDE) $(MPI_INCLUDE)
+
+F90      = @F90@
+FC       = @F90@
+CC       = @CC@
+CPP      = @CPP@
+AR       = @AR@
+AS       = @AS@ 
+
+DEFS     = @DEFS@
+
+CFLAGS   = -I../config @CFLAGS@
+FFLAGS   = @FFLAGS@
+F90FLAGS = $(INCLUDES) @F90FLAGS@ @MPI@
+CPPFLAGS = @CPPFLAGS@
+ARFLAGS  = @ARFLAGS@
+LDFLAGS  = @LDFLAGS@
+
+SRCDIRS = @SRCDIRS@ support modules src
+
+all:
+	@for DIR in $(SRCDIRS) ;\
+	  do \
+	    back=`pwd`; \
+	    cd $$DIR ;\
+	    $(MAKE) ; status=$$? ; \
+	    if [ $$status != 0 ] ; then \
+	      echo "Exit status from make was $$status" ; exit $$status ; \
+	    fi ; \
+	    cd $$back ; \
+	  done 
+
+clean:
+	@for DIR in $(SRCDIRS) ;\
+	  do \
+	  (cd $$DIR ;\
+	  $(MAKE) clean ; if [ $$? != 0 ] ; then \
+	        echo "Exit status from make was $$?" ; exit 1 ; fi ;) ;\
+	  done
+	-rm -f config.cache
+	-rm -f lib/*.a bin/echam5
+	-rm -f html/[a-z]*
+
+tar:
+	@tarfile=../echam5.f90.`date +%y%m%d`.taz ; gtar zcvf $$tarfile \
+	`ls */*.f90 */*.[fhc] */*inc */Makefile Makefile.in Makefile run/hjob*`
+
+index:
+	-rm -f html/[a-z]*
+	util/f2html.pl -f util/fgenrc -d html \
+          support modules src include

@@ -1,0 +1,1928 @@
+
+ Lahey/Fujitsu Fortran 95 Compiler Release L6.20c  Thu Sep 24 19:40:57 2009
+ Copyright (C) 1994-2003 Lahey Computer Systems.  All rights reserved.
+ Copyright (C) 1998-2003 FUJITSU LIMITED. All rights reserved.
+
+ Compilation information
+   Current directory : /nhome/martisch/echam5/burn
+   Source file       : echamnetcdf_afterburner.f90
+   Cpp options       : -Xs -I/usr/local/netcdf-lf95/include -Dunix -Di386 -D__unix -D__i386 -D__ELF__ -D__i386__ -D__unix__ -D__linux__ -D__linux -Asystem(unix) -Asystem(posix) -Acpu(i386) -Amachine(i386) -Dlinux
+   Compiler options  : --nap -nc --chk e --nchkglobal --co --nconcc --dal 
+                     : --ndbl --f95 -g --nin --ninfo --ninline --li --lst 
+                     : --nlong --maxfatals 50 --nml --nmldefault --o0 --no 
+                     : --nocl --nopenmp --nparallel --nprefetch --npca 
+                     : --nprivate --nquad --quiet --nsav --nshared --nsse2 
+                     : --nstaticlink --nswm --tp --nthreadheap --nthreads 
+                     : --trace --trap --nunroll --nvarheap --nversion --warn 
+                     : --nwide --nwisk --nwo --nzfm --xref
+
+ Main program "echamnetcdf_afterburner"
+  (line-no.)(nest)
+          1        PROGRAM echamnetcdf_afterburner
+          2        
+          3          ! Creates netcdf file with transformed pressure and time grid:
+          4          ! (a) Pressure grid: interpolation from sigma model levels (depending
+          5          !     on surface pressure) to pressure grid defined in a namelist
+          6          ! (b) Time units: given as "month since start year"
+          7          !
+          8          ! Input:
+          9          !
+         10          ! $1 : Input file name (netcdf file to be transformed)
+         11          ! $2 : Output file name (newly created netcdf file)
+         12          ! $3 : File name of namelist containing pressure levels of output file
+         13          ! $4 : Start year for Netcdf files (uniform for all output files)
+         14          !
+         15          ! M. Schraner, ETH Zurich, 10.3.2009
+         16        
+         17          USE netcdf
+         18        
+         19          IMPLICIT NONE
+         20        
+         21          INTEGER :: i, ji, jl, jk, jt, nvar, nlon, nlat, nlev_in, nlev_out, ntime, &
+         22               m, y, month, syear, syear_in, time_int, year, months, ioerror, &
+         23               status, ncid_in, ncid_out, lonid_in, lonid_out, latid_in, &
+         24               latid_out, mlevid_in, levid_out, timeid_in, timeid_out, &
+         25               nvartot, varnatts, vardimids(5), varndims, vartype, &
+         26               indfirst, indlast, ind, iind
+         27          REAL, ALLOCATABLE :: lon(:), lat(:), hyam(:), hybm(:), &
+         28               aps_in(:,:,:), lev_in(:,:,:,:), levstand_in(:), lev_out(:), &
+         29               time_in(:), time_out(:), var3(:,:,:), &
+         30               var4_in(:,:,:,:), var4_out(:,:,:,:), &
+         31               w0(:,:,:,:), w1(:,:,:,:), dwinv(:,:,:,:), &
+         32               log_lev_in0(:,:,:,:), log_lev_in1(:,:,:,:), log_lev_out(:), &
+         33               log_lev_out3d(:,:,:,:)
+         34          LOGICAL, ALLOCATABLE :: ll(:,:,:,:)
+         35          INTEGER, ALLOCATABLE :: varid_out(:), ind0(:), ind1(:), iind0(:,:,:,:), &
+         36               iind1(:,:,:,:)
+         37          CHARACTER(31) :: ncname_in, ncname_out, namelistfile, varname_in, varname_out
+         38          CHARACTER(23) :: timeunits_in, timeunits_out
+         39          CHARACTER(11) :: timeorigin_out
+         40          CHARACTER(4) :: syear_st, syearm1_st
+         41          LOGICAL :: laps=.FALSE.
+         42          REAL, PARAMETER :: ps_stand = 101325  ! Standard surface pressure [Pa]
+         43          INTEGER, PARAMETER :: lun=10
+         44        
+         45          INTEGER :: levels(99), levelscount(99)
+         46          NAMELIST /afterburner_levels/ levels
+         47        
+         48          ! External subroutines:
+         49          EXTERNAL interpolate_index
+         50        
+         51          ! Executable statements:
+         52        
+         53          CALL GETARG(1, ncname_in)
+         54          CALL GETARG(2, ncname_out)
+         55          CALL GETARG(3, namelistfile)
+         56          CALL GETARG(4, syear_st)
+         57        
+         58          READ(syear_st,'(i4.4)') syear
+         59        
+         60          ! 1. Open / create file:
+         61        
+         62          ! 1.1 Open input file:
+         63          status=NF90_OPEN(TRIM(ncname_in), NF90_NOWRITE, ncid_in)
+         64          IF (status /= NF90_NOERR) CALL handle_err(status)
+         65        
+         66          ! 1.2 Create output file:
+         67          status=NF90_CREATE(TRIM(ncname_out), NF90_CLOBBER, ncid_out)
+         68          IF (status /= NF90_NOERR) CALL handle_err(status)
+         69        
+         70          ! 2. Get / set dimensions:
+         71        
+         72          ! 2.1 Get dimension lengths of input file:
+         73          status=NF90_INQ_DIMID(ncid_in, 'lon', lonid_in)
+         74          IF (status /= NF90_NOERR) CALL handle_err(status)
+         75          status=NF90_INQUIRE_DIMENSION(ncid_in, lonid_in, len = nlon)
+         76          IF (status /= NF90_NOERR) CALL handle_err(status)
+         77          status=NF90_INQ_DIMID(ncid_in, 'lat', latid_in)
+         78          IF (status /= NF90_NOERR) CALL handle_err(status)
+         79          status=NF90_INQUIRE_DIMENSION(ncid_in, latid_in, len = nlat)
+         80          IF (status /= NF90_NOERR) CALL handle_err(status)
+         81          status=NF90_INQ_DIMID(ncid_in, 'mlev', mlevid_in)
+         82          IF (status /= NF90_NOERR) CALL handle_err(status)
+         83          status=NF90_INQUIRE_DIMENSION(ncid_in, mlevid_in, len = nlev_in)
+         84          IF (status /= NF90_NOERR) CALL handle_err(status)
+         85          status=NF90_INQ_DIMID(ncid_in, 'time', timeid_in)
+         86          IF (status /= NF90_NOERR) CALL handle_err(status)
+         87          status=NF90_INQUIRE_DIMENSION(ncid_in, timeid_in, len = ntime)
+         88          IF (status /= NF90_NOERR) CALL handle_err(status)
+         89        
+         90          ! Allocate arrays:
+         91          ALLOCATE(lon(nlon))
+         92          ALLOCATE(lat(nlat))
+         93          ALLOCATE(hyam(nlev_in))
+         94          ALLOCATE(hybm(nlev_in))
+         95          ALLOCATE(levstand_in(nlev_in))
+         96          ALLOCATE(lev_in(nlon,nlat,nlev_in,ntime))
+         97          ALLOCATE(time_in(ntime))
+         98          ALLOCATE(time_out(ntime))
+         99          ALLOCATE(aps_in(nlon,nlat,ntime))
+        100          ALLOCATE(var3(nlon,nlat,ntime))
+        101          ALLOCATE(var4_in(nlon,nlat,nlev_in,ntime))
+        102        
+        103          ! 2.2 Define dimensions of output file:
+        104        
+        105          ! 2.2.1 Read pressure levels from namelist:
+        106          levels(:) = 0
+        107          levelscount(:) = 0
+        108          ioerror = 0
+        109          OPEN (lun, ERR=110, FILE=TRIM(namelistfile), STATUS='old', &
+        110               FORM='formatted', ACTION='read')
+        111          GOTO 111
+        112        110 ioerror = 1
+        113        111 CONTINUE
+        114     1    IF (ioerror == 1) THEN
+        115     1       PRINT*, 'Could not open', TRIM(namelistfile)
+        116     1       STOP 'Stopped'
+        117     1    ENDIF
+        118          READ(lun, NML=afterburner_levels)
+        119          CLOSE(lun)
+        120        
+        121          ! 2.2.2 Determine number of levels:
+        122          WHERE (levels .GT. 0) levelscount=1
+        123          nlev_out=SUM(levelscount)
+        124        
+        125          ! 2.2.3 Allocate arrays:
+        126          ALLOCATE(lev_out(nlev_out))
+        127          ALLOCATE(var4_out(nlon,nlat,nlev_out,ntime))
+        128          ALLOCATE(ind0(nlev_out))
+        129          ALLOCATE(ind1(nlev_out))
+        130          ALLOCATE(iind0(nlon,nlat,nlev_out,ntime))
+        131          ALLOCATE(iind1(nlon,nlat,nlev_out,ntime))
+        132          ALLOCATE(log_lev_in0(nlon,nlat,nlev_out,ntime))
+        133          ALLOCATE(log_lev_in1(nlon,nlat,nlev_out,ntime))
+        134          ALLOCATE(log_lev_out(nlev_out))
+        135          ALLOCATE(log_lev_out3d(nlon,nlat,nlev_out,ntime))
+        136          ALLOCATE(w0(nlon,nlat,nlev_out,ntime))
+        137          ALLOCATE(w1(nlon,nlat,nlev_out,ntime))
+        138          ALLOCATE(dwinv(nlon,nlat,nlev_out,ntime))
+        139          ALLOCATE(ll(nlon,nlat,nlev_out,ntime))
+        140        
+        141          ! 2.2.4 Set out pressure grid:
+        142          lev_out(:)=0.01*REAL(levels(1:nlev_out))  !hPa
+        143        
+        144          ! 2.2.5 Create dimensions of output file:
+        145          status = NF90_DEF_DIM(ncid_out, 'lon', nlon, lonid_out)
+        146          IF (status /= NF90_NOERR) CALL handle_err(status)
+        147          status = NF90_DEF_DIM(ncid_out, 'lat', nlat, latid_out)
+        148          IF (status /= NF90_NOERR) CALL handle_err(status)
+        149          status = NF90_DEF_DIM(ncid_out, 'lev', nlev_out, levid_out)
+        150          IF (status /= NF90_NOERR) CALL handle_err(status)
+        151          status = NF90_DEF_DIM(ncid_out, 'time', NF90_UNLIMITED, timeid_out)
+        152          IF (status /= NF90_NOERR) CALL handle_err(status)
+        153        
+        154          ! 3. Define variables in output file and get / set attributes:
+        155        
+        156          ! 3.1.1 Inquire number of variables (input file):
+        157          status=NF90_INQUIRE(ncid_in, nvariables=nvartot)
+        158          IF (status /= NF90_NOERR) CALL handle_err(status)
+        159        
+        160          ALLOCATE(varid_out(nvartot))
+        161        
+        162     1    DO i=1, nvartot
+        163     1  
+        164     1       ! 3.2.1 Get variable name, type, number of dimesions, dimension IDs, and
+        165     1       ! number of variable attributes (input file):
+        166     1       status=NF90_INQUIRE_VARIABLE(ncid_in, i, varname_in, vartype, varndims, &
+        167     1            vardimids, varnatts)
+        168     1       IF (status /= NF90_NOERR) CALL handle_err(status)
+        169     1  
+        170     1       ! Remove _m in variable name of output file (if present):
+        171     1       ind = INDEX(TRIM(varname_in), '_m')
+        172     2       IF (ind .GE. 1) THEN
+        173     2          varname_out=varname_in(1:ind-1)
+        174     2       ELSE
+        175     2          varname_out=TRIM(varname_in)
+        176     2       ENDIF
+        177     1  
+        178     1       ! 3.3.1 Define variables and set attributes (output file):
+        179     1  
+        180     2       IF (varndims .EQ. 2) THEN
+        181     2          PRINT *, '2 dimensional arrays not allowed'
+        182     2          STOP 'Stopped'
+        183     2       ENDIF
+        184     2       IF (varndims .EQ. 1) THEN
+        185     3          SELECT CASE (TRIM(varname_in))
+        186     3  
+        187     3          CASE ('lon')
+        188     3             ! Define variable:
+        189     3             status=NF90_DEF_VAR(ncid_out, TRIM(varname_out), NF90_FLOAT, &
+        190     3                  (/ lonid_out /), varid_out(i))
+        191     3             IF (status /= NF90_NOERR) CALL handle_err(status)
+        192     3             ! Set attributes:
+        193     3             status=NF90_PUT_ATT(ncid_out, varid_out(i), "long_name", "longitude")
+        194     3             IF (status /= NF90_NOERR) CALL handle_err(status)
+        195     3             status=NF90_PUT_ATT(ncid_out, varid_out(i), "units", "degrees east")
+        196     3             IF (status /= NF90_NOERR) CALL handle_err(status)
+        197     3             status=NF90_PUT_ATT(ncid_out, varid_out(i), "standard_name", "longitude")
+        198     3             IF (status /= NF90_NOERR) CALL handle_err(status)
+        199     3  
+        200     3          CASE ('lat')
+        201     3             ! Define variable:
+        202     3             status=NF90_DEF_VAR(ncid_out, TRIM(varname_out), NF90_FLOAT, &
+        203     3                  (/ latid_out /), varid_out(i))
+        204     3             IF (status /= NF90_NOERR) CALL handle_err(status)
+        205     3             ! Set attributes:
+        206     3             status=NF90_PUT_ATT(ncid_out, varid_out(i), "long_name", "latitude")
+        207     3             IF (status /= NF90_NOERR) CALL handle_err(status)
+        208     3             status=NF90_PUT_ATT(ncid_out, varid_out(i), "units", "degrees north")
+        209     3             IF (status /= NF90_NOERR) CALL handle_err(status)
+        210     3             status=NF90_PUT_ATT(ncid_out, varid_out(i), "standard_name", "latitude")
+        211     3             IF (status /= NF90_NOERR) CALL handle_err(status)
+        212     3  
+        213     3          CASE ('mlev')
+        214     3             ! Define variable:
+        215     3             status=NF90_DEF_VAR(ncid_out, 'lev', NF90_FLOAT, &
+        216     3                  (/ levid_out /), varid_out(i))
+        217     3             IF (status /= NF90_NOERR) CALL handle_err(status)
+        218     3             ! Set attributes:
+        219     3             status=NF90_PUT_ATT(ncid_out, varid_out(i), "long_name", "pressure")
+        220     3             IF (status /= NF90_NOERR) CALL handle_err(status)
+        221     3             status=NF90_PUT_ATT(ncid_out, varid_out(i), "units", "mb")
+        222     3             IF (status /= NF90_NOERR) CALL handle_err(status)
+        223     3             status=NF90_PUT_ATT(ncid_out, varid_out(i), "positive", "down")
+        224     3             IF (status /= NF90_NOERR) CALL handle_err(status)
+        225     3  
+        226     3          CASE ('time')
+        227     3             ! Get time units:
+        228     3             status=NF90_GET_ATT(ncid_in, i, 'units', timeunits_in)
+        229     3             IF (status /= NF90_NOERR) CALL handle_err(status)
+        230     3             ! Transform time:
+        231     3             CALL transform_timeunits
+        232     3             ! Define variable:
+        233     3             status=NF90_DEF_VAR(ncid_out, TRIM(varname_out), NF90_FLOAT, &
+        234     3                  (/ timeid_out /), varid_out(i))
+        235     3             IF (status /= NF90_NOERR) CALL handle_err(status)
+        236     3             ! Set attributes:
+        237     3             status=NF90_PUT_ATT(ncid_out, varid_out(i), "long_name", "model time")
+        238     3             IF (status /= NF90_NOERR) CALL handle_err(status)
+        239     3             status=NF90_PUT_ATT(ncid_out, varid_out(i), "units", timeunits_out)
+        240     3             IF (status /= NF90_NOERR) CALL handle_err(status)
+        241     3             status=NF90_PUT_ATT(ncid_out, varid_out(i), "time_origin", &
+        242     3                  timeorigin_out)
+        243     3             IF (status /= NF90_NOERR) CALL handle_err(status)
+        244     3          END SELECT
+        245     2  
+        246     2       ELSE
+        247     2  
+        248     3          IF (varndims .EQ. 3) THEN
+        249     3             ! Define variable:
+        250     3             status=NF90_DEF_VAR(ncid_out, TRIM(varname_out), NF90_FLOAT, &
+        251     3                  (/ lonid_out, latid_out, timeid_out /), varid_out(i))
+        252     3             IF (status /= NF90_NOERR) CALL handle_err(status)
+        253     3          ELSE  ! varndims = 4
+        254     3             ! Define variable:
+        255     3             status=NF90_DEF_VAR(ncid_out, TRIM(varname_out), NF90_FLOAT, &
+        256     3                  (/ lonid_out, latid_out, levid_out, timeid_out /), varid_out(i))
+        257     3             IF (status /= NF90_NOERR) CALL handle_err(status)
+        258     3          ENDIF
+        259     2  
+        260     2          ! Copy attributes:
+        261     2          status=NF90_COPY_ATT(ncid_in, i, "long_name", ncid_out, varid_out(i))
+        262     2          IF (status /= NF90_NOERR) CALL handle_err(status)
+        263     2          status=NF90_COPY_ATT(ncid_in, i, "units", ncid_out, varid_out(i))
+        264     2          IF (status /= NF90_NOERR) CALL handle_err(status)
+        265     3          IF (TRIM(varname_in) .NE. 'aps') THEN
+        266     3             status=NF90_COPY_ATT(ncid_in, i, "code", ncid_out, varid_out(i))
+        267     3             IF (status /= NF90_NOERR) CALL handle_err(status)
+        268     3             status=NF90_COPY_ATT(ncid_in, i, "table", ncid_out, varid_out(i))
+        269     3             IF (status /= NF90_NOERR) CALL handle_err(status)
+        270     3             status=NF90_COPY_ATT(ncid_in, i, "axis", ncid_out, varid_out(i))
+        271     3             IF (status /= NF90_NOERR) CALL handle_err(status)
+        272     3             status=NF90_COPY_ATT(ncid_in, i, "grid_type", ncid_out, varid_out(i))
+        273     3             IF (status /= NF90_NOERR) CALL handle_err(status)
+        274     3          ENDIF
+        275     2  
+        276     2       ENDIF
+        277     1    ENDDO
+        278        
+        279          ! 3.4 Copy global attributes:
+        280          status=NF90_COPY_ATT(ncid_in, NF90_GLOBAL, "Conventions", ncid_out, NF90_GLOBAL)
+        281          IF (status /= NF90_NOERR) CALL handle_err(status)
+        282          status=NF90_COPY_ATT(ncid_in, NF90_GLOBAL, "title", ncid_out, NF90_GLOBAL)
+        283          IF (status /= NF90_NOERR) CALL handle_err(status)
+        284          status=NF90_COPY_ATT(ncid_in, NF90_GLOBAL, "source", ncid_out, NF90_GLOBAL)
+        285          IF (status /= NF90_NOERR) CALL handle_err(status)
+        286          status=NF90_COPY_ATT(ncid_in, NF90_GLOBAL, "echam_version", ncid_out, NF90_GLOBAL)
+        287          IF (status /= NF90_NOERR) CALL handle_err(status)
+        288          status=NF90_COPY_ATT(ncid_in, NF90_GLOBAL, "institution", ncid_out, NF90_GLOBAL)
+        289          IF (status /= NF90_NOERR) CALL handle_err(status)
+        290          status=NF90_COPY_ATT(ncid_in, NF90_GLOBAL, "advection", ncid_out, NF90_GLOBAL)
+        291          IF (status /= NF90_NOERR) CALL handle_err(status)
+        292          status=NF90_COPY_ATT(ncid_in, NF90_GLOBAL, "physics", ncid_out, NF90_GLOBAL)
+        293          IF (status /= NF90_NOERR) CALL handle_err(status)
+        294          status=NF90_COPY_ATT(ncid_in, NF90_GLOBAL, "radiation", ncid_out, NF90_GLOBAL)
+        295          IF (status /= NF90_NOERR) CALL handle_err(status)
+        296          status=NF90_COPY_ATT(ncid_in, NF90_GLOBAL, "date_time", ncid_out, NF90_GLOBAL)
+        297          IF (status /= NF90_NOERR) CALL handle_err(status)
+        298          status=NF90_COPY_ATT(ncid_in, NF90_GLOBAL, "operating_system", ncid_out, NF90_GLOBAL)
+        299          IF (status /= NF90_NOERR) CALL handle_err(status)
+        300          status=NF90_COPY_ATT(ncid_in, NF90_GLOBAL, "user_name", ncid_out, NF90_GLOBAL)
+        301          IF (status /= NF90_NOERR) CALL handle_err(status)
+        302          status=NF90_COPY_ATT(ncid_in, NF90_GLOBAL, "host_name", ncid_out, NF90_GLOBAL)
+        303          IF (status /= NF90_NOERR) CALL handle_err(status)
+        304          status=NF90_COPY_ATT(ncid_in, NF90_GLOBAL, "truncation", ncid_out, NF90_GLOBAL)
+        305          IF (status /= NF90_NOERR) CALL handle_err(status)
+        306        
+        307          ! 3.5.2 End definition modus of output file:
+        308          status=NF90_ENDDEF(ncid_out)
+        309          IF (status /= NF90_NOERR) CALL handle_err(status)
+        310        
+        311          ! 4. Get / set variable values:
+        312        
+        313     1    DO i=1, nvartot
+        314     1  
+        315     1       ! 4.1.1 Get variable name, type, number of dimesions, dimension IDs, and
+        316     1       ! number of variable attributes (input file):
+        317     1       status=NF90_INQUIRE_VARIABLE(ncid_in, i, varname_in, vartype, varndims, &
+        318     1            vardimids, varnatts)
+        319     1       IF (status /= NF90_NOERR) CALL handle_err(status)
+        320     1  
+        321     1       ! Remove _m in variable name of output file (if present):
+        322     1       ind = INDEX(TRIM(varname_in), '_m')
+        323     2       IF (ind .GE. 1) THEN
+        324     2          varname_out=varname_in(1:ind-1)
+        325     2       ELSE
+        326     2          varname_out=TRIM(varname_in)
+        327     2       ENDIF
+        328     1  
+        329     1       ! 4.2.1 Get variables values from input file and put values to output file
+        330     1       !       (transformed to output grid, if necessary):
+        331     1  
+        332     2       IF (varndims .EQ. 1) THEN
+        333     3          SELECT CASE (TRIM(varname_in))
+        334     3  
+        335     3          CASE ('lon')
+        336     3             ! Get values from input file:
+        337     3             status=NF90_GET_VAR(ncid_in, i, lon)
+        338     3             IF (status /= NF90_NOERR) CALL handle_err(status)
+        339     3             ! Put values to output file:
+        340     3             status=NF90_PUT_VAR(ncid_out, varid_out(i), lon)
+        341     3             IF (status /= NF90_NOERR) CALL handle_err(status)
+        342     3  
+        343     3          CASE ('lat')
+        344     3             ! Get values from input file:
+        345     3             status=NF90_GET_VAR(ncid_in, i, lat)
+        346     3             IF (status /= NF90_NOERR) CALL handle_err(status)
+        347     3             ! Put values to output file:
+        348     3             status=NF90_PUT_VAR(ncid_out, varid_out(i), lat)
+        349     3             IF (status /= NF90_NOERR) CALL handle_err(status)
+        350     3  
+        351     3          CASE ('mlev')
+        352     3             ! Put values to output file:
+        353     3             status=NF90_PUT_VAR(ncid_out, varid_out(i), lev_out)
+        354     3             IF (status /= NF90_NOERR) CALL handle_err(status)
+        355     3  
+        356     3          CASE ('time')
+        357     3             ! Get values from input file:
+        358     3             status=NF90_GET_VAR(ncid_in, i, time_in)
+        359     3             IF (status /= NF90_NOERR) CALL handle_err(status)
+        360     3             ! Transform time:
+        361     4             DO jt=1, ntime
+        362     4                !time_int=NINT((time_in(jt))/30.)
+        363     4                y=INT(time_in(jt)/365.25)  ! ~number of full years
+        364     4                time_int=NINT((time_in(jt)-y*365.25)/30.)+12*y ! [days->months]
+        365     4                time_in(jt) = REAL(time_int)
+        366     4             ENDDO
+        367     3             time_out(:)=time_in(:)+12.*(syear_in-syear)
+        368     3             ! Put values to output file:
+        369     3             status=NF90_PUT_VAR(ncid_out, varid_out(i), time_out)
+        370     3             IF (status /= NF90_NOERR) CALL handle_err(status)
+        371     3  
+        372     3          CASE ('hyam')
+        373     3             ! Get values from input file:
+        374     3             status=NF90_GET_VAR(ncid_in, i, hyam)
+        375     3  
+        376     3          CASE ('hybm')
+        377     3             ! Get values from input file:
+        378     3             status=NF90_GET_VAR(ncid_in, i, hybm)
+        379     3  
+        380     3          END SELECT
+        381     2  
+        382     2       ELSEIF (varndims .EQ. 3) THEN
+        383     2          ! Get values from input file:
+        384     2          status=NF90_GET_VAR(ncid_in, i, var3)
+        385     2          IF (status /= NF90_NOERR) CALL handle_err(status)
+        386     2          ! Put values to output file:
+        387     2          status=NF90_PUT_VAR(ncid_out, varid_out(i), var3)
+        388     2          IF (status /= NF90_NOERR) CALL handle_err(status)
+        389     2          ! Call *prepare_tranform_lev* if TRIM(varname_in)=='aps':
+        390     3          IF (TRIM(varname_in) .EQ. 'aps') THEN
+        391     3             laps = .TRUE.
+        392     3             aps_in = var3
+        393     3             CALL prepare_transform_lev
+        394     3          ENDIF
+        395     2  
+        396     2       ELSE  ! varndims = 4
+        397     3          IF (.NOT. laps) THEN
+        398     3             PRINT *, 'Surface pressure field "aps" has to be read before'
+        399     3             STOP 'Stopped'
+        400     3          ENDIF
+        401     2          ! Get values from input file:
+        402     2          status=NF90_GET_VAR(ncid_in, i, var4_in)
+        403     2          IF (status /= NF90_NOERR) CALL handle_err(status)
+        404     2          ! Interpolate var4_in to pressure grid of output grid:
+        405     2          CALL transform_lev
+        406     2          ! Put values to output file:
+        407     2          status=NF90_PUT_VAR(ncid_out, varid_out(i), var4_out)
+        408     2          IF (status /= NF90_NOERR) CALL handle_err(status)
+        409     2       ENDIF
+        410     1    ENDDO
+        411        
+        412          ! 5. Close files:
+        413        
+        414          status = NF90_CLOSE(ncid_in)
+        415          IF (status /= NF90_NOERR) CALL HANDLE_ERR(status)
+        416          status = NF90_CLOSE(ncid_out)
+        417          IF (status /= NF90_NOERR) CALL HANDLE_ERR(status)
+        418        
+        419          ! 6. Deallocate memory:
+        420        
+        421          DEALLOCATE(lon)
+        422          DEALLOCATE(lat)
+        423          DEALLOCATE(hyam)
+        424          DEALLOCATE(hybm)
+        425          DEALLOCATE(aps_in)
+        426          DEALLOCATE(lev_in)
+        427          DEALLOCATE(levstand_in)
+        428          DEALLOCATE(lev_out)
+        429          DEALLOCATE(time_in)
+        430          DEALLOCATE(time_out)
+        431          DEALLOCATE(iind0)
+        432          DEALLOCATE(iind1)
+        433          DEALLOCATE(var3)
+        434          DEALLOCATE(var4_in)
+        435          DEALLOCATE(var4_out)
+        436          DEALLOCATE(w0)
+        437          DEALLOCATE(w1)
+        438          DEALLOCATE(dwinv)
+        439          DEALLOCATE(log_lev_in0)
+        440          DEALLOCATE(log_lev_in1)
+        441          DEALLOCATE(log_lev_out)
+        442          DEALLOCATE(log_lev_out3d)
+        443          DEALLOCATE(ll)
+        444          DEALLOCATE(varid_out)
+        445          DEALLOCATE(ind0)
+        446          DEALLOCATE(ind1)
+        447        
+        448        CONTAINS
+        449        
+        450          SUBROUTINE transform_timeunits
+        451        
+        452            ! Transforms time record to output units "months since <syear>".
+        453        
+        454     1      IF (timeunits_in(1:10) .EQ. 'days since') THEN
+        455     1         READ(timeunits_in(12:15),'(i4.4)') syear_in
+        456     1      ELSEIF (timeunits_in(1:9) .EQ. 'day since') THEN
+        457     1         READ(timeunits_in(11:14),'(i4.4)') syear_in
+        458     1      ELSE
+        459     1         PRINT *, 'Invalid time units'
+        460     1         STOP 'Stopped'
+        461     1      ENDIF
+        462        
+        463            ! Set out time units:
+        464            WRITE(syearm1_st,'(i4)') syear-1
+        465            timeunits_out(1:19)= 'month since 15-DEC-'
+        466            timeunits_out(20:23)=syearm1_st
+        467            timeorigin_out(1:7)='15-DEC-'
+        468            timeorigin_out(8:11)=syearm1_st
+        469        
+        470          END SUBROUTINE transform_timeunits
+        471        
+        472          SUBROUTINE prepare_transform_lev
+        473        
+        474            ! Preparates level transformation: Calculates interpolation indices
+        475            ! and interpolation weights.
+        476        
+        477            ! Pressure grid [hPa] for standard surface pressure:
+        478            levstand_in(:)=0.01*(hyam(:)+hybm(:)*ps_stand)
+        479        
+        480            ! Calculate pressure interpolation indices:
+        481            CALL interpolate_index(nlev_in, nlev_out, levstand_in, lev_out, &
+        482                 indfirst, indlast, ind1)
+        483            ! iind1: index of next following level of input gird with respect
+        484            !        to a given levels of output grid
+        485            ind0(:)=ind1(:)-1
+        486            WHERE (ind0 .GT. nlev_in) ind0=nlev_in
+        487            WHERE (ind1 .GT. nlev_in) ind1=nlev_in
+        488            WHERE (ind0 .LT. 1) ind0=1
+        489            WHERE (ind1 .LT. 1) ind1=1
+        490        
+        491            ! Spread pressure levels onto horizontal grid:
+        492            FORALL (jl=1:nlon, jk=1:nlat, jt=1:ntime)
+        493               iind0(jl,jk,:,jt)=ind0(:)
+        494               iind1(jl,jk,:,jt)=ind1(:)
+        495            END FORALL
+        496        
+        497            ! Pressure grid [hPa] for surface pressure 'aps':
+        498            FORALL (jk= 1:nlev_in) &
+        499                 lev_in(:,:,jk,:)=0.01*(hyam(jk)+hybm(jk)*aps_in(:,:,:))
+        500        
+        501            ! Correct iind0, iind1 upwards / downwards if necessary:
+        502     1      DO ji=1, nlon
+        503     2         DO jk=1, nlat
+        504     3            DO jl=1, nlev_out
+        505     4               DO jt=1, ntime
+        506     5                  DO
+        507     5                     iind=iind1(ji,jk,jl,jt)
+        508     6                     IF (lev_in(ji,jk,iind,jt) .LT. lev_out(jl) &
+        509     6                          .AND. iind .LT. nlev_in) THEN
+        510     6                        iind0(ji,jk,jl,jt)=iind0(ji,jk,jl,jt)+1
+        511     6                        iind1(ji,jk,jl,jt)=iind1(ji,jk,jl,jt)+1
+        512     6                     ELSE
+        513     6                        IF (lev_in(ji,jk,iind,jt) .LT. lev_out(jl)) &
+        514     6                             iind0(ji,jk,jl,jt)=nlev_in
+        515     6                        EXIT
+        516     6                     ENDIF
+        517     5                  ENDDO
+        518     4  
+        519     5                  DO
+        520     5                     iind=iind0(ji,jk,jl,jt)
+        521     6                     IF (lev_out(jl) .LT. lev_in(ji,jk,iind,jt) &
+        522     6                          .AND. iind .GT. 1) THEN
+        523     6                        iind0(ji,jk,jl,jt)=iind0(ji,jk,jl,jt)-1
+        524     6                        iind1(ji,jk,jl,jt)=iind1(ji,jk,jl,jt)-1
+        525     6                     ELSE
+        526     6                        IF (lev_out(jl) .LT. lev_in(ji,jk,iind,jt)) &
+        527     6                             iind1(ji,jk,jl,jt)=1
+        528     6                        EXIT
+        529     6                     ENDIF
+        530     5                  ENDDO
+        531     4  
+        532     4               ENDDO
+        533     3            ENDDO
+        534     2         ENDDO
+        535     1      ENDDO
+        536        
+        537            WHERE (iind0 .GT. nlev_in) iind0=nlev_in
+        538            WHERE (iind1 .GT. nlev_in) iind1=nlev_in
+        539            WHERE (iind0 .LT. 1) iind0=1
+        540            WHERE (iind1 .LT. 1) iind1=1
+        541        
+        542            ! Weights:
+        543        
+        544            ! Negative logarithm of pressure grid for interpolation
+        545            ! <=> interpolation on height grid
+        546     1      DO ji=1, nlon
+        547     2         DO jk=1, nlat
+        548     3            DO jt=1, ntime
+        549     3              ind0(:)=iind0(ji,jk,:,jt)
+        550     3              ind1(:)=iind1(ji,jk,:,jt)
+        551     3              log_lev_in0(ji,jk,:,jt)=-LOG(lev_in(ji,jk,ind0(:),jt))
+        552     3              log_lev_in1(ji,jk,:,jt)=-LOG(lev_in(ji,jk,ind1(:),jt))
+        553     3            ENDDO
+        554     2         ENDDO
+        555     1      ENDDO
+        556            log_lev_out(:)=-LOG(lev_out(:))
+        557        
+        558            ! Spread pressure interpolation indices onto horizontal grid:
+        559            FORALL (jl=1:nlon, jk=1:nlat, jt=1:ntime) &
+        560               log_lev_out3d(jl,jk,:,jt)=log_lev_out(:)
+        561        
+        562            ll(:,:,:,:)=iind0(:,:,:,:) .LT. iind1(:,:,:,:)
+        563            w0=MERGE(log_lev_in1-log_lev_out3d, 1., ll)
+        564            w1=MERGE(log_lev_out3d-log_lev_in0, 0., ll)
+        565            WHERE (ll)   ! MERGE does not work here (division by 0 for ll=.FALSE.)
+        566               dwinv=1./(log_lev_in1-log_lev_in0)
+        567            ELSEWHERE
+        568               dwinv=1.
+        569            END WHERE
+        570        
+        571          END SUBROUTINE prepare_transform_lev
+        572        
+        573          SUBROUTINE transform_lev
+        574        
+        575            ! Pressure levels: interpolation from input to output grid.
+        576        
+        577     1      DO ji=1, nlon
+        578     2         DO jk=1, nlat
+        579     3            DO jt=1, ntime
+        580     3               ind0(:)=iind0(ji,jk,:,jt)
+        581     3               ind1(:)=iind1(ji,jk,:,jt)
+        582     3               var4_out(ji,jk,:,jt) = &
+        583     3                    (w0(ji,jk,:,jt)*var4_in(ji,jk,ind0(:),jt)+ &
+        584     3                    w1(ji,jk,:,jt)*var4_in(ji,jk,ind1(:),jt)) &
+        585     3                    * dwinv(ji,jk,:,jt)
+        586     3            ENDDO
+        587     2         ENDDO
+        588     1      ENDDO
+        589        
+        590          END SUBROUTINE transform_lev
+        591        
+        592          SUBROUTINE HANDLE_ERR(status)
+        593        
+        594            INTEGER, INTENT(IN) :: status
+        595        
+        596     1      IF (status /= NF90_NOERR) THEN
+        597     1         PRINT *, TRIM(NF90_STRERROR(status))
+        598     1         STOP
+        599     1      END IF
+        600        
+        601          END SUBROUTINE HANDLE_ERR
+        602        
+        603        END PROGRAM echamnetcdf_afterburner
+
+ Procedure information
+   Lines      : 603
+   Statements : 394
+
+ Scoping unit of program : echamnetcdf_afterburner
+   Attribute and Cross reference of name
+     afterburner_levels
+      |(Class and Type) : namelist name
+      |(Attributes)     : 
+      |(Declaration)    : 46
+      |(Definition)     : 
+      |(Reference)      : 118
+     aps_in
+      |(Class and Type) : variable name, REAL(4)
+      |(Attributes)     : ALLOCATABLE, DIMENSION
+      |(Declaration)    : 27
+      |(Definition)     : 99  392  425
+      |(Reference)      : 
+     dwinv
+      |(Class and Type) : variable name, REAL(4)
+      |(Attributes)     : ALLOCATABLE, DIMENSION
+      |(Declaration)    : 27
+      |(Definition)     : 138  438
+      |(Reference)      : 
+     echamnetcdf_afterburner
+      |(Class and Type) : program name
+      |(Attributes)     : 
+      |(Declaration)    : 1
+      |(Definition)     : 
+      |(Reference)      : 603
+     GETARG
+      |(Class and Type) : external subroutine name
+      |(Attributes)     : 
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 53  54  55  56
+     HANDLE_ERR
+      |(Class and Type) : internal subroutine name
+      |(Attributes)     : 
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 64  68  74  76  78  80  82  84  86  88  146  148  150  152  158  168  191  194  196  198  204  207  209  211  217  220  222  224  229  235  238  240  243  252  257  262  264  267  269  271  273  281  283  285  287  289  291  293  295  297  299  301  303  305  309  319  338  341  346  349  354  359  370  385  388  403  408  415  417
+     hyam
+      |(Class and Type) : variable name, REAL(4)
+      |(Attributes)     : ALLOCATABLE, DIMENSION
+      |(Declaration)    : 27
+      |(Definition)     : 93  374  423
+      |(Reference)      : 
+     hybm
+      |(Class and Type) : variable name, REAL(4)
+      |(Attributes)     : ALLOCATABLE, DIMENSION
+      |(Declaration)    : 27
+      |(Definition)     : 94  378  424
+      |(Reference)      : 
+     INDEX
+      |(Class and Type) : intrinsic function name, INTEGER(4)
+      |(Attributes)     : PURE, ELEMENTAL
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 171  322
+     INT
+      |(Class and Type) : intrinsic function name, INTEGER(4)
+      |(Attributes)     : PURE, ELEMENTAL
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 363
+     i
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : 
+      |(Declaration)    : 21
+      |(Definition)     : 162  313
+      |(Reference)      : 166  189  193  195  197  202  206  208  210  215  219  221  223  228  233  237  239  241  250  255  261  261  263  263  266  266  268  268  270  270  272  272  317  337  340  345  348  353  358  369  374  378  384  387  402  407
+     iind
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : 
+      |(Declaration)    : 21
+      |(Definition)     : 
+      |(Reference)      : 
+     iind0
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : ALLOCATABLE, DIMENSION
+      |(Declaration)    : 35
+      |(Definition)     : 130  431
+      |(Reference)      : 
+     iind1
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : ALLOCATABLE, DIMENSION
+      |(Declaration)    : 35
+      |(Definition)     : 131  432
+      |(Reference)      : 
+     ind
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : 
+      |(Declaration)    : 21
+      |(Definition)     : 171  322
+      |(Reference)      : 172  173  323  324
+     ind0
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : ALLOCATABLE, DIMENSION
+      |(Declaration)    : 35
+      |(Definition)     : 128  445
+      |(Reference)      : 
+     ind1
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : ALLOCATABLE, DIMENSION
+      |(Declaration)    : 35
+      |(Definition)     : 129  446
+      |(Reference)      : 
+     indfirst
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : 
+      |(Declaration)    : 21
+      |(Definition)     : 
+      |(Reference)      : 
+     indlast
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : 
+      |(Declaration)    : 21
+      |(Definition)     : 
+      |(Reference)      : 
+     interpolate_index
+      |(Class and Type) : external procedure name
+      |(Attributes)     : EXTERNAL
+      |(Declaration)    : 49
+      |(Definition)     : 
+      |(Reference)      : 
+     ioerror
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : 
+      |(Declaration)    : 21
+      |(Definition)     : 108  112
+      |(Reference)      : 114
+     ji
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : 
+      |(Declaration)    : 21
+      |(Definition)     : 
+      |(Reference)      : 
+     jk
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : 
+      |(Declaration)    : 21
+      |(Definition)     : 
+      |(Reference)      : 
+     jl
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : 
+      |(Declaration)    : 21
+      |(Definition)     : 
+      |(Reference)      : 
+     jt
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : 
+      |(Declaration)    : 21
+      |(Definition)     : 361
+      |(Reference)      : 363  364  365
+     laps
+      |(Class and Type) : variable name, LOGICAL(4)
+      |(Attributes)     : initialized
+      |(Declaration)    : 41
+      |(Definition)     : 391
+      |(Reference)      : 397
+     lat
+      |(Class and Type) : variable name, REAL(4)
+      |(Attributes)     : ALLOCATABLE, DIMENSION
+      |(Declaration)    : 27
+      |(Definition)     : 92  345  422
+      |(Reference)      : 348
+     latid_in
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : 
+      |(Declaration)    : 21
+      |(Definition)     : 77
+      |(Reference)      : 79
+     latid_out
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : 
+      |(Declaration)    : 21
+      |(Definition)     : 147
+      |(Reference)      : 202  250  255
+     len
+      |(Class and Type) : keyword argument name
+      |(Attributes)     : 
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 75  79  83  87
+     lev_in
+      |(Class and Type) : variable name, REAL(4)
+      |(Attributes)     : ALLOCATABLE, DIMENSION
+      |(Declaration)    : 27
+      |(Definition)     : 96  426
+      |(Reference)      : 
+     lev_out
+      |(Class and Type) : variable name, REAL(4)
+      |(Attributes)     : ALLOCATABLE, DIMENSION
+      |(Declaration)    : 27
+      |(Definition)     : 126  142  428
+      |(Reference)      : 353
+     levels
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : DIMENSION, namelist-group-object
+      |(Declaration)    : 45  46
+      |(Definition)     : 106
+      |(Reference)      : 122  142
+     levelscount
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : DIMENSION
+      |(Declaration)    : 45
+      |(Definition)     : 107  122
+      |(Reference)      : 123
+     levid_out
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : 
+      |(Declaration)    : 21
+      |(Definition)     : 149
+      |(Reference)      : 215  255
+     levstand_in
+      |(Class and Type) : variable name, REAL(4)
+      |(Attributes)     : ALLOCATABLE, DIMENSION
+      |(Declaration)    : 27
+      |(Definition)     : 95  427
+      |(Reference)      : 
+     ll
+      |(Class and Type) : variable name, LOGICAL(4)
+      |(Attributes)     : ALLOCATABLE, DIMENSION
+      |(Declaration)    : 34
+      |(Definition)     : 139  443
+      |(Reference)      : 
+     log_lev_in0
+      |(Class and Type) : variable name, REAL(4)
+      |(Attributes)     : ALLOCATABLE, DIMENSION
+      |(Declaration)    : 27
+      |(Definition)     : 132  439
+      |(Reference)      : 
+     log_lev_in1
+      |(Class and Type) : variable name, REAL(4)
+      |(Attributes)     : ALLOCATABLE, DIMENSION
+      |(Declaration)    : 27
+      |(Definition)     : 133  440
+      |(Reference)      : 
+     log_lev_out
+      |(Class and Type) : variable name, REAL(4)
+      |(Attributes)     : ALLOCATABLE, DIMENSION
+      |(Declaration)    : 27
+      |(Definition)     : 134  441
+      |(Reference)      : 
+     log_lev_out3d
+      |(Class and Type) : variable name, REAL(4)
+      |(Attributes)     : ALLOCATABLE, DIMENSION
+      |(Declaration)    : 27
+      |(Definition)     : 135  442
+      |(Reference)      : 
+     lon
+      |(Class and Type) : variable name, REAL(4)
+      |(Attributes)     : ALLOCATABLE, DIMENSION
+      |(Declaration)    : 27
+      |(Definition)     : 91  337  421
+      |(Reference)      : 340
+     lonid_in
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : 
+      |(Declaration)    : 21
+      |(Definition)     : 73
+      |(Reference)      : 75
+     lonid_out
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : 
+      |(Declaration)    : 21
+      |(Definition)     : 145
+      |(Reference)      : 189  250  255
+     lun
+      |(Class and Type) : named constant, INTEGER(4)
+      |(Attributes)     : 
+      |(Declaration)    : 43
+      |(Definition)     : 
+      |(Reference)      : 109  118  119
+     m
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : 
+      |(Declaration)    : 21
+      |(Definition)     : 
+      |(Reference)      : 
+     mlevid_in
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : 
+      |(Declaration)    : 21
+      |(Definition)     : 81
+      |(Reference)      : 83
+     month
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : 
+      |(Declaration)    : 21
+      |(Definition)     : 
+      |(Reference)      : 
+     months
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : 
+      |(Declaration)    : 21
+      |(Definition)     : 
+      |(Reference)      : 
+     NINT
+      |(Class and Type) : intrinsic function name, INTEGER(4)
+      |(Attributes)     : PURE, ELEMENTAL
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 364
+     namelistfile
+      |(Class and Type) : variable name, CHARACTER(31,1)
+      |(Attributes)     : 
+      |(Declaration)    : 37
+      |(Definition)     : 55
+      |(Reference)      : 109  115
+     ncid_in
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : 
+      |(Declaration)    : 21
+      |(Definition)     : 63
+      |(Reference)      : 73  75  77  79  81  83  85  87  157  166  228  261  263  266  268  270  272  280  282  284  286  288  290  292  294  296  298  300  302  304  317  337  345  358  374  378  384  402  414
+     ncid_out
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : 
+      |(Declaration)    : 21
+      |(Definition)     : 67
+      |(Reference)      : 145  147  149  151  189  193  195  197  202  206  208  210  215  219  221  223  233  237  239  241  250  255  261  263  266  268  270  272  280  282  284  286  288  290  292  294  296  298  300  302  304  308  340  348  353  369  387  407  416
+     ncname_in
+      |(Class and Type) : variable name, CHARACTER(31,1)
+      |(Attributes)     : 
+      |(Declaration)    : 37
+      |(Definition)     : 53
+      |(Reference)      : 63
+     ncname_out
+      |(Class and Type) : variable name, CHARACTER(31,1)
+      |(Attributes)     : 
+      |(Declaration)    : 37
+      |(Definition)     : 54
+      |(Reference)      : 67
+     netcdf
+      |(Class and Type) : module name
+      |(Attributes)     : 
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 17
+     nf90_clobber
+      |(Class and Type) : named constant, INTEGER(4)
+      |(Attributes)     : use-associated
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 67
+     nf90_close
+      |(Class and Type) : module function name, INTEGER(4)
+      |(Attributes)     : use-associated
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 414  416
+     nf90_copy_att
+      |(Class and Type) : module function name, INTEGER(4)
+      |(Attributes)     : use-associated
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 261  263  266  268  270  272  280  282  284  286  288  290  292  294  296  298  300  302  304
+     nf90_create
+      |(Class and Type) : module function name, INTEGER(4)
+      |(Attributes)     : use-associated
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 67
+     nf90_def_dim
+      |(Class and Type) : module function name, INTEGER(4)
+      |(Attributes)     : use-associated
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 145  147  149  151
+     nf90_def_var
+      |(Class and Type) : generic name
+      |(Attributes)     : use-associated
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 189  202  215  233  250  255
+     nf90_enddef
+      |(Class and Type) : module function name, INTEGER(4)
+      |(Attributes)     : use-associated
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 308
+     nf90_float
+      |(Class and Type) : named constant, INTEGER(4)
+      |(Attributes)     : use-associated
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 189  202  215  233  250  255
+     nf90_get_att
+      |(Class and Type) : generic name
+      |(Attributes)     : use-associated
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 228
+     nf90_get_var
+      |(Class and Type) : generic name
+      |(Attributes)     : use-associated
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 337  345  358  374  378  384  402
+     nf90_global
+      |(Class and Type) : named constant, INTEGER(4)
+      |(Attributes)     : use-associated
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 280  280  282  282  284  284  286  286  288  288  290  290  292  292  294  294  296  296  298  298  300  300  302  302  304  304
+     nf90_inq_dimid
+      |(Class and Type) : module function name, INTEGER(4)
+      |(Attributes)     : use-associated
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 73  77  81  85
+     nf90_inquire
+      |(Class and Type) : module function name, INTEGER(4)
+      |(Attributes)     : use-associated
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 157
+     nf90_inquire_dimension
+      |(Class and Type) : module function name, INTEGER(4)
+      |(Attributes)     : use-associated
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 75  79  83  87
+     nf90_inquire_variable
+      |(Class and Type) : module function name, INTEGER(4)
+      |(Attributes)     : use-associated
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 166  317
+     nf90_noerr
+      |(Class and Type) : named constant, INTEGER(4)
+      |(Attributes)     : use-associated
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 64  68  74  76  78  80  82  84  86  88  146  148  150  152  158  168  191  194  196  198  204  207  209  211  217  220  222  224  229  235  238  240  243  252  257  262  264  267  269  271  273  281  283  285  287  289  291  293  295  297  299  301  303  305  309  319  338  341  346  349  354  359  370  385  388  403  408  415  417
+     nf90_nowrite
+      |(Class and Type) : named constant, INTEGER(4)
+      |(Attributes)     : use-associated
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 63
+     nf90_open
+      |(Class and Type) : module function name, INTEGER(4)
+      |(Attributes)     : use-associated
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 63
+     nf90_put_att
+      |(Class and Type) : generic name
+      |(Attributes)     : use-associated
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 193  195  197  206  208  210  219  221  223  237  239  241
+     nf90_put_var
+      |(Class and Type) : generic name
+      |(Attributes)     : use-associated
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 340  348  353  369  387  407
+     nf90_unlimited
+      |(Class and Type) : named constant, INTEGER(4)
+      |(Attributes)     : use-associated
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 151
+     nlat
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : 
+      |(Declaration)    : 21
+      |(Definition)     : 79
+      |(Reference)      : 92  96  99  100  101  127  130  131  132  133  135  136  137  138  139  147
+     nlev_in
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : 
+      |(Declaration)    : 21
+      |(Definition)     : 83
+      |(Reference)      : 93  94  95  96  101
+     nlev_out
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : 
+      |(Declaration)    : 21
+      |(Definition)     : 123
+      |(Reference)      : 126  127  128  129  130  131  132  133  134  135  136  137  138  139  142  149
+     nlon
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : 
+      |(Declaration)    : 21
+      |(Definition)     : 75
+      |(Reference)      : 91  96  99  100  101  127  130  131  132  133  135  136  137  138  139  145
+     ntime
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : 
+      |(Declaration)    : 21
+      |(Definition)     : 87
+      |(Reference)      : 96  97  98  99  100  101  127  130  131  132  133  135  136  137  138  139  361
+     nvar
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : 
+      |(Declaration)    : 21
+      |(Definition)     : 
+      |(Reference)      : 
+     nvariables
+      |(Class and Type) : keyword argument name
+      |(Attributes)     : 
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 157
+     nvartot
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : 
+      |(Declaration)    : 21
+      |(Definition)     : 157
+      |(Reference)      : 160  162  313
+     prepare_transform_lev
+      |(Class and Type) : internal subroutine name
+      |(Attributes)     : 
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 393
+     ps_stand
+      |(Class and Type) : named constant, REAL(4)
+      |(Attributes)     : 
+      |(Declaration)    : 42
+      |(Definition)     : 
+      |(Reference)      : 
+     REAL
+      |(Class and Type) : intrinsic function name, REAL(4)
+      |(Attributes)     : PURE, ELEMENTAL
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 142  365
+     SUM
+      |(Class and Type) : intrinsic function name, INTEGER(4)
+      |(Attributes)     : PURE
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 123
+     status
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : 
+      |(Declaration)    : 21
+      |(Definition)     : 63  67  73  75  77  79  81  83  85  87  145  147  149  151  157  166  189  193  195  197  202  206  208  210  215  219  221  223  228  233  237  239  241  250  255  261  263  266  268  270  272  280  282  284  286  288  290  292  294  296  298  300  302  304  308  317  337  340  345  348  353  358  369  374  378  384  387  402  407  414  416
+      |(Reference)      : 64  64  68  68  74  74  76  76  78  78  80  80  82  82  84  84  86  86  88  88  146  146  148  148  150  150  152  152  158  158  168  168  191  191  194  194  196  196  198  198  204  204  207  207  209  209  211  211  217  217  220  220  222  222  224  224  229  229  235  235  238  238  240  240  243  243  252  252  257  257  262  262  264  264  267  267  269  269  271  271  273  273  281  281  283  283  285  285  287  287  289  289  291  291  293  293  295  295  297  297  299  299  301  301  303  303  305  305  309  309  319  319  338  338  341  341  346  346  349  349  354  354  359  359  370  370  385  385  388  388  403  403  408  408  415  415  417  417
+     syear
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : 
+      |(Declaration)    : 21
+      |(Definition)     : 58
+      |(Reference)      : 367
+     syear_in
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : 
+      |(Declaration)    : 21
+      |(Definition)     : 
+      |(Reference)      : 367
+     syear_st
+      |(Class and Type) : variable name, CHARACTER(4,1)
+      |(Attributes)     : 
+      |(Declaration)    : 40
+      |(Definition)     : 56
+      |(Reference)      : 58
+     syearm1_st
+      |(Class and Type) : variable name, CHARACTER(4,1)
+      |(Attributes)     : 
+      |(Declaration)    : 40
+      |(Definition)     : 
+      |(Reference)      : 
+     TRIM
+      |(Class and Type) : intrinsic function name, CHARACTER((unknown),1)
+      |(Attributes)     : PURE
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 63  67  109  115  171  175  185  189  202  233  250  255  265  322  326  333  390
+     time_in
+      |(Class and Type) : variable name, REAL(4)
+      |(Attributes)     : ALLOCATABLE, DIMENSION
+      |(Declaration)    : 27
+      |(Definition)     : 97  358  365  429
+      |(Reference)      : 363  364  367
+     time_int
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : 
+      |(Declaration)    : 21
+      |(Definition)     : 364
+      |(Reference)      : 365
+     time_out
+      |(Class and Type) : variable name, REAL(4)
+      |(Attributes)     : ALLOCATABLE, DIMENSION
+      |(Declaration)    : 27
+      |(Definition)     : 98  367  430
+      |(Reference)      : 369
+     timeid_in
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : 
+      |(Declaration)    : 21
+      |(Definition)     : 85
+      |(Reference)      : 87
+     timeid_out
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : 
+      |(Declaration)    : 21
+      |(Definition)     : 151
+      |(Reference)      : 233  250  255
+     timeorigin_out
+      |(Class and Type) : variable name, CHARACTER(11,1)
+      |(Attributes)     : 
+      |(Declaration)    : 39
+      |(Definition)     : 
+      |(Reference)      : 241
+     timeunits_in
+      |(Class and Type) : variable name, CHARACTER(23,1)
+      |(Attributes)     : 
+      |(Declaration)    : 38
+      |(Definition)     : 228
+      |(Reference)      : 
+     timeunits_out
+      |(Class and Type) : variable name, CHARACTER(23,1)
+      |(Attributes)     : 
+      |(Declaration)    : 38
+      |(Definition)     : 
+      |(Reference)      : 239
+     transform_lev
+      |(Class and Type) : internal subroutine name
+      |(Attributes)     : 
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 405
+     transform_timeunits
+      |(Class and Type) : internal subroutine name
+      |(Attributes)     : 
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 231
+     var3
+      |(Class and Type) : variable name, REAL(4)
+      |(Attributes)     : ALLOCATABLE, DIMENSION
+      |(Declaration)    : 27
+      |(Definition)     : 100  384  433
+      |(Reference)      : 387  392
+     var4_in
+      |(Class and Type) : variable name, REAL(4)
+      |(Attributes)     : ALLOCATABLE, DIMENSION
+      |(Declaration)    : 27
+      |(Definition)     : 101  402  434
+      |(Reference)      : 
+     var4_out
+      |(Class and Type) : variable name, REAL(4)
+      |(Attributes)     : ALLOCATABLE, DIMENSION
+      |(Declaration)    : 27
+      |(Definition)     : 127  435
+      |(Reference)      : 407
+     vardimids
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : DIMENSION
+      |(Declaration)    : 21
+      |(Definition)     : 166  317
+      |(Reference)      : 
+     varid_out
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : ALLOCATABLE, DIMENSION
+      |(Declaration)    : 35
+      |(Definition)     : 160  189  202  215  233  250  255  444
+      |(Reference)      : 193  195  197  206  208  210  219  221  223  237  239  241  261  263  266  268  270  272  340  348  353  369  387  407
+     varname_in
+      |(Class and Type) : variable name, CHARACTER(31,1)
+      |(Attributes)     : 
+      |(Declaration)    : 37
+      |(Definition)     : 166  317
+      |(Reference)      : 171  173  175  185  265  322  324  326  333  390
+     varname_out
+      |(Class and Type) : variable name, CHARACTER(31,1)
+      |(Attributes)     : 
+      |(Declaration)    : 37
+      |(Definition)     : 173  175  324  326
+      |(Reference)      : 189  202  233  250  255
+     varnatts
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : 
+      |(Declaration)    : 21
+      |(Definition)     : 166  317
+      |(Reference)      : 
+     varndims
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : 
+      |(Declaration)    : 21
+      |(Definition)     : 166  317
+      |(Reference)      : 180  184  248  332  382
+     vartype
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : 
+      |(Declaration)    : 21
+      |(Definition)     : 166  317
+      |(Reference)      : 
+     w0
+      |(Class and Type) : variable name, REAL(4)
+      |(Attributes)     : ALLOCATABLE, DIMENSION
+      |(Declaration)    : 27
+      |(Definition)     : 136  436
+      |(Reference)      : 
+     w1
+      |(Class and Type) : variable name, REAL(4)
+      |(Attributes)     : ALLOCATABLE, DIMENSION
+      |(Declaration)    : 27
+      |(Definition)     : 137  437
+      |(Reference)      : 
+     y
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : 
+      |(Declaration)    : 21
+      |(Definition)     : 363
+      |(Reference)      : 364  364
+     year
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : 
+      |(Declaration)    : 21
+      |(Definition)     : 
+      |(Reference)      : 
+   Cross reference of label
+     (Label) (label-kind)               (line-no.)
+     ------- ------------- ------------ ----------
+        110  execution     (Definition) 112  
+                           (Reference)  109
+        111  execution     (Definition) 113  
+                           (Reference)  111
+
+ Scoping unit of internal sub-program : transform_timeunits
+   Attribute and Cross reference of name
+     syear
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : host-associated
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 464
+     syear_in
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : host-associated
+      |(Declaration)    : 
+      |(Definition)     : 455  457
+      |(Reference)      : 
+     syearm1_st
+      |(Class and Type) : variable name, CHARACTER(4,1)
+      |(Attributes)     : host-associated
+      |(Declaration)    : 
+      |(Definition)     : 464
+      |(Reference)      : 466  468
+     timeorigin_out
+      |(Class and Type) : variable name, CHARACTER(11,1)
+      |(Attributes)     : host-associated
+      |(Declaration)    : 
+      |(Definition)     : 467  468
+      |(Reference)      : 
+     timeunits_in
+      |(Class and Type) : variable name, CHARACTER(23,1)
+      |(Attributes)     : host-associated
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 454  455  456  457
+     timeunits_out
+      |(Class and Type) : variable name, CHARACTER(23,1)
+      |(Attributes)     : host-associated
+      |(Declaration)    : 
+      |(Definition)     : 465  466
+      |(Reference)      : 
+     transform_timeunits
+      |(Class and Type) : internal subroutine name
+      |(Attributes)     : 
+      |(Declaration)    : 
+      |(Definition)     : 450
+      |(Reference)      : 470
+
+ Scoping unit of internal sub-program : prepare_transform_lev
+   Attribute and Cross reference of name
+     aps_in
+      |(Class and Type) : variable name, REAL(4)
+      |(Attributes)     : ALLOCATABLE, DIMENSION, host-associated
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 498
+     dwinv
+      |(Class and Type) : variable name, REAL(4)
+      |(Attributes)     : ALLOCATABLE, DIMENSION, host-associated
+      |(Declaration)    : 
+      |(Definition)     : 566  568
+      |(Reference)      : 
+     hyam
+      |(Class and Type) : variable name, REAL(4)
+      |(Attributes)     : ALLOCATABLE, DIMENSION, host-associated
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 478  498
+     hybm
+      |(Class and Type) : variable name, REAL(4)
+      |(Attributes)     : ALLOCATABLE, DIMENSION, host-associated
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 478  498
+     iind
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : host-associated
+      |(Declaration)    : 
+      |(Definition)     : 507  520
+      |(Reference)      : 508  508  513  521  521  526
+     iind0
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : ALLOCATABLE, DIMENSION, host-associated
+      |(Declaration)    : 
+      |(Definition)     : 493  510  513  523  537  539
+      |(Reference)      : 510  520  523  537  539  549  562
+     iind1
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : ALLOCATABLE, DIMENSION, host-associated
+      |(Declaration)    : 
+      |(Definition)     : 494  511  524  526  538  540
+      |(Reference)      : 507  511  524  538  540  550  562
+     ind0
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : ALLOCATABLE, DIMENSION, host-associated
+      |(Declaration)    : 
+      |(Definition)     : 485  486  488  549
+      |(Reference)      : 486  488  493  551
+     ind1
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : ALLOCATABLE, DIMENSION, host-associated
+      |(Declaration)    : 
+      |(Definition)     : 481  487  489  550
+      |(Reference)      : 485  487  489  494  552
+     indfirst
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : host-associated
+      |(Declaration)    : 
+      |(Definition)     : 481
+      |(Reference)      : 
+     indlast
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : host-associated
+      |(Declaration)    : 
+      |(Definition)     : 481
+      |(Reference)      : 
+     interpolate_index
+      |(Class and Type) : external subroutine name
+      |(Attributes)     : host-associated, EXTERNAL
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 481
+     ji
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : host-associated
+      |(Declaration)    : 
+      |(Definition)     : 502  546
+      |(Reference)      : 507  508  510  510  511  511  513  513  520  521  523  523  524  524  526  526  549  550  551  551  552  552
+     jk
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : host-associated
+      |(Declaration)    : 
+      |(Definition)     : 492  498  503  547  559
+      |(Reference)      : 492  492  498  498  498  507  508  510  510  511  511  513  513  520  521  523  523  524  524  526  526  549  550  551  551  552  552  559
+     jl
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : host-associated
+      |(Declaration)    : 
+      |(Definition)     : 492  504  559
+      |(Reference)      : 492  492  507  508  510  510  511  511  513  513  520  521  523  523  524  524  526  526  559
+     jt
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : host-associated
+      |(Declaration)    : 
+      |(Definition)     : 492  505  548  559
+      |(Reference)      : 492  492  507  508  510  510  511  511  513  513  520  521  523  523  524  524  526  526  549  550  551  551  552  552  559
+     LOG
+      |(Class and Type) : intrinsic function name, REAL(4)
+      |(Attributes)     : PURE, ELEMENTAL
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 551  552  556
+     lev_in
+      |(Class and Type) : variable name, REAL(4)
+      |(Attributes)     : ALLOCATABLE, DIMENSION, host-associated
+      |(Declaration)    : 
+      |(Definition)     : 498
+      |(Reference)      : 508  513  521  526  551  552
+     lev_out
+      |(Class and Type) : variable name, REAL(4)
+      |(Attributes)     : ALLOCATABLE, DIMENSION, host-associated
+      |(Declaration)    : 
+      |(Definition)     : 481
+      |(Reference)      : 508  513  521  526  556
+     levstand_in
+      |(Class and Type) : variable name, REAL(4)
+      |(Attributes)     : ALLOCATABLE, DIMENSION, host-associated
+      |(Declaration)    : 
+      |(Definition)     : 478  481
+      |(Reference)      : 
+     ll
+      |(Class and Type) : variable name, LOGICAL(4)
+      |(Attributes)     : ALLOCATABLE, DIMENSION, host-associated
+      |(Declaration)    : 
+      |(Definition)     : 562
+      |(Reference)      : 563  564  565
+     log_lev_in0
+      |(Class and Type) : variable name, REAL(4)
+      |(Attributes)     : ALLOCATABLE, DIMENSION, host-associated
+      |(Declaration)    : 
+      |(Definition)     : 551
+      |(Reference)      : 564  566
+     log_lev_in1
+      |(Class and Type) : variable name, REAL(4)
+      |(Attributes)     : ALLOCATABLE, DIMENSION, host-associated
+      |(Declaration)    : 
+      |(Definition)     : 552
+      |(Reference)      : 563  566
+     log_lev_out
+      |(Class and Type) : variable name, REAL(4)
+      |(Attributes)     : ALLOCATABLE, DIMENSION, host-associated
+      |(Declaration)    : 
+      |(Definition)     : 556
+      |(Reference)      : 559
+     log_lev_out3d
+      |(Class and Type) : variable name, REAL(4)
+      |(Attributes)     : ALLOCATABLE, DIMENSION, host-associated
+      |(Declaration)    : 
+      |(Definition)     : 559
+      |(Reference)      : 563  564
+     MERGE
+      |(Class and Type) : intrinsic function name, REAL(4)
+      |(Attributes)     : PURE, ELEMENTAL
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 563  564
+     nlat
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : host-associated
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 492  503  547  559
+     nlev_in
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : host-associated
+      |(Declaration)    : 
+      |(Definition)     : 481
+      |(Reference)      : 486  486  487  487  498  508  513  537  537  538  538
+     nlev_out
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : host-associated
+      |(Declaration)    : 
+      |(Definition)     : 481
+      |(Reference)      : 504
+     nlon
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : host-associated
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 492  502  546  559
+     ntime
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : host-associated
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 492  505  548  559
+     prepare_transform_lev
+      |(Class and Type) : internal subroutine name
+      |(Attributes)     : 
+      |(Declaration)    : 
+      |(Definition)     : 472
+      |(Reference)      : 571
+     ps_stand
+      |(Class and Type) : named constant, REAL(4)
+      |(Attributes)     : host-associated
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 478
+     w0
+      |(Class and Type) : variable name, REAL(4)
+      |(Attributes)     : ALLOCATABLE, DIMENSION, host-associated
+      |(Declaration)    : 
+      |(Definition)     : 563
+      |(Reference)      : 
+     w1
+      |(Class and Type) : variable name, REAL(4)
+      |(Attributes)     : ALLOCATABLE, DIMENSION, host-associated
+      |(Declaration)    : 
+      |(Definition)     : 564
+      |(Reference)      : 
+
+ Scoping unit of internal sub-program : transform_lev
+   Attribute and Cross reference of name
+     dwinv
+      |(Class and Type) : variable name, REAL(4)
+      |(Attributes)     : ALLOCATABLE, DIMENSION, host-associated
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 582
+     iind0
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : ALLOCATABLE, DIMENSION, host-associated
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 580
+     iind1
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : ALLOCATABLE, DIMENSION, host-associated
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 581
+     ind0
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : ALLOCATABLE, DIMENSION, host-associated
+      |(Declaration)    : 
+      |(Definition)     : 580
+      |(Reference)      : 582
+     ind1
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : ALLOCATABLE, DIMENSION, host-associated
+      |(Declaration)    : 
+      |(Definition)     : 581
+      |(Reference)      : 582
+     ji
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : host-associated
+      |(Declaration)    : 
+      |(Definition)     : 577
+      |(Reference)      : 580  581  582  582  582  582  582  582
+     jk
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : host-associated
+      |(Declaration)    : 
+      |(Definition)     : 578
+      |(Reference)      : 580  581  582  582  582  582  582  582
+     jt
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : host-associated
+      |(Declaration)    : 
+      |(Definition)     : 579
+      |(Reference)      : 580  581  582  582  582  582  582  582
+     nlat
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : host-associated
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 578
+     nlon
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : host-associated
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 577
+     ntime
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : host-associated
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 579
+     transform_lev
+      |(Class and Type) : internal subroutine name
+      |(Attributes)     : 
+      |(Declaration)    : 
+      |(Definition)     : 573
+      |(Reference)      : 590
+     var4_in
+      |(Class and Type) : variable name, REAL(4)
+      |(Attributes)     : ALLOCATABLE, DIMENSION, host-associated
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 582  582
+     var4_out
+      |(Class and Type) : variable name, REAL(4)
+      |(Attributes)     : ALLOCATABLE, DIMENSION, host-associated
+      |(Declaration)    : 
+      |(Definition)     : 582
+      |(Reference)      : 
+     w0
+      |(Class and Type) : variable name, REAL(4)
+      |(Attributes)     : ALLOCATABLE, DIMENSION, host-associated
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 582
+     w1
+      |(Class and Type) : variable name, REAL(4)
+      |(Attributes)     : ALLOCATABLE, DIMENSION, host-associated
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 582
+
+ Scoping unit of internal sub-program : HANDLE_ERR
+   Attribute and Cross reference of name
+     HANDLE_ERR
+      |(Class and Type) : internal subroutine name
+      |(Attributes)     : 
+      |(Declaration)    : 
+      |(Definition)     : 592
+      |(Reference)      : 601
+     nf90_noerr
+      |(Class and Type) : named constant, INTEGER(4)
+      |(Attributes)     : host-associated
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 596
+     nf90_strerror
+      |(Class and Type) : module function name, CHARACTER(80,1)
+      |(Attributes)     : host-associated
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 597
+     status
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : INTENT(IN), dummy-argument
+      |(Declaration)    : 592  594
+      |(Definition)     : 
+      |(Reference)      : 596  597
+     TRIM
+      |(Class and Type) : intrinsic function name, CHARACTER((unknown),1)
+      |(Attributes)     : PURE
+      |(Declaration)    : 
+      |(Definition)     : 
+      |(Reference)      : 597
+
+ Total information
+   Procedures       : 1
+   Total lines      : 603
+   Total statements : 394
+
+
+ Lahey/Fujitsu Fortran 95 Compiler Release L6.20c  Thu Sep 24 19:40:57 2009
+ Copyright (C) 1994-2003 Lahey Computer Systems.  All rights reserved.
+ Copyright (C) 1998-2003 FUJITSU LIMITED. All rights reserved.
+
+ Compilation information
+   Current directory : /nhome/martisch/echam5/burn
+   Source file       : interpolate_index.f90
+   Cpp options       : -Xs -I/usr/local/netcdf-lf95/include -Dunix -Di386 -D__unix -D__i386 -D__ELF__ -D__i386__ -D__unix__ -D__linux__ -D__linux -Asystem(unix) -Asystem(posix) -Acpu(i386) -Amachine(i386) -Dlinux
+   Compiler options  : --nap -nc --chk e --nchkglobal --co --nconcc --dal 
+                     : --ndbl --f95 -g --nin --ninfo --ninline --li --lst 
+                     : --nlong --maxfatals 50 --nml --nmldefault --o0 --no 
+                     : --nocl --nopenmp --nparallel --nprefetch --npca 
+                     : --nprivate --nquad --quiet --nsav --nshared --nsse2 
+                     : --nstaticlink --nswm --tp --nthreadheap --nthreads 
+                     : --trace --trap --nunroll --nvarheap --nversion --warn 
+                     : --nwide --nwisk --nwo --nzfm --xref
+
+ External subroutine subprogram "interpolate_index"
+  (line-no.)(nest)
+          1          SUBROUTINE interpolate_index(ndim1, ndim2, g1, g2, k2first, k2last, k2index)
+          2        
+          3            ! This subroutine initializes the module variables which
+          4            ! are used by the interpolation subroutines.
+          5        
+          6            ! Input:
+          7            ! ------
+          8            ! ndim1   : dimension of grid 1
+          9            ! g1      : coordinates of grid 1
+         10            ! ndim2   : dimension of grid 2
+         11            ! g2      : coordinates of grid 2
+         12        
+         13            ! Output:
+         14            ! -------
+         15            ! k2first : index of first coordinate of grid 2
+         16            !           in the range of grid 1
+         17            ! k2last  : index of last coordinate of grid 2
+         18            !           in the range of grid 1
+         19            ! k2index : contains for each coordinate of grid2
+         20            !           in the range of grid1 the index of the
+         21            !           nearest bigger coordinate of grid1
+         22        
+         23            ! Data on grid 1 may be interpolated to the index
+         24            ! range [k2first,k2last] of grid 2.
+         25        
+         26            ! Authors: Marco Giorgetta, MPI for Meteorology, Hamburg
+         27            !          October 1999
+         28            !          Martin Schraner, ETH Zurich, February 2009
+         29        
+         30            IMPLICIT NONE
+         31        
+         32            ! Subroutine arguments:
+         33            INTEGER, INTENT(in)                :: ndim1, ndim2
+         34            REAL, INTENT(in)                   :: g1(ndim1), g2(ndim2)
+         35            INTEGER, INTENT(out)               :: k2first, k2last
+         36            INTEGER, INTENT(out)               :: k2index(ndim2)
+         37        
+         38            ! Local variables:
+         39            INTEGER  :: k1, k2
+         40        
+         41            ! Executable statements:
+         42        
+         43            ! Find index of first element of grid 2
+         44            ! which is in the range of grid 1
+         45            ! -------------------------------------
+         46            k2first=0
+         47            k2=1
+         48        
+         49     1      DO
+         50     2         IF (g2(k2) .GE. g1(1)) THEN
+         51     2            k2first=k2
+         52     2         ELSE
+         53     2            k2=k2+1
+         54     2         ENDIF
+         55     1         IF (k2first .NE. 0) EXIT
+         56     1      ENDDO
+         57        
+         58            ! Find index of last element of grid 2
+         59            ! which is in the range of grid 1
+         60            ! ------------------------------------
+         61            k2last=0
+         62            k2=ndim2
+         63     1      DO
+         64     2         IF (g2(k2) .LE. g1(ndim1)) THEN
+         65     2            k2last=k2
+         66     2         ELSE
+         67     2            k2=k2-1
+         68     2         ENDIF
+         69     1         IF (k2last .NE. 0) EXIT
+         70     1      ENDDO
+         71        
+         72            ! Find indices k2index for elements k2first
+         73            ! to k2last of grid 2
+         74            ! -----------------------------------------
+         75            k2index(:)=0
+         76            k2=k2first
+         77            k1=2
+         78     1      DO
+         79     2         IF (g2(k2) .LE. g1(k1)) THEN
+         80     2            k2index(k2)=k1
+         81     2            k2=k2+1
+         82     2         ELSE
+         83     2            k1=k1+1
+         84     2         ENDIF
+         85     1         IF (k2 .GT. k2last) EXIT
+         86     1      ENDDO
+         87        
+         88          END SUBROUTINE interpolate_index
+
+ Procedure information
+   Lines      : 88
+   Statements : 40
+
+ Scoping unit of external sub-program : interpolate_index
+   Attribute and Cross reference of name
+     g1
+      |(Class and Type) : variable name, REAL(4)
+      |(Attributes)     : DIMENSION, INTENT(IN), dummy-argument
+      |(Declaration)    : 1  34
+      |(Definition)     : 
+      |(Reference)      : 50  64  79
+     g2
+      |(Class and Type) : variable name, REAL(4)
+      |(Attributes)     : DIMENSION, INTENT(IN), dummy-argument
+      |(Declaration)    : 1  34
+      |(Definition)     : 
+      |(Reference)      : 50  64  79
+     interpolate_index
+      |(Class and Type) : external subroutine name
+      |(Attributes)     : 
+      |(Declaration)    : 
+      |(Definition)     : 1
+      |(Reference)      : 88
+     k1
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : 
+      |(Declaration)    : 39
+      |(Definition)     : 77  83
+      |(Reference)      : 79  80  83
+     k2
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : 
+      |(Declaration)    : 39
+      |(Definition)     : 47  53  62  67  76  81
+      |(Reference)      : 50  51  53  64  65  67  79  80  81  85
+     k2first
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : INTENT(OUT), dummy-argument
+      |(Declaration)    : 1  35
+      |(Definition)     : 46  51
+      |(Reference)      : 55  76
+     k2index
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : DIMENSION, INTENT(OUT), dummy-argument
+      |(Declaration)    : 1  36
+      |(Definition)     : 75  80
+      |(Reference)      : 
+     k2last
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : INTENT(OUT), dummy-argument
+      |(Declaration)    : 1  35
+      |(Definition)     : 61  65
+      |(Reference)      : 69  85
+     ndim1
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : INTENT(IN), dummy-argument
+      |(Declaration)    : 1  33
+      |(Definition)     : 
+      |(Reference)      : 34  64
+     ndim2
+      |(Class and Type) : variable name, INTEGER(4)
+      |(Attributes)     : INTENT(IN), dummy-argument
+      |(Declaration)    : 1  33
+      |(Definition)     : 
+      |(Reference)      : 34  36  62
+
+ Total information
+   Procedures       : 1
+   Total lines      : 88
+   Total statements : 40
+

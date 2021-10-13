@@ -1,0 +1,48 @@
+# Intel/Linux
+#
+# Two working compiler sets:
+#
+# 1. Lahey/Fujitsu
+#
+F90      = lf95
+FFLAGS   = -O 
+F90FLAGS = -Cpp -DLF
+LIBS     = -L../lib -lsupport -llapackmt -lblasmt
+SRCDIRS  =
+#MPIROOT  = /sw/linux/mpich2-1.0.2p1-lf
+MPIROOT  =
+#
+# 2. NAG f95 - this is for testing and debugging
+#
+#F90      = f95
+3FFLAGS   = -O
+#F90FLAGS = -colour -C=all -maxcontin=99 -nan -gline -g -fpp -DNAG -DARGCHECK -wmismatch=mpi_bcast,mpi_send,mpi_recv,mpi_isend,mpi_irecv,mpi_allreduce,mpi_gather,nf_get_var_double,nf_put_var_double,nf_def_var,nf_put_vara_double,dgemm,nfmpi_def_dim,nfmpi_put_vara_double,nfmpi_def_var
+#LIBS     = -L../lib -lsupport -llapack -lblas
+#SRCDIRS  = blas lapack
+#MPIROOT  = /sw/sarge-ia32/mpich2-1.0.2p1-nag
+MPIROOT  = 
+#
+# 3. PGI pgf95
+#
+#F90      = pgf95
+#FFLAGS   = -O3 -Kieee -fastsse -Mnontemporal -Mnorecursive -Mextend -Mpreprocess
+#F90FLAGS = -mp -O3 -Kieee -fastsse -Mnontemporal -Mnorecursive -Mextend -Mpreprocess
+#LIBS     = -L../lib -lsupport -llapack -lblas
+#SRCDIRS  = blas lapack
+#MPIROOT  = /sw/sarge-ia32/mpich2-1.0.2p1-pgi
+#
+ARCH       = LINUX
+
+MPI_LIB    = -lmpich
+
+#NETCDFROOT = /sw/sarge-ia32/netcdf-3.6.0-p1
+NETCDFROOT = /usr/local/lib/netcdf
+
+CC       = gcc
+CFLAGS   = -O -DNAGf90Fortran
+
+DEFOPT   = -D
+MODOPT   = -I
+
+
+

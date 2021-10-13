@@ -1,0 +1,27 @@
+# CRAY-X1
+#
+# Enable CC and F90 only, if not the standard compiler should be used 
+
+ARCH       = CRAY_X1
+
+MPIROOT    = ${MPT_SV2}
+MPI_LIB    = -lmpi
+
+CC       = cc
+CFLAGS   = -I../config  -UCRAY -U_CRAY -D_SX
+F90      = ftn
+FFLAGS   = -s real64 -d p -Ofp3 -O gen_private_callee -O task0
+F90FLAGS = -emZ -s real64 -dp -Ofp3 -O gen_private_callee -O task0 -rm -F -UCRAY
+
+LIBS     = -L../lib -lsupport
+
+DEFOPT   = -D
+
+MODOPT   = -p
+
+SRCDIRS  =
+
+
+
+
+

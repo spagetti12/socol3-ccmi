@@ -1,0 +1,89 @@
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/support
+END
+gribex.c.138r.greg
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/support/gribex.c.138r.greg
+END
+gribex.c
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/support/gribex.c
+END
+util_system.c
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/support/util_system.c
+END
+rtc_sx.s
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/support/rtc_sx.s
+END
+cfortran.h
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/support/cfortran.h
+END
+util_reshape.c.138r.greg
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/support/util_reshape.c.138r.greg
+END
+util_reshape.c
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/support/util_reshape.c
+END
+util_pbio.c.138r.greg
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/support/util_pbio.c.138r.greg
+END
+util_pbio.c
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/support/util_pbio.c
+END
+util_sysinfo.c
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/support/util_sysinfo.c
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/support/Makefile
+END
+util_convert.c.138r.greg
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/support/util_convert.c.138r.greg
+END
+util_convert.c
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/support/util_convert.c
+END
+util_timer.c
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/support/util_timer.c
+END

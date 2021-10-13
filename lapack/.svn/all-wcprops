@@ -1,0 +1,1643 @@
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack
+END
+dlasv2.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlasv2.f
+END
+dsygv.f
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dsygv.f
+END
+dlartv.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlartv.f
+END
+dsyevd.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dsyevd.f
+END
+dpotrf.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dpotrf.f
+END
+dspsv.f
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dspsv.f
+END
+dlaqsb.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlaqsb.f
+END
+dsytrd.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dsytrd.f
+END
+dsytd2.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dsytd2.f
+END
+dlaeda.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlaeda.f
+END
+dpbtf2.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dpbtf2.f
+END
+dlansp.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlansp.f
+END
+dpbstf.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dpbstf.f
+END
+dhgeqz.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dhgeqz.f
+END
+dlasq2.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlasq2.f
+END
+dtrevc.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dtrevc.f
+END
+dgtrfs.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dgtrfs.f
+END
+dlaswp.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlaswp.f
+END
+dlaed2.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlaed2.f
+END
+dppsv.f
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dppsv.f
+END
+dormlq.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dormlq.f
+END
+dorml2.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dorml2.f
+END
+dsysvx.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dsysvx.f
+END
+dptsv.f
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dptsv.f
+END
+dlaexc.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlaexc.f
+END
+dtbtrs.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dtbtrs.f
+END
+dpbcon.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dpbcon.f
+END
+dopmtr.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dopmtr.f
+END
+dlabad.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlabad.f
+END
+dlagtm.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlagtm.f
+END
+dlarft.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlarft.f
+END
+dlartg.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlartg.f
+END
+dsptrs.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dsptrs.f
+END
+dggbal.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dggbal.f
+END
+dtrtrs.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dtrtrs.f
+END
+dppsvx.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dppsvx.f
+END
+dgeqr2.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dgeqr2.f
+END
+dgetrs.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dgetrs.f
+END
+dlag2.f
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlag2.f
+END
+dlaqge.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlaqge.f
+END
+dpotf2.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dpotf2.f
+END
+dpteqr.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dpteqr.f
+END
+dspgst.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dspgst.f
+END
+dormqr.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dormqr.f
+END
+dgglse.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dgglse.f
+END
+drscl.f
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/drscl.f
+END
+dtrti2.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dtrti2.f
+END
+dsyrfs.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dsyrfs.f
+END
+dlaset.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlaset.f
+END
+dgeesx.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dgeesx.f
+END
+dpocon.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dpocon.f
+END
+dlasyf.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlasyf.f
+END
+dgerq2.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dgerq2.f
+END
+dspevd.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dspevd.f
+END
+dgbtrs.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dgbtrs.f
+END
+dlasq3.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlasq3.f
+END
+dgttrf.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dgttrf.f
+END
+dlansy.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlansy.f
+END
+dgegv.f
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dgegv.f
+END
+dlaed3.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlaed3.f
+END
+dlaruv.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlaruv.f
+END
+dgehd2.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dgehd2.f
+END
+dgehrd.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dgehrd.f
+END
+dpprfs.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dpprfs.f
+END
+dsptrd.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dsptrd.f
+END
+dorgtr.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dorgtr.f
+END
+dlagtf.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlagtf.f
+END
+dormrq.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dormrq.f
+END
+dsbgv.f
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dsbgv.f
+END
+dormr2.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dormr2.f
+END
+dorm2r.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dorm2r.f
+END
+dtptri.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dtptri.f
+END
+dpttrs.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dpttrs.f
+END
+dlantp.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlantp.f
+END
+dstein.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dstein.f
+END
+dspsvx.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dspsvx.f
+END
+dgtsv.f
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dgtsv.f
+END
+dlaqtr.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlaqtr.f
+END
+dppequ.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dppequ.f
+END
+dgesvx.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dgesvx.f
+END
+dlacon.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlacon.f
+END
+dsteqr.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dsteqr.f
+END
+dgelqf.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dgelqf.f
+END
+dlansb.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlansb.f
+END
+dsysv.f
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dsysv.f
+END
+dlangt.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlangt.f
+END
+dtzrqf.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dtzrqf.f
+END
+dsytrf.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dsytrf.f
+END
+dgelss.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dgelss.f
+END
+dtrsyl.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dtrsyl.f
+END
+dtbrfs.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dtbrfs.f
+END
+dormbr.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dormbr.f
+END
+dlasq4.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlasq4.f
+END
+dlabrd.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlabrd.f
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/Makefile
+END
+dsbevx.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dsbevx.f
+END
+dlauu2.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlauu2.f
+END
+dgbsvx.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dgbsvx.f
+END
+dlaed4.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlaed4.f
+END
+dpptrf.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dpptrf.f
+END
+dsprfs.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dsprfs.f
+END
+dtrrfs.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dtrrfs.f
+END
+dgeqpf.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dgeqpf.f
+END
+dlanhs.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlanhs.f
+END
+dggqrf.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dggqrf.f
+END
+dgerfs.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dgerfs.f
+END
+dgebak.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dgebak.f
+END
+dgtcon.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dgtcon.f
+END
+dggsvd.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dggsvd.f
+END
+dbdsqr.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dbdsqr.f
+END
+dspev.f
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dspev.f
+END
+dstev.f
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dstev.f
+END
+dlatps.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlatps.f
+END
+dptsvx.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dptsvx.f
+END
+dlange.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlange.f
+END
+dormql.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dormql.f
+END
+dpotri.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dpotri.f
+END
+dladiv.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dladiv.f
+END
+dlas2.f
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlas2.f
+END
+dgbrfs.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dgbrfs.f
+END
+dggrqf.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dggrqf.f
+END
+dgeequ.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dgeequ.f
+END
+dsytf2.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dsytf2.f
+END
+dlahqr.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlahqr.f
+END
+dlags2.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlags2.f
+END
+dlassq.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlassq.f
+END
+dgees.f
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dgees.f
+END
+dstevd.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dstevd.f
+END
+dtrexc.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dtrexc.f
+END
+dstebz.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dstebz.f
+END
+dormhr.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dormhr.f
+END
+dlaed5.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlaed5.f
+END
+dsycon.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dsycon.f
+END
+dorm2l.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dorm2l.f
+END
+dlarfg.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlarfg.f
+END
+dsptrf.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dsptrf.f
+END
+dptrfs.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dptrfs.f
+END
+dlantb.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlantb.f
+END
+dlamrg.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlamrg.f
+END
+dgbequ.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dgbequ.f
+END
+dgesv.f
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dgesv.f
+END
+dgetrf.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dgetrf.f
+END
+dlaev2.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlaev2.f
+END
+dgebal.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dgebal.f
+END
+dtptrs.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dtptrs.f
+END
+dppcon.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dppcon.f
+END
+dlantr.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlantr.f
+END
+dlar2v.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlar2v.f
+END
+dlatzm.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlatzm.f
+END
+dlasr.f
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlasr.f
+END
+dgbtrf.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dgbtrf.f
+END
+dpbsv.f
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dpbsv.f
+END
+dlargv.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlargv.f
+END
+dsyevx.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dsyevx.f
+END
+dlanst.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlanst.f
+END
+dorglq.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dorglq.f
+END
+dorgl2.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dorgl2.f
+END
+dpbtrs.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dpbtrs.f
+END
+dlasy2.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlasy2.f
+END
+dopgtr.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dopgtr.f
+END
+dlaed6.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlaed6.f
+END
+dggglm.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dggglm.f
+END
+dgeqlf.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dgeqlf.f
+END
+dpttrf.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dpttrf.f
+END
+dtbcon.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dtbcon.f
+END
+dsygs2.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dsygs2.f
+END
+dgetf2.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dgetf2.f
+END
+dtgsja.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dtgsja.f
+END
+dtgevc.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dtgevc.f
+END
+dlarfx.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlarfx.f
+END
+dzsum1.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dzsum1.f
+END
+dspcon.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dspcon.f
+END
+dlasrt.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlasrt.f
+END
+dtrcon.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dtrcon.f
+END
+dsyev.f
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dsyev.f
+END
+dlaein.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlaein.f
+END
+dorgqr.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dorgqr.f
+END
+dgecon.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dgecon.f
+END
+dgbtf2.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dgbtf2.f
+END
+dpotrs.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dpotrs.f
+END
+dsytri.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dsytri.f
+END
+dgelq2.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dgelq2.f
+END
+dgebrd.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dgebrd.f
+END
+dgebd2.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dgebd2.f
+END
+dgbcon.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dgbcon.f
+END
+dorgrq.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dorgrq.f
+END
+dorgr2.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dorgr2.f
+END
+dorg2r.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dorg2r.f
+END
+dlaed7.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlaed7.f
+END
+dpptri.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dpptri.f
+END
+dtprfs.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dtprfs.f
+END
+dgbsv.f
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dgbsv.f
+END
+dpbsvx.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dpbsvx.f
+END
+dormtr.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dormtr.f
+END
+dgeqrf.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dgeqrf.f
+END
+dlapll.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlapll.f
+END
+dspevx.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dspevx.f
+END
+dlatbs.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlatbs.f
+END
+dgesvd.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dgesvd.f
+END
+dlaln2.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlaln2.f
+END
+dgeevx.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dgeevx.f
+END
+dspgv.f
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dspgv.f
+END
+dgbbrd.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dgbbrd.f
+END
+dsbgst.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dsbgst.f
+END
+dlanv2.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlanv2.f
+END
+dptcon.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dptcon.f
+END
+dlae2.f
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlae2.f
+END
+dlamch.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlamch.f
+END
+dlatrs.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlatrs.f
+END
+dlaqgb.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlaqgb.f
+END
+dlaic1.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlaic1.f
+END
+dgels.f
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dgels.f
+END
+dtrsen.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dtrsen.f
+END
+dlascl.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlascl.f
+END
+dsbevd.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dsbevd.f
+END
+dgerqf.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dgerqf.f
+END
+dhsein.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dhsein.f
+END
+ilaenv.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/ilaenv.f
+END
+dorgbr.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dorgbr.f
+END
+dpbrfs.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dpbrfs.f
+END
+dsbtrd.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dsbtrd.f
+END
+dposvx.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dposvx.f
+END
+dlaqsp.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlaqsp.f
+END
+dhseqr.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dhseqr.f
+END
+dlauum.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlauum.f
+END
+dlarf.f
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlarf.f
+END
+dgegs.f
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dgegs.f
+END
+dlaed0.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlaed0.f
+END
+dgeev.f
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dgeev.f
+END
+dlarfb.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlarfb.f
+END
+dposv.f
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dposv.f
+END
+dlapy2.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlapy2.f
+END
+dtrsna.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dtrsna.f
+END
+dlahrd.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlahrd.f
+END
+dgghrd.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dgghrd.f
+END
+dlaebz.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlaebz.f
+END
+dlaed8.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlaed8.f
+END
+dsbev.f
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dsbev.f
+END
+dsptri.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dsptri.f
+END
+dgttrs.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dgttrs.f
+END
+dtrtri.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dtrtri.f
+END
+dlatrd.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlatrd.f
+END
+dlacpy.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlacpy.f
+END
+dgetri.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dgetri.f
+END
+dlagts.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlagts.f
+END
+dpbequ.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dpbequ.f
+END
+dlarnv.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlarnv.f
+END
+dorgql.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dorgql.f
+END
+dggsvp.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dggsvp.f
+END
+dporfs.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dporfs.f
+END
+dstedc.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dstedc.f
+END
+dpbtrf.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dpbtrf.f
+END
+dlapmt.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlapmt.f
+END
+dorghr.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dorghr.f
+END
+dlasq1.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlasq1.f
+END
+dgelsx.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dgelsx.f
+END
+dsterf.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dsterf.f
+END
+dsytrs.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dsytrs.f
+END
+dorg2l.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dorg2l.f
+END
+dlaed1.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlaed1.f
+END
+dlapy3.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlapy3.f
+END
+dpoequ.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dpoequ.f
+END
+dlaqsy.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlaqsy.f
+END
+ddisna.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/ddisna.f
+END
+dlaed9.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlaed9.f
+END
+dpptrs.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dpptrs.f
+END
+dsygst.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dsygst.f
+END
+dstevx.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dstevx.f
+END
+dgeql2.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dgeql2.f
+END
+dgtsvx.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dgtsvx.f
+END
+dggbak.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dggbak.f
+END
+dlangb.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dlangb.f
+END
+dtpcon.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/users/stenkea/!svn/ver/890/echam5_socol_ccmi/lapack/dtpcon.f
+END

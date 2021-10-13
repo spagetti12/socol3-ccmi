@@ -1,0 +1,36 @@
+# Fujitsu/VPP5000 - MeteoFrance
+
+# Enable CC and F90 only, if not the standard compiler should be used 
+
+ARCH       = fujitsu
+
+case `uname -n` in
+xbar*)
+
+MPIROOT    = /u/fj/mfuj/mfuj004
+MPI_LIB    = -lmpi
+MPI_INCLUDE = 
+
+NETCDFROOT = /usr/local
+
+CC       = vcc
+CFLAGS   = -O -Wv,-m3 -KA64
+
+F90     = frt -X9 -Sw
+F77     = frt -X9 -Sw
+FFLAGS   = -Am -CcdRR8  -Kfast -Of -Wv,-qm,-ilfunc,-m3 -Eiu -Cpp
+F90FLAGS = -Am -CcdRR8  -Kfast -Of -Wv,-qm,-ilfunc,-m3 -Eiu -Cpp
+LDFLAGS  = 
+
+DEFOPT   = -Wp,-D
+
+MODOPT   = -I
+
+LIBS     = -Wl,-P,-t,-J,-dy -Wg,-c  -L../lib -lsupport -llapackvp -lblasvp \
+           /u/fj/mfuj/mfuj004/lib64/d24/libmp.a -L/usr/lang/lib64 -llang0
+
+SRCDIRS  = 
+
+;;
+esac
+

@@ -1,0 +1,2334 @@
+
+;; Function c2fstrv (c2fstrv)
+
+Spilling for insn 39.
+Spilling for insn 75.
+
+Reloads for insn # 39
+Reload 0: reload_in (SI) = (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                                                        (const_int 16 [0x10])) [0 elem_len+0 S4 A32])
+	reload_out (SI) = (reg:SI 0 ax [orig:69 D.2768 ] [69])
+	GENERAL_REGS, RELOAD_OTHER (opnum = 0)
+	reload_in_reg: (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                                                        (const_int 16 [0x10])) [0 elem_len+0 S4 A32])
+	reload_out_reg: (reg:SI 0 ax [orig:69 D.2768 ] [69])
+	reload_reg_rtx: (reg:SI 0 ax [orig:69 D.2768 ] [69])
+
+Reloads for insn # 75
+Reload 0: reload_in (SI) = (reg/f:SI 0 ax [orig:82 fstr ] [82])
+	reload_out (SI) = (reg:SI 2 cx [orig:61 D.2776 ] [61])
+	GENERAL_REGS, RELOAD_OTHER (opnum = 0)
+	reload_in_reg: (reg/f:SI 0 ax [orig:82 fstr ] [82])
+	reload_out_reg: (reg:SI 2 cx [orig:61 D.2776 ] [61])
+	reload_reg_rtx: (reg:SI 2 cx [orig:61 D.2776 ] [61])
+;; Register dispositions:
+58 in 0  59 in 0  60 in 0  61 in 2  62 in 1  63 in 0  
+64 in 0  65 in 0  66 in 0  67 in 0  68 in 0  69 in 0  
+70 in 0  71 in 1  72 in 0  73 in 0  74 in 0  75 in 0  
+76 in 0  77 in 0  78 in 0  79 in 0  80 in 1  81 in 1  
+82 in 0  83 in 0  84 in 1  85 in 1  
+
+;; Hard regs used:  0 1 2 6 17
+
+(note 1 0 3 ("cfortran.h") 425)
+
+(note 3 1 5 2 NOTE_INSN_FUNCTION_BEG)
+
+;; Start of basic block 3, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(note 5 3 6 3 [bb 3] NOTE_INSN_BASIC_BLOCK)
+
+(note 6 5 7 3 ("cfortran.h") 428)
+
+(insn 7 6 8 3 cfortran.h:428 (set (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int -8 [0xfffffff8])) [0 i+0 S4 A32])
+        (const_int 0 [0x0])) 34 {*movsi_1} (nil)
+    (nil))
+
+(jump_insn 8 7 9 3 cfortran.h:428 (set (pc)
+        (label_ref 62)) 380 {jump} (nil)
+    (nil))
+;; End of basic block 3, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+(barrier 9 8 10)
+
+;; Start of basic block 4, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(code_label 10 9 11 4 3 "" [1 uses])
+
+(note 11 10 12 4 [bb 4] NOTE_INSN_BASIC_BLOCK)
+
+(note 12 11 13 4 ("cfortran.h") 429)
+
+(insn 13 12 14 4 cfortran.h:429 (set (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int -4 [0xfffffffc])) [0 j+0 S4 A32])
+        (const_int 1 [0x1])) 34 {*movsi_1} (nil)
+    (nil))
+
+(jump_insn 14 13 15 4 cfortran.h:429 (set (pc)
+        (label_ref 25)) 380 {jump} (nil)
+    (nil))
+;; End of basic block 4, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+(barrier 15 14 16)
+
+;; Start of basic block 5, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(code_label 16 15 17 5 5 "" [1 uses])
+
+(note 17 16 18 5 [bb 5] NOTE_INSN_BASIC_BLOCK)
+
+(insn 18 17 19 5 cfortran.h:429 (set (reg/f:SI 0 ax [orig:73 cstr ] [73])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 8 [0x8])) [0 cstr+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 19 18 20 5 cfortran.h:429 (set (reg:QI 1 dx [orig:71 D.2766 ] [71])
+        (mem:QI (reg/f:SI 0 ax [orig:73 cstr ] [73]) [0 S1 A8])) 43 {*movqi_1} (nil)
+    (nil))
+
+(insn 20 19 21 5 cfortran.h:429 (set (reg/f:SI 0 ax [orig:74 fstr ] [74])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 12 [0xc])) [0 fstr+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 21 20 22 5 cfortran.h:429 (set (mem:QI (reg/f:SI 0 ax [orig:74 fstr ] [74]) [0 S1 A8])
+        (reg:QI 1 dx [orig:71 D.2766 ] [71])) 43 {*movqi_1} (nil)
+    (nil))
+
+(insn 22 21 23 5 cfortran.h:429 (parallel [
+            (set (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                        (const_int 12 [0xc])) [0 fstr+0 S4 A32])
+                (plus:SI (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                            (const_int 12 [0xc])) [0 fstr+0 S4 A32])
+                    (const_int 1 [0x1])))
+            (clobber (reg:CC 17 flags))
+        ]) 148 {*addsi_1} (nil)
+    (nil))
+
+(insn 23 22 24 5 cfortran.h:429 (parallel [
+            (set (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                        (const_int 8 [0x8])) [0 cstr+0 S4 A32])
+                (plus:SI (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                            (const_int 8 [0x8])) [0 cstr+0 S4 A32])
+                    (const_int 1 [0x1])))
+            (clobber (reg:CC 17 flags))
+        ]) 148 {*addsi_1} (nil)
+    (nil))
+
+(insn 24 23 25 5 cfortran.h:429 (parallel [
+            (set (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                        (const_int -4 [0xfffffffc])) [0 j+0 S4 A32])
+                (plus:SI (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                            (const_int -4 [0xfffffffc])) [0 j+0 S4 A32])
+                    (const_int 1 [0x1])))
+            (clobber (reg:CC 17 flags))
+        ]) 148 {*addsi_1} (nil)
+    (nil))
+;; End of basic block 5, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+;; Start of basic block 6, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(code_label 25 24 26 6 4 "" [1 uses])
+
+(note 26 25 27 6 [bb 6] NOTE_INSN_BASIC_BLOCK)
+
+(insn 27 26 28 6 cfortran.h:429 (set (reg:SI 0 ax [orig:75 j ] [75])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int -4 [0xfffffffc])) [0 j+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 28 27 29 6 cfortran.h:429 (set (reg:CCGC 17 flags)
+        (compare:CCGC (reg:SI 0 ax [orig:75 j ] [75])
+            (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                    (const_int 16 [0x10])) [0 elem_len+0 S4 A32]))) 2 {*cmpsi_1_insn} (nil)
+    (nil))
+
+(jump_insn 29 28 31 6 cfortran.h:429 (set (pc)
+        (if_then_else (ge (reg:CCGC 17 flags)
+                (const_int 0 [0x0]))
+            (label_ref 36)
+            (pc))) 365 {*jcc_1} (nil)
+    (nil))
+;; End of basic block 6, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+;; Start of basic block 7, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(note 31 29 32 7 [bb 7] NOTE_INSN_BASIC_BLOCK)
+
+(insn 32 31 33 7 cfortran.h:429 (set (reg/f:SI 0 ax [orig:76 cstr ] [76])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 8 [0x8])) [0 cstr+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 33 32 34 7 cfortran.h:429 (set (reg:QI 0 ax [orig:70 D.2767 ] [70])
+        (mem:QI (reg/f:SI 0 ax [orig:76 cstr ] [76]) [0 S1 A8])) 43 {*movqi_1} (nil)
+    (nil))
+
+(insn 34 33 35 7 cfortran.h:429 (set (reg:CCZ 17 flags)
+        (compare:CCZ (reg:QI 0 ax [orig:70 D.2767 ] [70])
+            (const_int 0 [0x0]))) 6 {*cmpqi_ccno_1} (nil)
+    (nil))
+
+(jump_insn 35 34 36 7 cfortran.h:429 (set (pc)
+        (if_then_else (ne (reg:CCZ 17 flags)
+                (const_int 0 [0x0]))
+            (label_ref 16)
+            (pc))) 365 {*jcc_1} (nil)
+    (nil))
+;; End of basic block 7, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+;; Start of basic block 8, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(code_label 36 35 37 8 6 "" [1 uses])
+
+(note 37 36 38 8 [bb 8] NOTE_INSN_BASIC_BLOCK)
+
+(note 38 37 99 8 ("cfortran.h") 430)
+
+(insn 99 38 39 8 cfortran.h:430 (set (reg:SI 0 ax [orig:69 D.2768 ] [69])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 16 [0x10])) [0 elem_len+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 39 99 40 8 cfortran.h:430 (parallel [
+            (set (reg:SI 0 ax [orig:69 D.2768 ] [69])
+                (plus:SI (reg:SI 0 ax [orig:69 D.2768 ] [69])
+                    (const_int 1 [0x1])))
+            (clobber (reg:CC 17 flags))
+        ]) 148 {*addsi_1} (nil)
+    (nil))
+
+(insn 40 39 43 8 cfortran.h:430 (parallel [
+            (set (reg:SI 0 ax [orig:68 D.2769 ] [68])
+                (minus:SI (reg:SI 0 ax [orig:69 D.2768 ] [69])
+                    (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                            (const_int -4 [0xfffffffc])) [0 j+0 S4 A32])))
+            (clobber (reg:CC 17 flags))
+        ]) 172 {*subsi_1} (nil)
+    (nil))
+
+(insn 43 40 44 8 cfortran.h:430 (parallel [
+            (set (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                        (const_int 8 [0x8])) [0 cstr+0 S4 A32])
+                (plus:SI (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                            (const_int 8 [0x8])) [0 cstr+0 S4 A32])
+                    (reg:SI 0 ax [orig:66 D.2771 ] [66])))
+            (clobber (reg:CC 17 flags))
+        ]) 148 {*addsi_1} (nil)
+    (nil))
+
+(note 44 43 45 8 ("cfortran.h") 431)
+
+(jump_insn 45 44 46 8 cfortran.h:431 (set (pc)
+        (label_ref 53)) 380 {jump} (nil)
+    (nil))
+;; End of basic block 8, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+(barrier 46 45 47)
+
+;; Start of basic block 9, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(code_label 47 46 48 9 9 "" [1 uses])
+
+(note 48 47 49 9 [bb 9] NOTE_INSN_BASIC_BLOCK)
+
+(insn 49 48 50 9 cfortran.h:431 (set (reg/f:SI 0 ax [orig:77 fstr ] [77])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 12 [0xc])) [0 fstr+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 50 49 51 9 cfortran.h:431 (set (mem:QI (reg/f:SI 0 ax [orig:77 fstr ] [77]) [0 S1 A8])
+        (const_int 32 [0x20])) 43 {*movqi_1} (nil)
+    (nil))
+
+(insn 51 50 52 9 cfortran.h:431 (parallel [
+            (set (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                        (const_int 12 [0xc])) [0 fstr+0 S4 A32])
+                (plus:SI (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                            (const_int 12 [0xc])) [0 fstr+0 S4 A32])
+                    (const_int 1 [0x1])))
+            (clobber (reg:CC 17 flags))
+        ]) 148 {*addsi_1} (nil)
+    (nil))
+
+(insn 52 51 53 9 cfortran.h:431 (parallel [
+            (set (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                        (const_int -4 [0xfffffffc])) [0 j+0 S4 A32])
+                (plus:SI (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                            (const_int -4 [0xfffffffc])) [0 j+0 S4 A32])
+                    (const_int 1 [0x1])))
+            (clobber (reg:CC 17 flags))
+        ]) 148 {*addsi_1} (nil)
+    (nil))
+;; End of basic block 9, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+;; Start of basic block 10, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(code_label 53 52 54 10 8 "" [1 uses])
+
+(note 54 53 55 10 [bb 10] NOTE_INSN_BASIC_BLOCK)
+
+(insn 55 54 56 10 cfortran.h:431 (set (reg:SI 0 ax [orig:78 j ] [78])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int -4 [0xfffffffc])) [0 j+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 56 55 57 10 cfortran.h:431 (set (reg:CCGC 17 flags)
+        (compare:CCGC (reg:SI 0 ax [orig:78 j ] [78])
+            (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                    (const_int 16 [0x10])) [0 elem_len+0 S4 A32]))) 2 {*cmpsi_1_insn} (nil)
+    (nil))
+
+(jump_insn 57 56 59 10 cfortran.h:431 (set (pc)
+        (if_then_else (lt (reg:CCGC 17 flags)
+                (const_int 0 [0x0]))
+            (label_ref 47)
+            (pc))) 365 {*jcc_1} (nil)
+    (nil))
+;; End of basic block 10, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+;; Start of basic block 11, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(note 59 57 60 11 [bb 11] NOTE_INSN_BASIC_BLOCK)
+
+(note 60 59 61 11 ("cfortran.h") 428)
+
+(insn 61 60 62 11 cfortran.h:428 (parallel [
+            (set (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                        (const_int -8 [0xfffffff8])) [0 i+0 S4 A32])
+                (plus:SI (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                            (const_int -8 [0xfffffff8])) [0 i+0 S4 A32])
+                    (const_int 1 [0x1])))
+            (clobber (reg:CC 17 flags))
+        ]) 148 {*addsi_1} (nil)
+    (nil))
+;; End of basic block 11, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+;; Start of basic block 12, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(code_label 62 61 63 12 2 "" [1 uses])
+
+(note 63 62 64 12 [bb 12] NOTE_INSN_BASIC_BLOCK)
+
+(insn 64 63 65 12 cfortran.h:428 (set (reg:SI 1 dx [orig:81 sizeofcstr ] [81])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 20 [0x14])) [0 sizeofcstr+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 65 64 67 12 cfortran.h:428 (parallel [
+            (set (reg:SI 0 ax [79])
+                (div:SI (reg:SI 1 dx [orig:81 sizeofcstr ] [81])
+                    (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                            (const_int 16 [0x10])) [0 elem_len+0 S4 A32])))
+            (set (reg:SI 1 dx [80])
+                (mod:SI (reg:SI 1 dx [orig:81 sizeofcstr ] [81])
+                    (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                            (const_int 16 [0x10])) [0 elem_len+0 S4 A32])))
+            (clobber (reg:CC 17 flags))
+        ]) 193 {*divmodsi4_nocltd} (nil)
+    (nil))
+
+(insn 67 65 68 12 cfortran.h:428 (set (reg:CCGC 17 flags)
+        (compare:CCGC (reg:SI 0 ax [orig:65 D.2772 ] [65])
+            (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                    (const_int -8 [0xfffffff8])) [0 i+0 S4 A32]))) 2 {*cmpsi_1_insn} (nil)
+    (nil))
+
+(jump_insn 68 67 70 12 cfortran.h:428 (set (pc)
+        (if_then_else (gt (reg:CCGC 17 flags)
+                (const_int 0 [0x0]))
+            (label_ref 10)
+            (pc))) 365 {*jcc_1} (nil)
+    (nil))
+;; End of basic block 12, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+;; Start of basic block 13, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(note 70 68 71 13 [bb 13] NOTE_INSN_BASIC_BLOCK)
+
+(note 71 70 72 13 ("cfortran.h") 433)
+
+(insn 72 71 73 13 cfortran.h:433 (set (reg:SI 0 ax [orig:63 sizeofcstr.0 ] [63])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 20 [0x14])) [0 sizeofcstr+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 73 72 74 13 cfortran.h:433 (set (reg:SI 1 dx [orig:62 sizeofcstr.1 ] [62])
+        (reg:SI 0 ax [orig:63 sizeofcstr.0 ] [63])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 74 73 100 13 cfortran.h:433 (set (reg/f:SI 0 ax [orig:82 fstr ] [82])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 12 [0xc])) [0 fstr+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 100 74 75 13 cfortran.h:433 (set (reg:SI 2 cx [orig:61 D.2776 ] [61])
+        (reg/f:SI 0 ax [orig:82 fstr ] [82])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 75 100 76 13 cfortran.h:433 (parallel [
+            (set (reg:SI 2 cx [orig:61 D.2776 ] [61])
+                (minus:SI (reg:SI 2 cx [orig:61 D.2776 ] [61])
+                    (reg:SI 1 dx [orig:62 sizeofcstr.1 ] [62])))
+            (clobber (reg:CC 17 flags))
+        ]) 172 {*subsi_1} (nil)
+    (expr_list:REG_EQUAL (minus:SI (mem/f/c/i:SI (plus:SI (reg/f:SI 16 argp)
+                    (const_int 4 [0x4])) [0 fstr+0 S4 A32])
+            (reg:SI 1 dx [orig:62 sizeofcstr.1 ] [62]))
+        (nil)))
+
+(insn 76 75 77 13 cfortran.h:433 (set (reg:SI 1 dx [orig:85 sizeofcstr ] [85])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 20 [0x14])) [0 sizeofcstr+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 77 76 81 13 cfortran.h:433 (parallel [
+            (set (reg:SI 0 ax [83])
+                (div:SI (reg:SI 1 dx [orig:85 sizeofcstr ] [85])
+                    (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                            (const_int 16 [0x10])) [0 elem_len+0 S4 A32])))
+            (set (reg:SI 1 dx [84])
+                (mod:SI (reg:SI 1 dx [orig:85 sizeofcstr ] [85])
+                    (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                            (const_int 16 [0x10])) [0 elem_len+0 S4 A32])))
+            (clobber (reg:CC 17 flags))
+        ]) 193 {*divmodsi4_nocltd} (nil)
+    (nil))
+
+(insn 81 77 85 13 cfortran.h:433 (parallel [
+            (set (reg:SI 0 ax [orig:64 D.2773 ] [64])
+                (plus:SI (reg:SI 2 cx [orig:61 D.2776 ] [61])
+                    (reg:SI 0 ax [orig:58 D.2779 ] [58])))
+            (clobber (reg:CC 17 flags))
+        ]) 148 {*addsi_1} (nil)
+    (nil))
+
+(note 85 81 94 13 NOTE_INSN_FUNCTION_END)
+
+(insn 94 85 98 13 cfortran.h:433 (use (reg/i:SI 0 ax [ <result> ])) -1 (nil)
+    (nil))
+;; End of basic block 13, registers live:
+ 0 [ax] 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+(note 98 94 0 NOTE_INSN_DELETED)
+
+
+;; Function f2cstrv (f2cstrv)
+
+;; Register dispositions:
+58 in 0  59 in 0  60 in 1  61 in 0  62 in 0  63 in 0  
+64 in 1  65 in 0  66 in 0  67 in 0  68 in 0  69 in 1  
+70 in 1  71 in 0  72 in 0  73 in 0  74 in 0  75 in 0  
+76 in 0  77 in 1  78 in 1  
+
+;; Hard regs used:  0 1 6 17
+
+(note 1 0 3 ("cfortran.h") 442)
+
+(note 3 1 5 2 NOTE_INSN_FUNCTION_BEG)
+
+;; Start of basic block 3, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(note 5 3 6 3 [bb 3] NOTE_INSN_BASIC_BLOCK)
+
+(note 6 5 7 3 ("cfortran.h") 445)
+
+(insn 7 6 9 3 cfortran.h:445 (set (reg:SI 0 ax [orig:66 sizeofcstr.2 ] [66])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 20 [0x14])) [0 sizeofcstr+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 9 7 10 3 cfortran.h:445 (parallel [
+            (set (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                        (const_int 12 [0xc])) [0 cstr+0 S4 A32])
+                (plus:SI (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                            (const_int 12 [0xc])) [0 cstr+0 S4 A32])
+                    (reg:SI 0 ax [orig:65 sizeofcstr.3 ] [65])))
+            (clobber (reg:CC 17 flags))
+        ]) 148 {*addsi_1} (nil)
+    (nil))
+
+(note 10 9 11 3 ("cfortran.h") 446)
+
+(insn 11 10 12 3 cfortran.h:446 (set (reg:SI 1 dx [orig:70 sizeofcstr ] [70])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 20 [0x14])) [0 sizeofcstr+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 12 11 13 3 cfortran.h:446 (parallel [
+            (set (reg:SI 0 ax [68])
+                (div:SI (reg:SI 1 dx [orig:70 sizeofcstr ] [70])
+                    (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                            (const_int 16 [0x10])) [0 elem_len+0 S4 A32])))
+            (set (reg:SI 1 dx [69])
+                (mod:SI (reg:SI 1 dx [orig:70 sizeofcstr ] [70])
+                    (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                            (const_int 16 [0x10])) [0 elem_len+0 S4 A32])))
+            (clobber (reg:CC 17 flags))
+        ]) 193 {*divmodsi4_nocltd} (nil)
+    (nil))
+
+(insn 13 12 14 3 cfortran.h:446 (set (reg:SI 1 dx [orig:64 D.2798 ] [64])
+        (reg:SI 0 ax [68])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 14 13 15 3 cfortran.h:446 (set (reg:SI 0 ax [orig:71 sizeofcstr ] [71])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 20 [0x14])) [0 sizeofcstr+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 15 14 18 3 cfortran.h:446 (parallel [
+            (set (reg:SI 0 ax [orig:63 D.2799 ] [63])
+                (minus:SI (reg:SI 0 ax [orig:71 sizeofcstr ] [71])
+                    (reg:SI 1 dx [orig:64 D.2798 ] [64])))
+            (clobber (reg:CC 17 flags))
+        ]) 172 {*subsi_1} (nil)
+    (expr_list:REG_EQUAL (minus:SI (mem/c/i:SI (plus:SI (reg/f:SI 16 argp)
+                    (const_int 12 [0xc])) [0 sizeofcstr+0 S4 A32])
+            (reg:SI 1 dx [orig:64 D.2798 ] [64]))
+        (nil)))
+
+(insn 18 15 19 3 cfortran.h:446 (parallel [
+            (set (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                        (const_int 8 [0x8])) [0 fstr+0 S4 A32])
+                (plus:SI (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                            (const_int 8 [0x8])) [0 fstr+0 S4 A32])
+                    (reg:SI 0 ax [orig:61 D.2801 ] [61])))
+            (clobber (reg:CC 17 flags))
+        ]) 148 {*addsi_1} (nil)
+    (nil))
+
+(note 19 18 20 3 ("cfortran.h") 447)
+
+(insn 20 19 21 3 cfortran.h:447 (set (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int -8 [0xfffffff8])) [0 i+0 S4 A32])
+        (const_int 0 [0x0])) 34 {*movsi_1} (nil)
+    (nil))
+
+(jump_insn 21 20 22 3 cfortran.h:447 (set (pc)
+        (label_ref 51)) 380 {jump} (nil)
+    (nil))
+;; End of basic block 3, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+(barrier 22 21 23)
+
+;; Start of basic block 4, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(code_label 23 22 24 4 15 "" [1 uses])
+
+(note 24 23 25 4 [bb 4] NOTE_INSN_BASIC_BLOCK)
+
+(note 25 24 26 4 ("cfortran.h") 448)
+
+(insn 26 25 27 4 cfortran.h:448 (parallel [
+            (set (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                        (const_int 12 [0xc])) [0 cstr+0 S4 A32])
+                (plus:SI (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                            (const_int 12 [0xc])) [0 cstr+0 S4 A32])
+                    (const_int -1 [0xffffffff])))
+            (clobber (reg:CC 17 flags))
+        ]) 148 {*addsi_1} (nil)
+    (nil))
+
+(insn 27 26 28 4 cfortran.h:448 (set (reg/f:SI 0 ax [orig:72 cstr ] [72])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 12 [0xc])) [0 cstr+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 28 27 29 4 cfortran.h:448 (set (mem:QI (reg/f:SI 0 ax [orig:72 cstr ] [72]) [0 S1 A8])
+        (const_int 0 [0x0])) 43 {*movqi_1} (nil)
+    (nil))
+
+(note 29 28 30 4 ("cfortran.h") 449)
+
+(insn 30 29 31 4 cfortran.h:449 (set (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int -4 [0xfffffffc])) [0 j+0 S4 A32])
+        (const_int 1 [0x1])) 34 {*movsi_1} (nil)
+    (nil))
+
+(jump_insn 31 30 32 4 cfortran.h:449 (set (pc)
+        (label_ref 42)) 380 {jump} (nil)
+    (nil))
+;; End of basic block 4, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+(barrier 32 31 33)
+
+;; Start of basic block 5, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(code_label 33 32 34 5 17 "" [1 uses])
+
+(note 34 33 35 5 [bb 5] NOTE_INSN_BASIC_BLOCK)
+
+(insn 35 34 36 5 cfortran.h:449 (parallel [
+            (set (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                        (const_int 12 [0xc])) [0 cstr+0 S4 A32])
+                (plus:SI (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                            (const_int 12 [0xc])) [0 cstr+0 S4 A32])
+                    (const_int -1 [0xffffffff])))
+            (clobber (reg:CC 17 flags))
+        ]) 148 {*addsi_1} (nil)
+    (nil))
+
+(insn 36 35 37 5 cfortran.h:449 (parallel [
+            (set (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                        (const_int 8 [0x8])) [0 fstr+0 S4 A32])
+                (plus:SI (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                            (const_int 8 [0x8])) [0 fstr+0 S4 A32])
+                    (const_int -1 [0xffffffff])))
+            (clobber (reg:CC 17 flags))
+        ]) 148 {*addsi_1} (nil)
+    (nil))
+
+(insn 37 36 38 5 cfortran.h:449 (set (reg/f:SI 0 ax [orig:73 fstr ] [73])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 8 [0x8])) [0 fstr+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 38 37 39 5 cfortran.h:449 (set (reg:QI 1 dx [orig:60 D.2802 ] [60])
+        (mem:QI (reg/f:SI 0 ax [orig:73 fstr ] [73]) [0 S1 A8])) 43 {*movqi_1} (nil)
+    (nil))
+
+(insn 39 38 40 5 cfortran.h:449 (set (reg/f:SI 0 ax [orig:74 cstr ] [74])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 12 [0xc])) [0 cstr+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 40 39 41 5 cfortran.h:449 (set (mem:QI (reg/f:SI 0 ax [orig:74 cstr ] [74]) [0 S1 A8])
+        (reg:QI 1 dx [orig:60 D.2802 ] [60])) 43 {*movqi_1} (nil)
+    (nil))
+
+(insn 41 40 42 5 cfortran.h:449 (parallel [
+            (set (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                        (const_int -4 [0xfffffffc])) [0 j+0 S4 A32])
+                (plus:SI (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                            (const_int -4 [0xfffffffc])) [0 j+0 S4 A32])
+                    (const_int 1 [0x1])))
+            (clobber (reg:CC 17 flags))
+        ]) 148 {*addsi_1} (nil)
+    (nil))
+;; End of basic block 5, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+;; Start of basic block 6, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(code_label 42 41 43 6 16 "" [1 uses])
+
+(note 43 42 44 6 [bb 6] NOTE_INSN_BASIC_BLOCK)
+
+(insn 44 43 45 6 cfortran.h:449 (set (reg:SI 0 ax [orig:75 j ] [75])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int -4 [0xfffffffc])) [0 j+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 45 44 46 6 cfortran.h:449 (set (reg:CCGC 17 flags)
+        (compare:CCGC (reg:SI 0 ax [orig:75 j ] [75])
+            (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                    (const_int 16 [0x10])) [0 elem_len+0 S4 A32]))) 2 {*cmpsi_1_insn} (nil)
+    (nil))
+
+(jump_insn 46 45 48 6 cfortran.h:449 (set (pc)
+        (if_then_else (lt (reg:CCGC 17 flags)
+                (const_int 0 [0x0]))
+            (label_ref 33)
+            (pc))) 365 {*jcc_1} (nil)
+    (nil))
+;; End of basic block 6, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+;; Start of basic block 7, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(note 48 46 49 7 [bb 7] NOTE_INSN_BASIC_BLOCK)
+
+(note 49 48 50 7 ("cfortran.h") 447)
+
+(insn 50 49 51 7 cfortran.h:447 (parallel [
+            (set (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                        (const_int -8 [0xfffffff8])) [0 i+0 S4 A32])
+                (plus:SI (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                            (const_int -8 [0xfffffff8])) [0 i+0 S4 A32])
+                    (const_int 1 [0x1])))
+            (clobber (reg:CC 17 flags))
+        ]) 148 {*addsi_1} (nil)
+    (nil))
+;; End of basic block 7, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+;; Start of basic block 8, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(code_label 51 50 52 8 14 "" [1 uses])
+
+(note 52 51 53 8 [bb 8] NOTE_INSN_BASIC_BLOCK)
+
+(insn 53 52 54 8 cfortran.h:447 (set (reg:SI 1 dx [orig:78 sizeofcstr ] [78])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 20 [0x14])) [0 sizeofcstr+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 54 53 56 8 cfortran.h:447 (parallel [
+            (set (reg:SI 0 ax [76])
+                (div:SI (reg:SI 1 dx [orig:78 sizeofcstr ] [78])
+                    (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                            (const_int 16 [0x10])) [0 elem_len+0 S4 A32])))
+            (set (reg:SI 1 dx [77])
+                (mod:SI (reg:SI 1 dx [orig:78 sizeofcstr ] [78])
+                    (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                            (const_int 16 [0x10])) [0 elem_len+0 S4 A32])))
+            (clobber (reg:CC 17 flags))
+        ]) 193 {*divmodsi4_nocltd} (nil)
+    (nil))
+
+(insn 56 54 57 8 cfortran.h:447 (set (reg:CCGC 17 flags)
+        (compare:CCGC (reg:SI 0 ax [orig:59 D.2803 ] [59])
+            (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                    (const_int -8 [0xfffffff8])) [0 i+0 S4 A32]))) 2 {*cmpsi_1_insn} (nil)
+    (nil))
+
+(jump_insn 57 56 59 8 cfortran.h:447 (set (pc)
+        (if_then_else (gt (reg:CCGC 17 flags)
+                (const_int 0 [0x0]))
+            (label_ref 23)
+            (pc))) 365 {*jcc_1} (nil)
+    (nil))
+;; End of basic block 8, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+;; Start of basic block 9, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(note 59 57 60 9 [bb 9] NOTE_INSN_BASIC_BLOCK)
+
+(note 60 59 61 9 ("cfortran.h") 450)
+
+(insn 61 60 65 9 cfortran.h:450 (set (reg:SI 0 ax [orig:58 D.2804 ] [58])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 12 [0xc])) [0 cstr+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(note 65 61 74 9 NOTE_INSN_FUNCTION_END)
+
+(insn 74 65 78 9 cfortran.h:450 (use (reg/i:SI 0 ax [ <result> ])) -1 (nil)
+    (nil))
+;; End of basic block 9, registers live:
+ 0 [ax] 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+(note 78 74 0 NOTE_INSN_DELETED)
+
+
+;; Function kill_trailing (kill_trailing)
+
+Spilling for insn 51.
+
+Reloads for insn # 51
+Reload 0: reload_in (SI) = (reg:SI 61 [ iftmp.4 ])
+	reload_out (SI) = (reg:SI 0 ax [orig:59 D.2819 ] [59])
+	GENERAL_REGS, RELOAD_OTHER (opnum = 0)
+	reload_in_reg: (reg:SI 61 [ iftmp.4 ])
+	reload_out_reg: (reg:SI 0 ax [orig:59 D.2819 ] [59])
+	reload_reg_rtx: (reg:SI 0 ax [orig:59 D.2819 ] [59])
+;; Register dispositions:
+58 in 0  59 in 0  60 in 0  62 in 0  63 in 0  64 in 0  
+65 in 0  66 in 0  67 in 0  68 in 0  69 in 0  70 in 0  
+71 in 0  72 in 0  73 in 0  
+
+;; Hard regs used:  0 6 7 17
+
+(note 1 0 6 ("cfortran.h") 458)
+
+;; Start of basic block 2, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(note 6 1 2 2 [bb 2] NOTE_INSN_BASIC_BLOCK)
+
+(note 2 6 3 2 NOTE_INSN_DELETED)
+
+(insn 3 2 4 2 cfortran.h:458 (set (reg:SI 0 ax [orig:66 t ] [66])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 12 [0xc])) [0 t+0 S1 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 4 3 5 2 cfortran.h:458 (set (mem/c/i:QI (plus:SI (reg/f:SI 6 bp)
+                (const_int -20 [0xffffffec])) [0 t+0 S1 A8])
+        (reg:QI 0 ax [orig:66 t ] [66])) 43 {*movqi_1} (nil)
+    (nil))
+
+(note 5 4 8 2 NOTE_INSN_FUNCTION_BEG)
+
+(note 8 5 9 2 ("cfortran.h") 459)
+
+(insn 9 8 10 2 cfortran.h:459 (set (reg/f:SI 0 ax [orig:67 s ] [67])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 8 [0x8])) [0 s+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 10 9 11 2 cfortran.h:459 (set (mem:SI (reg/f:SI 7 sp) [0 S4 A32])
+        (reg/f:SI 0 ax [orig:67 s ] [67])) 34 {*movsi_1} (nil)
+    (nil))
+
+(call_insn/u 11 10 15 2 cfortran.h:459 (set (reg:SI 0 ax)
+        (call (mem:QI (symbol_ref:SI ("strlen") [flags 0x41] <function_decl 0x401f18c0 strlen>) [0 S1 A8])
+            (const_int 4 [0x4]))) 557 {*call_value_0} (nil)
+    (expr_list:REG_EH_REGION (const_int 0 [0x0])
+        (nil))
+    (expr_list:REG_DEP_TRUE (use (mem:BLK (scratch) [0 A8]))
+        (nil)))
+
+(insn 15 11 16 2 cfortran.h:459 (parallel [
+            (set (reg:SI 0 ax [69])
+                (plus:SI (reg:SI 0 ax [orig:63 D.2815 ] [63])
+                    (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                            (const_int 8 [0x8])) [0 s+0 S4 A32])))
+            (clobber (reg:CC 17 flags))
+        ]) 148 {*addsi_1} (nil)
+    (nil))
+
+(insn 16 15 17 2 cfortran.h:459 (set (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int -4 [0xfffffffc])) [0 e+0 S4 A32])
+        (reg:SI 0 ax [69])) 34 {*movsi_1} (nil)
+    (expr_list:REG_EQUAL (plus:SI (reg:SI 0 ax [orig:63 D.2815 ] [63])
+            (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                    (const_int 8 [0x8])) [0 s+0 S4 A32]))
+        (nil)))
+
+(note 17 16 18 2 ("cfortran.h") 460)
+
+(insn 18 17 19 2 cfortran.h:460 (set (reg/f:SI 0 ax [orig:70 e ] [70])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int -4 [0xfffffffc])) [0 e+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 19 18 20 2 cfortran.h:460 (set (reg:CC 17 flags)
+        (compare:CC (reg/f:SI 0 ax [orig:70 e ] [70])
+            (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                    (const_int 8 [0x8])) [0 s+0 S4 A32]))) 2 {*cmpsi_1_insn} (nil)
+    (nil))
+
+(jump_insn 20 19 21 2 cfortran.h:460 (set (pc)
+        (if_then_else (leu (reg:CC 17 flags)
+                (const_int 0 [0x0]))
+            (label_ref 53)
+            (pc))) 365 {*jcc_1} (nil)
+    (nil))
+;; End of basic block 2, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+;; Start of basic block 4, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(code_label 21 20 22 4 23 "" [1 uses])
+
+(note 22 21 23 4 [bb 4] NOTE_INSN_BASIC_BLOCK)
+
+(note 23 22 24 4 ("cfortran.h") 461)
+
+(insn 24 23 25 4 cfortran.h:461 (set (reg/f:SI 0 ax [orig:71 e ] [71])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int -4 [0xfffffffc])) [0 e+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 25 24 26 4 cfortran.h:461 (set (reg:CC 17 flags)
+        (compare:CC (reg/f:SI 0 ax [orig:71 e ] [71])
+            (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                    (const_int 8 [0x8])) [0 s+0 S4 A32]))) 2 {*cmpsi_1_insn} (nil)
+    (nil))
+
+(jump_insn 26 25 28 4 cfortran.h:461 (set (pc)
+        (if_then_else (leu (reg:CC 17 flags)
+                (const_int 0 [0x0]))
+            (label_ref 34)
+            (pc))) 365 {*jcc_1} (nil)
+    (nil))
+;; End of basic block 4, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+;; Start of basic block 5, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(note 28 26 29 5 [bb 5] NOTE_INSN_BASIC_BLOCK)
+
+(insn 29 28 30 5 cfortran.h:461 (parallel [
+            (set (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                        (const_int -4 [0xfffffffc])) [0 e+0 S4 A32])
+                (plus:SI (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                            (const_int -4 [0xfffffffc])) [0 e+0 S4 A32])
+                    (const_int -1 [0xffffffff])))
+            (clobber (reg:CC 17 flags))
+        ]) 148 {*addsi_1} (nil)
+    (nil))
+
+(insn 30 29 31 5 cfortran.h:461 (set (reg/f:SI 0 ax [orig:72 e ] [72])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int -4 [0xfffffffc])) [0 e+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 31 30 32 5 cfortran.h:461 (set (reg:QI 0 ax [orig:62 D.2816 ] [62])
+        (mem:QI (reg/f:SI 0 ax [orig:72 e ] [72]) [0 S1 A8])) 43 {*movqi_1} (nil)
+    (nil))
+
+(insn 32 31 33 5 cfortran.h:461 (set (reg:CCZ 17 flags)
+        (compare:CCZ (reg:QI 0 ax [orig:62 D.2816 ] [62])
+            (mem/c/i:QI (plus:SI (reg/f:SI 6 bp)
+                    (const_int -20 [0xffffffec])) [0 t+0 S1 A8]))) 7 {*cmpqi_1} (nil)
+    (nil))
+
+(jump_insn 33 32 34 5 cfortran.h:461 (set (pc)
+        (if_then_else (eq (reg:CCZ 17 flags)
+                (const_int 0 [0x0]))
+            (label_ref 21)
+            (pc))) 365 {*jcc_1} (nil)
+    (nil))
+;; End of basic block 5, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+;; Start of basic block 6, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(code_label 34 33 35 6 24 "" [1 uses])
+
+(note 35 34 36 6 [bb 6] NOTE_INSN_BASIC_BLOCK)
+
+(note 36 35 37 6 ("cfortran.h") 462)
+
+(insn 37 36 38 6 cfortran.h:462 (set (reg/f:SI 0 ax [orig:73 e ] [73])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int -4 [0xfffffffc])) [0 e+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 38 37 39 6 cfortran.h:462 (set (reg:QI 0 ax [orig:60 D.2818 ] [60])
+        (mem:QI (reg/f:SI 0 ax [orig:73 e ] [73]) [0 S1 A8])) 43 {*movqi_1} (nil)
+    (nil))
+
+(insn 39 38 40 6 cfortran.h:462 (set (reg:CCZ 17 flags)
+        (compare:CCZ (reg:QI 0 ax [orig:60 D.2818 ] [60])
+            (mem/c/i:QI (plus:SI (reg/f:SI 6 bp)
+                    (const_int -20 [0xffffffec])) [0 t+0 S1 A8]))) 7 {*cmpqi_1} (nil)
+    (nil))
+
+(jump_insn 40 39 42 6 cfortran.h:462 (set (pc)
+        (if_then_else (eq (reg:CCZ 17 flags)
+                (const_int 0 [0x0]))
+            (label_ref 46)
+            (pc))) 365 {*jcc_1} (nil)
+    (nil))
+;; End of basic block 6, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+;; Start of basic block 7, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(note 42 40 43 7 [bb 7] NOTE_INSN_BASIC_BLOCK)
+
+(insn 43 42 44 7 cfortran.h:462 (set (mem/c:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int -24 [0xffffffe8])) [0 iftmp.4+0 S4 A8])
+        (const_int 1 [0x1])) 34 {*movsi_1} (nil)
+    (nil))
+
+(jump_insn 44 43 45 7 cfortran.h:462 (set (pc)
+        (label_ref 49)) 380 {jump} (nil)
+    (nil))
+;; End of basic block 7, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame] 61
+
+(barrier 45 44 46)
+
+;; Start of basic block 8, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(code_label 46 45 47 8 26 "" [1 uses])
+
+(note 47 46 48 8 [bb 8] NOTE_INSN_BASIC_BLOCK)
+
+(insn 48 47 49 8 cfortran.h:462 (set (mem/c:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int -24 [0xffffffe8])) [0 iftmp.4+0 S4 A8])
+        (const_int 0 [0x0])) 34 {*movsi_1} (nil)
+    (nil))
+;; End of basic block 8, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame] 61
+
+;; Start of basic block 9, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame] 61
+(code_label 49 48 50 9 28 "" [1 uses])
+
+(note 50 49 74 9 [bb 9] NOTE_INSN_BASIC_BLOCK)
+
+(insn 74 50 51 9 cfortran.h:462 (set (reg:SI 0 ax [orig:59 D.2819 ] [59])
+        (mem/c:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int -24 [0xffffffe8])) [0 iftmp.4+0 S4 A8])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 51 74 52 9 cfortran.h:462 (parallel [
+            (set (reg:SI 0 ax [orig:59 D.2819 ] [59])
+                (plus:SI (reg:SI 0 ax [orig:59 D.2819 ] [59])
+                    (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                            (const_int -4 [0xfffffffc])) [0 e+0 S4 A32])))
+            (clobber (reg:CC 17 flags))
+        ]) 148 {*addsi_1} (nil)
+    (nil))
+
+(insn 52 51 53 9 cfortran.h:462 (set (mem:QI (reg:SI 0 ax [orig:59 D.2819 ] [59]) [0 S1 A8])
+        (const_int 0 [0x0])) 43 {*movqi_1} (nil)
+    (nil))
+;; End of basic block 9, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+;; Start of basic block 10, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(code_label 53 52 54 10 22 "" [1 uses])
+
+(note 54 53 55 10 [bb 10] NOTE_INSN_BASIC_BLOCK)
+
+(note 55 54 56 10 ("cfortran.h") 463)
+
+(insn 56 55 60 10 cfortran.h:463 (set (reg:SI 0 ax [orig:58 D.2820 ] [58])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 8 [0x8])) [0 s+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(note 60 56 69 10 NOTE_INSN_FUNCTION_END)
+
+(insn 69 60 73 10 cfortran.h:463 (use (reg/i:SI 0 ax [ <result> ])) -1 (nil)
+    (nil))
+;; End of basic block 10, registers live:
+ 0 [ax] 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+(note 73 69 0 NOTE_INSN_DELETED)
+
+
+;; Function kill_trailingn (kill_trailingn)
+
+Spilling for insn 54.
+
+Reloads for insn # 54
+Reload 0: reload_in (SI) = (reg:SI 61 [ iftmp.5 ])
+	reload_out (SI) = (reg:SI 0 ax [orig:59 D.2839 ] [59])
+	GENERAL_REGS, RELOAD_OTHER (opnum = 0)
+	reload_in_reg: (reg:SI 61 [ iftmp.5 ])
+	reload_out_reg: (reg:SI 0 ax [orig:59 D.2839 ] [59])
+	reload_reg_rtx: (reg:SI 0 ax [orig:59 D.2839 ] [59])
+;; Register dispositions:
+58 in 0  59 in 0  60 in 0  62 in 0  63 in 0  64 in 0  
+65 in 0  66 in 0  67 in 0  68 in 0  69 in 0  70 in 0  
+
+
+;; Hard regs used:  0 6 17
+
+(note 1 0 6 ("cfortran.h") 474)
+
+;; Start of basic block 2, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(note 6 1 2 2 [bb 2] NOTE_INSN_BASIC_BLOCK)
+
+(note 2 6 3 2 NOTE_INSN_DELETED)
+
+(insn 3 2 4 2 cfortran.h:474 (set (reg:SI 0 ax [orig:64 t ] [64])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 12 [0xc])) [0 t+0 S1 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 4 3 5 2 cfortran.h:474 (set (mem/c/i:QI (plus:SI (reg/f:SI 6 bp)
+                (const_int -4 [0xfffffffc])) [0 t+0 S1 A8])
+        (reg:QI 0 ax [orig:64 t ] [64])) 43 {*movqi_1} (nil)
+    (nil))
+
+(note 5 4 8 2 NOTE_INSN_FUNCTION_BEG)
+
+(note 8 5 9 2 ("cfortran.h") 475)
+
+(insn 9 8 10 2 cfortran.h:475 (set (reg/f:SI 0 ax [orig:65 e ] [65])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 16 [0x10])) [0 e+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 10 9 11 2 cfortran.h:475 (set (reg:CCZ 17 flags)
+        (compare:CCZ (reg/f:SI 0 ax [orig:65 e ] [65])
+            (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                    (const_int 8 [0x8])) [0 s+0 S4 A32]))) 2 {*cmpsi_1_insn} (nil)
+    (nil))
+
+(jump_insn 11 10 13 2 cfortran.h:475 (set (pc)
+        (if_then_else (ne (reg:CCZ 17 flags)
+                (const_int 0 [0x0]))
+            (label_ref 18)
+            (pc))) 365 {*jcc_1} (nil)
+    (nil))
+;; End of basic block 2, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+;; Start of basic block 4, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(note 13 11 14 4 [bb 4] NOTE_INSN_BASIC_BLOCK)
+
+(insn 14 13 15 4 cfortran.h:475 (set (reg/f:SI 0 ax [orig:66 e ] [66])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 16 [0x10])) [0 e+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 15 14 16 4 cfortran.h:475 (set (mem:QI (reg/f:SI 0 ax [orig:66 e ] [66]) [0 S1 A8])
+        (const_int 0 [0x0])) 43 {*movqi_1} (nil)
+    (nil))
+
+(jump_insn 16 15 17 4 cfortran.h:475 (set (pc)
+        (label_ref 56)) 380 {jump} (nil)
+    (nil))
+;; End of basic block 4, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+(barrier 17 16 18)
+
+;; Start of basic block 5, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(code_label 18 17 19 5 31 "" [1 uses])
+
+(note 19 18 20 5 [bb 5] NOTE_INSN_BASIC_BLOCK)
+
+(note 20 19 21 5 ("cfortran.h") 476)
+
+(insn 21 20 22 5 cfortran.h:476 (set (reg/f:SI 0 ax [orig:67 e ] [67])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 16 [0x10])) [0 e+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 22 21 23 5 cfortran.h:476 (set (reg:CC 17 flags)
+        (compare:CC (reg/f:SI 0 ax [orig:67 e ] [67])
+            (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                    (const_int 8 [0x8])) [0 s+0 S4 A32]))) 2 {*cmpsi_1_insn} (nil)
+    (nil))
+
+(jump_insn 23 22 24 5 cfortran.h:476 (set (pc)
+        (if_then_else (leu (reg:CC 17 flags)
+                (const_int 0 [0x0]))
+            (label_ref 56)
+            (pc))) 365 {*jcc_1} (nil)
+    (nil))
+;; End of basic block 5, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+;; Start of basic block 6, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(code_label 24 23 25 6 34 "" [1 uses])
+
+(note 25 24 26 6 [bb 6] NOTE_INSN_BASIC_BLOCK)
+
+(note 26 25 27 6 ("cfortran.h") 477)
+
+(insn 27 26 28 6 cfortran.h:477 (set (reg/f:SI 0 ax [orig:68 e ] [68])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 16 [0x10])) [0 e+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 28 27 29 6 cfortran.h:477 (set (reg:CC 17 flags)
+        (compare:CC (reg/f:SI 0 ax [orig:68 e ] [68])
+            (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                    (const_int 8 [0x8])) [0 s+0 S4 A32]))) 2 {*cmpsi_1_insn} (nil)
+    (nil))
+
+(jump_insn 29 28 31 6 cfortran.h:477 (set (pc)
+        (if_then_else (leu (reg:CC 17 flags)
+                (const_int 0 [0x0]))
+            (label_ref 37)
+            (pc))) 365 {*jcc_1} (nil)
+    (nil))
+;; End of basic block 6, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+;; Start of basic block 7, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(note 31 29 32 7 [bb 7] NOTE_INSN_BASIC_BLOCK)
+
+(insn 32 31 33 7 cfortran.h:477 (parallel [
+            (set (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                        (const_int 16 [0x10])) [0 e+0 S4 A32])
+                (plus:SI (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                            (const_int 16 [0x10])) [0 e+0 S4 A32])
+                    (const_int -1 [0xffffffff])))
+            (clobber (reg:CC 17 flags))
+        ]) 148 {*addsi_1} (nil)
+    (nil))
+
+(insn 33 32 34 7 cfortran.h:477 (set (reg/f:SI 0 ax [orig:69 e ] [69])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 16 [0x10])) [0 e+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 34 33 35 7 cfortran.h:477 (set (reg:QI 0 ax [orig:62 D.2836 ] [62])
+        (mem:QI (reg/f:SI 0 ax [orig:69 e ] [69]) [0 S1 A8])) 43 {*movqi_1} (nil)
+    (nil))
+
+(insn 35 34 36 7 cfortran.h:477 (set (reg:CCZ 17 flags)
+        (compare:CCZ (reg:QI 0 ax [orig:62 D.2836 ] [62])
+            (mem/c/i:QI (plus:SI (reg/f:SI 6 bp)
+                    (const_int -4 [0xfffffffc])) [0 t+0 S1 A8]))) 7 {*cmpqi_1} (nil)
+    (nil))
+
+(jump_insn 36 35 37 7 cfortran.h:477 (set (pc)
+        (if_then_else (eq (reg:CCZ 17 flags)
+                (const_int 0 [0x0]))
+            (label_ref 24)
+            (pc))) 365 {*jcc_1} (nil)
+    (nil))
+;; End of basic block 7, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+;; Start of basic block 8, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(code_label 37 36 38 8 35 "" [1 uses])
+
+(note 38 37 39 8 [bb 8] NOTE_INSN_BASIC_BLOCK)
+
+(note 39 38 40 8 ("cfortran.h") 478)
+
+(insn 40 39 41 8 cfortran.h:478 (set (reg/f:SI 0 ax [orig:70 e ] [70])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 16 [0x10])) [0 e+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 41 40 42 8 cfortran.h:478 (set (reg:QI 0 ax [orig:60 D.2838 ] [60])
+        (mem:QI (reg/f:SI 0 ax [orig:70 e ] [70]) [0 S1 A8])) 43 {*movqi_1} (nil)
+    (nil))
+
+(insn 42 41 43 8 cfortran.h:478 (set (reg:CCZ 17 flags)
+        (compare:CCZ (reg:QI 0 ax [orig:60 D.2838 ] [60])
+            (mem/c/i:QI (plus:SI (reg/f:SI 6 bp)
+                    (const_int -4 [0xfffffffc])) [0 t+0 S1 A8]))) 7 {*cmpqi_1} (nil)
+    (nil))
+
+(jump_insn 43 42 45 8 cfortran.h:478 (set (pc)
+        (if_then_else (eq (reg:CCZ 17 flags)
+                (const_int 0 [0x0]))
+            (label_ref 49)
+            (pc))) 365 {*jcc_1} (nil)
+    (nil))
+;; End of basic block 8, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+;; Start of basic block 9, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(note 45 43 46 9 [bb 9] NOTE_INSN_BASIC_BLOCK)
+
+(insn 46 45 47 9 cfortran.h:478 (set (mem/c:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int -8 [0xfffffff8])) [0 iftmp.5+0 S4 A8])
+        (const_int 1 [0x1])) 34 {*movsi_1} (nil)
+    (nil))
+
+(jump_insn 47 46 48 9 cfortran.h:478 (set (pc)
+        (label_ref 52)) 380 {jump} (nil)
+    (nil))
+;; End of basic block 9, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame] 61
+
+(barrier 48 47 49)
+
+;; Start of basic block 10, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(code_label 49 48 50 10 37 "" [1 uses])
+
+(note 50 49 51 10 [bb 10] NOTE_INSN_BASIC_BLOCK)
+
+(insn 51 50 52 10 cfortran.h:478 (set (mem/c:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int -8 [0xfffffff8])) [0 iftmp.5+0 S4 A8])
+        (const_int 0 [0x0])) 34 {*movsi_1} (nil)
+    (nil))
+;; End of basic block 10, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame] 61
+
+;; Start of basic block 11, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame] 61
+(code_label 52 51 53 11 39 "" [1 uses])
+
+(note 53 52 77 11 [bb 11] NOTE_INSN_BASIC_BLOCK)
+
+(insn 77 53 54 11 cfortran.h:478 (set (reg:SI 0 ax [orig:59 D.2839 ] [59])
+        (mem/c:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int -8 [0xfffffff8])) [0 iftmp.5+0 S4 A8])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 54 77 55 11 cfortran.h:478 (parallel [
+            (set (reg:SI 0 ax [orig:59 D.2839 ] [59])
+                (plus:SI (reg:SI 0 ax [orig:59 D.2839 ] [59])
+                    (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                            (const_int 16 [0x10])) [0 e+0 S4 A32])))
+            (clobber (reg:CC 17 flags))
+        ]) 148 {*addsi_1} (nil)
+    (nil))
+
+(insn 55 54 56 11 cfortran.h:478 (set (mem:QI (reg:SI 0 ax [orig:59 D.2839 ] [59]) [0 S1 A8])
+        (const_int 0 [0x0])) 43 {*movqi_1} (nil)
+    (nil))
+;; End of basic block 11, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+;; Start of basic block 12, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(code_label 56 55 57 12 33 "" [2 uses])
+
+(note 57 56 58 12 [bb 12] NOTE_INSN_BASIC_BLOCK)
+
+(note 58 57 59 12 ("cfortran.h") 479)
+
+(insn 59 58 63 12 cfortran.h:479 (set (reg:SI 0 ax [orig:58 D.2840 ] [58])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 8 [0x8])) [0 s+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(note 63 59 72 12 NOTE_INSN_FUNCTION_END)
+
+(insn 72 63 76 12 cfortran.h:479 (use (reg/i:SI 0 ax [ <result> ])) -1 (nil)
+    (nil))
+;; End of basic block 12, registers live:
+ 0 [ax] 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+(note 76 72 0 NOTE_INSN_DELETED)
+
+
+;; Function vkill_trailing (vkill_trailing)
+
+Spilling for insn 15.
+
+Reloads for insn # 15
+Reload 0: reload_in (SI) = (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                                                        (const_int -4 [0xfffffffc])) [0 i+0 S4 A32])
+	reload_out (SI) = (reg:SI 0 ax [orig:70 D.2861 ] [70])
+	GENERAL_REGS, RELOAD_OTHER (opnum = 0)
+	reload_in_reg: (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                                                        (const_int -4 [0xfffffffc])) [0 i+0 S4 A32])
+	reload_out_reg: (reg:SI 0 ax [orig:70 D.2861 ] [70])
+	reload_reg_rtx: (reg:SI 0 ax [orig:70 D.2861 ] [70])
+;; Register dispositions:
+58 in 0  59 in 0  60 in 0  61 in 0  62 in 0  63 in 0  
+64 in 2  65 in 1  66 in 0  67 in 0  68 in 0  69 in 0  
+70 in 0  71 in 0  72 in 0  73 in 0  74 in 0  75 in 1  
+76 in 1  
+
+;; Hard regs used:  0 1 2 6 7 17
+
+(note 1 0 6 ("cfortran.h") 489)
+
+;; Start of basic block 2, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(note 6 1 2 2 [bb 2] NOTE_INSN_BASIC_BLOCK)
+
+(note 2 6 3 2 NOTE_INSN_DELETED)
+
+(insn 3 2 4 2 cfortran.h:489 (set (reg:SI 0 ax [orig:72 t ] [72])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 20 [0x14])) [0 t+0 S1 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 4 3 5 2 cfortran.h:489 (set (mem/c/i:QI (plus:SI (reg/f:SI 6 bp)
+                (const_int -20 [0xffffffec])) [0 t+0 S1 A8])
+        (reg:QI 0 ax [orig:72 t ] [72])) 43 {*movqi_1} (nil)
+    (nil))
+
+(note 5 4 8 2 NOTE_INSN_FUNCTION_BEG)
+
+(note 8 5 9 2 ("cfortran.h") 490)
+
+(insn 9 8 10 2 cfortran.h:490 (set (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int -4 [0xfffffffc])) [0 i+0 S4 A32])
+        (const_int 0 [0x0])) 34 {*movsi_1} (nil)
+    (nil))
+
+(jump_insn 10 9 11 2 cfortran.h:490 (set (pc)
+        (label_ref 33)) 380 {jump} (nil)
+    (nil))
+;; End of basic block 2, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+(barrier 11 10 12)
+
+;; Start of basic block 4, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(code_label 12 11 13 4 43 "" [1 uses])
+
+(note 13 12 14 4 [bb 4] NOTE_INSN_BASIC_BLOCK)
+
+(note 14 13 61 4 ("cfortran.h") 491)
+
+(insn 61 14 15 4 cfortran.h:491 (set (reg:SI 0 ax [orig:70 D.2861 ] [70])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int -4 [0xfffffffc])) [0 i+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 15 61 16 4 cfortran.h:491 (parallel [
+            (set (reg:SI 0 ax [orig:70 D.2861 ] [70])
+                (plus:SI (reg:SI 0 ax [orig:70 D.2861 ] [70])
+                    (const_int 1 [0x1])))
+            (clobber (reg:CC 17 flags))
+        ]) 148 {*addsi_1} (nil)
+    (nil))
+
+(insn 16 15 19 4 cfortran.h:491 (parallel [
+            (set (reg:SI 0 ax [orig:69 D.2862 ] [69])
+                (mult:SI (reg:SI 0 ax [orig:70 D.2861 ] [70])
+                    (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                            (const_int 12 [0xc])) [0 elem_len+0 S4 A32])))
+            (clobber (reg:CC 17 flags))
+        ]) 182 {*mulsi3_1} (nil)
+    (nil))
+
+(insn 19 16 20 4 cfortran.h:491 (parallel [
+            (set (reg:SI 0 ax [orig:66 D.2865 ] [66])
+                (plus:SI (reg:SI 0 ax [orig:67 D.2864 ] [67])
+                    (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                            (const_int 8 [0x8])) [0 cstr+0 S4 A32])))
+            (clobber (reg:CC 17 flags))
+        ]) 148 {*addsi_1} (nil)
+    (nil))
+
+(insn 20 19 21 4 cfortran.h:491 (parallel [
+            (set (reg:SI 1 dx [orig:65 D.2866 ] [65])
+                (plus:SI (reg:SI 0 ax [orig:66 D.2865 ] [66])
+                    (const_int -1 [0xffffffff])))
+            (clobber (reg:CC 17 flags))
+        ]) 148 {*addsi_1} (nil)
+    (nil))
+
+(insn 21 20 22 4 cfortran.h:491 (set (reg:SI 2 cx [orig:64 D.2867 ] [64])
+        (sign_extend:SI (mem/c/i:QI (plus:SI (reg/f:SI 6 bp)
+                    (const_int -20 [0xffffffec])) [0 t+0 S1 A8]))) 83 {extendqisi2} (nil)
+    (nil))
+
+(insn 22 21 23 4 cfortran.h:491 (set (reg:SI 0 ax [orig:73 elem_len ] [73])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 12 [0xc])) [0 elem_len+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 23 22 26 4 cfortran.h:491 (parallel [
+            (set (reg:SI 0 ax [orig:63 D.2868 ] [63])
+                (mult:SI (reg:SI 0 ax [orig:73 elem_len ] [73])
+                    (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                            (const_int -4 [0xfffffffc])) [0 i+0 S4 A32])))
+            (clobber (reg:CC 17 flags))
+        ]) 182 {*mulsi3_1} (nil)
+    (nil))
+
+(insn 26 23 27 4 cfortran.h:491 (parallel [
+            (set (reg:SI 0 ax [orig:60 D.2871 ] [60])
+                (plus:SI (reg:SI 0 ax [orig:61 D.2870 ] [61])
+                    (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                            (const_int 8 [0x8])) [0 cstr+0 S4 A32])))
+            (clobber (reg:CC 17 flags))
+        ]) 148 {*addsi_1} (nil)
+    (nil))
+
+(insn 27 26 28 4 cfortran.h:491 (set (mem:SI (plus:SI (reg/f:SI 7 sp)
+                (const_int 8 [0x8])) [0 S4 A32])
+        (reg:SI 1 dx [orig:65 D.2866 ] [65])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 28 27 29 4 cfortran.h:491 (set (mem:SI (plus:SI (reg/f:SI 7 sp)
+                (const_int 4 [0x4])) [0 S4 A32])
+        (reg:SI 2 cx [orig:64 D.2867 ] [64])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 29 28 30 4 cfortran.h:491 (set (mem:SI (reg/f:SI 7 sp) [0 S4 A32])
+        (reg:SI 0 ax [orig:60 D.2871 ] [60])) 34 {*movsi_1} (nil)
+    (nil))
+
+(call_insn 30 29 31 4 cfortran.h:491 (set (reg:SI 0 ax)
+        (call (mem:QI (symbol_ref:SI ("kill_trailingn") [flags 0x3] <function_decl 0x4030f770 kill_trailingn>) [0 S1 A8])
+            (const_int 12 [0xc]))) 557 {*call_value_0} (nil)
+    (expr_list:REG_EH_REGION (const_int 0 [0x0])
+        (nil))
+    (nil))
+
+(note 31 30 32 4 ("cfortran.h") 490)
+
+(insn 32 31 33 4 cfortran.h:490 (parallel [
+            (set (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                        (const_int -4 [0xfffffffc])) [0 i+0 S4 A32])
+                (plus:SI (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                            (const_int -4 [0xfffffffc])) [0 i+0 S4 A32])
+                    (const_int 1 [0x1])))
+            (clobber (reg:CC 17 flags))
+        ]) 148 {*addsi_1} (nil)
+    (nil))
+;; End of basic block 4, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+;; Start of basic block 5, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(code_label 33 32 34 5 42 "" [1 uses])
+
+(note 34 33 35 5 [bb 5] NOTE_INSN_BASIC_BLOCK)
+
+(insn 35 34 36 5 cfortran.h:490 (set (reg:SI 1 dx [orig:76 sizeofcstr ] [76])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 16 [0x10])) [0 sizeofcstr+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 36 35 38 5 cfortran.h:490 (parallel [
+            (set (reg:SI 0 ax [74])
+                (div:SI (reg:SI 1 dx [orig:76 sizeofcstr ] [76])
+                    (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                            (const_int 12 [0xc])) [0 elem_len+0 S4 A32])))
+            (set (reg:SI 1 dx [75])
+                (mod:SI (reg:SI 1 dx [orig:76 sizeofcstr ] [76])
+                    (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                            (const_int 12 [0xc])) [0 elem_len+0 S4 A32])))
+            (clobber (reg:CC 17 flags))
+        ]) 193 {*divmodsi4_nocltd} (nil)
+    (nil))
+
+(insn 38 36 39 5 cfortran.h:490 (set (reg:CCGC 17 flags)
+        (compare:CCGC (reg:SI 0 ax [orig:59 D.2872 ] [59])
+            (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                    (const_int -4 [0xfffffffc])) [0 i+0 S4 A32]))) 2 {*cmpsi_1_insn} (nil)
+    (nil))
+
+(jump_insn 39 38 41 5 cfortran.h:490 (set (pc)
+        (if_then_else (gt (reg:CCGC 17 flags)
+                (const_int 0 [0x0]))
+            (label_ref 12)
+            (pc))) 365 {*jcc_1} (nil)
+    (nil))
+;; End of basic block 5, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+;; Start of basic block 6, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(note 41 39 42 6 [bb 6] NOTE_INSN_BASIC_BLOCK)
+
+(note 42 41 43 6 ("cfortran.h") 492)
+
+(insn 43 42 47 6 cfortran.h:492 (set (reg:SI 0 ax [orig:58 D.2873 ] [58])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 8 [0x8])) [0 cstr+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(note 47 43 56 6 NOTE_INSN_FUNCTION_END)
+
+(insn 56 47 60 6 cfortran.h:492 (use (reg/i:SI 0 ax [ <result> ])) -1 (nil)
+    (nil))
+;; End of basic block 6, registers live:
+ 0 [ax] 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+(note 60 56 0 NOTE_INSN_DELETED)
+
+
+;; Function num_elem (num_elem)
+
+Spilling for insn 16.
+Using reg 0 for reload 0
+Spilling for insn 76.
+Using reg 0 for reload 0
+
+Reloads for insn # 16
+Reload 0: reload_out (SI) = (reg:SI 64 [ D.2890 ])
+	GENERAL_REGS, RELOAD_FOR_OUTPUT (opnum = 0)
+	reload_out_reg: (reg:SI 64 [ D.2890 ])
+	reload_reg_rtx: (reg:SI 0 ax)
+
+Reloads for insn # 76
+Reload 0: reload_out (SI) = (reg:SI 64 [ D.2890 ])
+	GENERAL_REGS, RELOAD_FOR_OUTPUT (opnum = 0)
+	reload_out_reg: (reg:SI 64 [ D.2890 ])
+	reload_reg_rtx: (reg:SI 0 ax)
+;; Register dispositions:
+58 in 0  59 in 0  60 in 0  61 in 0  62 in 0  63 in 0  
+65 in 0  66 in 0  67 in 0  68 in 1  69 in 0  
+
+;; Hard regs used:  0 1 6 17
+
+(note 1 0 3 ("cfortran.h") 536)
+
+(note 3 1 5 2 NOTE_INSN_FUNCTION_BEG)
+
+;; Start of basic block 3, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(note 5 3 6 3 [bb 3] NOTE_INSN_BASIC_BLOCK)
+
+(note 6 5 7 3 ("cfortran.h") 538)
+
+(insn 7 6 8 3 cfortran.h:538 (set (reg:CCZ 17 flags)
+        (compare:CCZ (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                    (const_int 20 [0x14])) [0 num_term+0 S4 A32])
+            (const_int -1 [0xffffffff]))) 2 {*cmpsi_1_insn} (nil)
+    (nil))
+
+(jump_insn 8 7 10 3 cfortran.h:538 (set (pc)
+        (if_then_else (eq (reg:CCZ 17 flags)
+                (const_int 0 [0x0]))
+            (label_ref 13)
+            (pc))) 365 {*jcc_1} (nil)
+    (nil))
+;; End of basic block 3, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+;; Start of basic block 4, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(note 10 8 11 4 [bb 4] NOTE_INSN_BASIC_BLOCK)
+
+(insn 11 10 12 4 cfortran.h:538 (set (reg:CCZ 17 flags)
+        (compare:CCZ (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                    (const_int 20 [0x14])) [0 num_term+0 S4 A32])
+            (const_int -2 [0xfffffffe]))) 2 {*cmpsi_1_insn} (nil)
+    (nil))
+
+(jump_insn 12 11 13 4 cfortran.h:538 (set (pc)
+        (if_then_else (ne (reg:CCZ 17 flags)
+                (const_int 0 [0x0]))
+            (label_ref 19)
+            (pc))) 365 {*jcc_1} (nil)
+    (nil))
+;; End of basic block 4, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+;; Start of basic block 5, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(code_label 13 12 14 5 47 "" [1 uses])
+
+(note 14 13 15 5 [bb 5] NOTE_INSN_BASIC_BLOCK)
+
+(note 15 14 16 5 ("cfortran.h") 539)
+
+(insn 16 15 96 5 cfortran.h:539 (set (reg:SI 0 ax)
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 16 [0x10])) [0 term_char+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 96 16 17 5 cfortran.h:539 (set (mem/c:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int -20 [0xffffffec])) [0 D.2890+0 S4 A8])
+        (reg:SI 0 ax)) 34 {*movsi_1} (nil)
+    (nil))
+
+(jump_insn 17 96 18 5 cfortran.h:539 (set (pc)
+        (label_ref 77)) 380 {jump} (nil)
+    (nil))
+;; End of basic block 5, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame] 64
+
+(barrier 18 17 19)
+
+;; Start of basic block 6, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(code_label 19 18 20 6 49 "" [1 uses])
+
+(note 20 19 21 6 [bb 6] NOTE_INSN_BASIC_BLOCK)
+
+(note 21 20 22 6 ("cfortran.h") 540)
+
+(insn 22 21 23 6 cfortran.h:540 (set (reg:CCNO 17 flags)
+        (compare:CCNO (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                    (const_int 20 [0x14])) [0 num_term+0 S4 A32])
+            (const_int 0 [0x0]))) 0 {*cmpsi_ccno_1} (nil)
+    (nil))
+
+(jump_insn 23 22 25 6 cfortran.h:540 (set (pc)
+        (if_then_else (gt (reg:CCNO 17 flags)
+                (const_int 0 [0x0]))
+            (label_ref 28)
+            (pc))) 365 {*jcc_1} (nil)
+    (nil))
+;; End of basic block 6, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+;; Start of basic block 7, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(note 25 23 26 7 [bb 7] NOTE_INSN_BASIC_BLOCK)
+
+(insn 26 25 27 7 cfortran.h:540 (set (reg:SI 0 ax [orig:66 elem_len ] [66])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 12 [0xc])) [0 elem_len+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 27 26 28 7 cfortran.h:540 (set (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 20 [0x14])) [0 num_term+0 S4 A32])
+        (reg:SI 0 ax [orig:66 elem_len ] [66])) 34 {*movsi_1} (nil)
+    (nil))
+;; End of basic block 7, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+;; Start of basic block 8, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(code_label 28 27 29 8 51 "" [1 uses])
+
+(note 29 28 30 8 [bb 8] NOTE_INSN_BASIC_BLOCK)
+
+(note 30 29 31 8 ("cfortran.h") 541)
+
+(insn 31 30 32 8 cfortran.h:541 (set (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int -8 [0xfffffff8])) [0 num+0 S4 A32])
+        (const_int 0 [0x0])) 34 {*movsi_1} (nil)
+    (nil))
+;; End of basic block 8, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+;; Start of basic block 9, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(code_label 32 31 33 9 53 "" [1 uses])
+
+(note 33 32 34 9 [bb 9] NOTE_INSN_BASIC_BLOCK)
+
+(note 34 33 35 9 ("cfortran.h") 542)
+
+(insn 35 34 36 9 cfortran.h:542 (set (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int -4 [0xfffffffc])) [0 i+0 S4 A32])
+        (const_int 0 [0x0])) 34 {*movsi_1} (nil)
+    (nil))
+
+(jump_insn 36 35 37 9 cfortran.h:542 (set (pc)
+        (label_ref 42)) 380 {jump} (nil)
+    (nil))
+;; End of basic block 9, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+(barrier 37 36 38)
+
+;; Start of basic block 10, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(code_label 38 37 39 10 55 "" [1 uses])
+
+(note 39 38 40 10 [bb 10] NOTE_INSN_BASIC_BLOCK)
+
+(insn 40 39 41 10 cfortran.h:542 (parallel [
+            (set (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                        (const_int -4 [0xfffffffc])) [0 i+0 S4 A32])
+                (plus:SI (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                            (const_int -4 [0xfffffffc])) [0 i+0 S4 A32])
+                    (const_int 1 [0x1])))
+            (clobber (reg:CC 17 flags))
+        ]) 148 {*addsi_1} (nil)
+    (nil))
+
+(insn 41 40 42 10 cfortran.h:542 (parallel [
+            (set (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                        (const_int 8 [0x8])) [0 strv+0 S4 A32])
+                (plus:SI (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                            (const_int 8 [0x8])) [0 strv+0 S4 A32])
+                    (const_int 1 [0x1])))
+            (clobber (reg:CC 17 flags))
+        ]) 148 {*addsi_1} (nil)
+    (nil))
+;; End of basic block 10, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+;; Start of basic block 11, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(code_label 42 41 43 11 54 "" [1 uses])
+
+(note 43 42 44 11 [bb 11] NOTE_INSN_BASIC_BLOCK)
+
+(insn 44 43 45 11 cfortran.h:542 (set (reg:SI 0 ax [orig:63 num_term.6 ] [63])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 20 [0x14])) [0 num_term+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 45 44 46 11 cfortran.h:542 (set (reg:CC 17 flags)
+        (compare:CC (reg:SI 0 ax [orig:63 num_term.6 ] [63])
+            (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                    (const_int -4 [0xfffffffc])) [0 i+0 S4 A32]))) 2 {*cmpsi_1_insn} (nil)
+    (nil))
+
+(jump_insn 46 45 48 11 cfortran.h:542 (set (pc)
+        (if_then_else (leu (reg:CC 17 flags)
+                (const_int 0 [0x0]))
+            (label_ref 54)
+            (pc))) 365 {*jcc_1} (nil)
+    (nil))
+;; End of basic block 11, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+;; Start of basic block 12, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(note 48 46 49 12 [bb 12] NOTE_INSN_BASIC_BLOCK)
+
+(insn 49 48 50 12 cfortran.h:542 (set (reg/f:SI 0 ax [orig:67 strv ] [67])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 8 [0x8])) [0 strv+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 50 49 51 12 cfortran.h:542 (set (reg:QI 0 ax [orig:62 D.2892 ] [62])
+        (mem:QI (reg/f:SI 0 ax [orig:67 strv ] [67]) [0 S1 A8])) 43 {*movqi_1} (nil)
+    (nil))
+
+(insn 51 50 52 12 cfortran.h:542 (set (reg:SI 0 ax [orig:61 D.2893 ] [61])
+        (sign_extend:SI (reg:QI 0 ax [orig:62 D.2892 ] [62]))) 83 {extendqisi2} (nil)
+    (nil))
+
+(insn 52 51 53 12 cfortran.h:542 (set (reg:CCZ 17 flags)
+        (compare:CCZ (reg:SI 0 ax [orig:61 D.2893 ] [61])
+            (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                    (const_int 16 [0x10])) [0 term_char+0 S4 A32]))) 2 {*cmpsi_1_insn} (nil)
+    (nil))
+
+(jump_insn 53 52 54 12 cfortran.h:542 (set (pc)
+        (if_then_else (eq (reg:CCZ 17 flags)
+                (const_int 0 [0x0]))
+            (label_ref 38)
+            (pc))) 365 {*jcc_1} (nil)
+    (nil))
+;; End of basic block 12, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+;; Start of basic block 13, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(code_label 54 53 55 13 56 "" [1 uses])
+
+(note 55 54 56 13 [bb 13] NOTE_INSN_BASIC_BLOCK)
+
+(note 56 55 57 13 ("cfortran.h") 543)
+
+(insn 57 56 58 13 cfortran.h:543 (set (reg:SI 0 ax [orig:60 num_term.7 ] [60])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 20 [0x14])) [0 num_term+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 58 57 59 13 cfortran.h:543 (set (reg:CCZ 17 flags)
+        (compare:CCZ (reg:SI 0 ax [orig:60 num_term.7 ] [60])
+            (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                    (const_int -4 [0xfffffffc])) [0 i+0 S4 A32]))) 2 {*cmpsi_1_insn} (nil)
+    (nil))
+
+(jump_insn 59 58 61 13 cfortran.h:543 (set (pc)
+        (if_then_else (eq (reg:CCZ 17 flags)
+                (const_int 0 [0x0]))
+            (label_ref 73)
+            (pc))) 365 {*jcc_1} (nil)
+    (nil))
+;; End of basic block 13, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+;; Start of basic block 14, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(note 61 59 62 14 [bb 14] NOTE_INSN_BASIC_BLOCK)
+
+(note 62 61 63 14 ("cfortran.h") 544)
+
+(insn 63 62 64 14 cfortran.h:544 (set (reg:SI 1 dx [orig:68 i ] [68])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int -4 [0xfffffffc])) [0 i+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 64 63 65 14 cfortran.h:544 (set (reg:SI 0 ax [orig:69 elem_len ] [69])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 12 [0xc])) [0 elem_len+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 65 64 67 14 cfortran.h:544 (parallel [
+            (set (reg:SI 0 ax [orig:59 D.2895 ] [59])
+                (minus:SI (reg:SI 0 ax [orig:69 elem_len ] [69])
+                    (reg:SI 1 dx [orig:68 i ] [68])))
+            (clobber (reg:CC 17 flags))
+        ]) 172 {*subsi_1} (nil)
+    (expr_list:REG_EQUAL (minus:SI (mem/c/i:SI (plus:SI (reg/f:SI 16 argp)
+                    (const_int 4 [0x4])) [0 elem_len+0 S4 A32])
+            (mem/c/i:SI (plus:SI (reg/f:SI 20 frame)
+                    (const_int -4 [0xfffffffc])) [0 i+0 S4 A32]))
+        (nil)))
+
+(insn 67 65 68 14 cfortran.h:544 (parallel [
+            (set (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                        (const_int 8 [0x8])) [0 strv+0 S4 A32])
+                (plus:SI (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                            (const_int 8 [0x8])) [0 strv+0 S4 A32])
+                    (reg:SI 0 ax [orig:58 D.2896 ] [58])))
+            (clobber (reg:CC 17 flags))
+        ]) 148 {*addsi_1} (nil)
+    (nil))
+
+(note 68 67 69 14 ("cfortran.h") 541)
+
+(insn 69 68 70 14 cfortran.h:541 (parallel [
+            (set (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                        (const_int -8 [0xfffffff8])) [0 num+0 S4 A32])
+                (plus:SI (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                            (const_int -8 [0xfffffff8])) [0 num+0 S4 A32])
+                    (const_int 1 [0x1])))
+            (clobber (reg:CC 17 flags))
+        ]) 148 {*addsi_1} (nil)
+    (nil))
+
+(note 70 69 71 14 ("cfortran.h") 545)
+
+(jump_insn 71 70 72 14 cfortran.h:545 (set (pc)
+        (label_ref 32)) 380 {jump} (nil)
+    (nil))
+;; End of basic block 14, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+(barrier 72 71 73)
+
+;; Start of basic block 15, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(code_label 73 72 74 15 58 "" [1 uses])
+
+(note 74 73 75 15 [bb 15] NOTE_INSN_BASIC_BLOCK)
+
+(note 75 74 76 15 ("cfortran.h") 546)
+
+(insn 76 75 97 15 cfortran.h:546 (set (reg:SI 0 ax)
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int -8 [0xfffffff8])) [0 num+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 97 76 77 15 cfortran.h:546 (set (mem/c:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int -20 [0xffffffec])) [0 D.2890+0 S4 A8])
+        (reg:SI 0 ax)) 34 {*movsi_1} (nil)
+    (nil))
+;; End of basic block 15, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame] 64
+
+;; Start of basic block 16, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame] 64
+(code_label 77 97 78 16 50 "" [1 uses])
+
+(note 78 77 79 16 [bb 16] NOTE_INSN_BASIC_BLOCK)
+
+(insn 79 78 82 16 cfortran.h:546 (set (reg:SI 0 ax [orig:65 <result> ] [65])
+        (mem/c:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int -20 [0xffffffec])) [0 D.2890+0 S4 A8])) 34 {*movsi_1} (nil)
+    (nil))
+
+(note 82 79 83 16 NOTE_INSN_FUNCTION_END)
+
+(note 83 82 91 16 ("cfortran.h") 547)
+
+(insn 91 83 95 16 cfortran.h:547 (use (reg/i:SI 0 ax [ <result> ])) -1 (nil)
+    (nil))
+;; End of basic block 16, registers live:
+ 0 [ax] 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+(note 95 91 0 NOTE_INSN_DELETED)
+
+
+;; Function util_reshape_ (util_reshape_)
+
+;; Register dispositions:
+58 in 0  59 in 0  60 in 0  61 in 0  
+
+;; Hard regs used:  0 6 7
+
+(note 1 0 3 ("util_reshape.c") 13)
+
+(note 3 1 5 2 NOTE_INSN_FUNCTION_BEG)
+
+;; Start of basic block 3, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(note 5 3 6 3 [bb 3] NOTE_INSN_BASIC_BLOCK)
+
+(note 6 5 7 3 ("util_reshape.c") 13)
+
+(insn 7 6 8 3 util_reshape.c:13 (set (reg/f:SI 0 ax [orig:59 A3 ] [59])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 16 [0x10])) [0 A3+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 8 7 9 3 util_reshape.c:13 (set (reg:SI 0 ax [orig:58 D.2913 ] [58])
+        (mem:SI (reg/f:SI 0 ax [orig:59 A3 ] [59]) [0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 9 8 10 3 util_reshape.c:13 (set (mem:SI (plus:SI (reg/f:SI 7 sp)
+                (const_int 8 [0x8])) [0 S4 A32])
+        (reg:SI 0 ax [orig:58 D.2913 ] [58])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 10 9 11 3 util_reshape.c:13 (set (reg/f:SI 0 ax [orig:60 A2 ] [60])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 12 [0xc])) [0 A2+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 11 10 12 3 util_reshape.c:13 (set (mem:SI (plus:SI (reg/f:SI 7 sp)
+                (const_int 4 [0x4])) [0 S4 A32])
+        (reg/f:SI 0 ax [orig:60 A2 ] [60])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 12 11 13 3 util_reshape.c:13 (set (reg/f:SI 0 ax [orig:61 A1 ] [61])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 8 [0x8])) [0 A1+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 13 12 14 3 util_reshape.c:13 (set (mem:SI (reg/f:SI 7 sp) [0 S4 A32])
+        (reg/f:SI 0 ax [orig:61 A1 ] [61])) 34 {*movsi_1} (nil)
+    (nil))
+
+(call_insn 14 13 15 3 util_reshape.c:13 (call (mem:QI (symbol_ref:SI ("cf_util_reshape") [flags 0x41] <function_decl 0x403911c0 cf_util_reshape>) [0 S1 A8])
+        (const_int 12 [0xc])) 385 {*call_0} (nil)
+    (nil)
+    (nil))
+;; End of basic block 3, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+(note 15 14 24 NOTE_INSN_FUNCTION_END)
+
+(note 24 15 0 NOTE_INSN_DELETED)
+
+
+;; Function util_reshape2_ (util_reshape2_)
+
+;; Register dispositions:
+58 in 0  59 in 1  60 in 0  61 in 0  62 in 0  63 in 0  
+
+
+;; Hard regs used:  0 1 6 7
+
+(note 1 0 3 ("util_reshape.c") 17)
+
+(note 3 1 5 2 NOTE_INSN_FUNCTION_BEG)
+
+;; Start of basic block 3, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(note 5 3 6 3 [bb 3] NOTE_INSN_BASIC_BLOCK)
+
+(note 6 5 7 3 ("util_reshape.c") 17)
+
+(insn 7 6 8 3 util_reshape.c:17 (set (reg/f:SI 0 ax [orig:60 A4 ] [60])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 20 [0x14])) [0 A4+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 8 7 9 3 util_reshape.c:17 (set (reg:SI 1 dx [orig:59 D.2926 ] [59])
+        (mem:SI (reg/f:SI 0 ax [orig:60 A4 ] [60]) [0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 9 8 10 3 util_reshape.c:17 (set (reg/f:SI 0 ax [orig:61 A3 ] [61])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 16 [0x10])) [0 A3+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 10 9 11 3 util_reshape.c:17 (set (reg:SI 0 ax [orig:58 D.2927 ] [58])
+        (mem:SI (reg/f:SI 0 ax [orig:61 A3 ] [61]) [0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 11 10 12 3 util_reshape.c:17 (set (mem:SI (plus:SI (reg/f:SI 7 sp)
+                (const_int 12 [0xc])) [0 S4 A32])
+        (reg:SI 1 dx [orig:59 D.2926 ] [59])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 12 11 13 3 util_reshape.c:17 (set (mem:SI (plus:SI (reg/f:SI 7 sp)
+                (const_int 8 [0x8])) [0 S4 A32])
+        (reg:SI 0 ax [orig:58 D.2927 ] [58])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 13 12 14 3 util_reshape.c:17 (set (reg/f:SI 0 ax [orig:62 A2 ] [62])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 12 [0xc])) [0 A2+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 14 13 15 3 util_reshape.c:17 (set (mem:SI (plus:SI (reg/f:SI 7 sp)
+                (const_int 4 [0x4])) [0 S4 A32])
+        (reg/f:SI 0 ax [orig:62 A2 ] [62])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 15 14 16 3 util_reshape.c:17 (set (reg/f:SI 0 ax [orig:63 A1 ] [63])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 8 [0x8])) [0 A1+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 16 15 17 3 util_reshape.c:17 (set (mem:SI (reg/f:SI 7 sp) [0 S4 A32])
+        (reg/f:SI 0 ax [orig:63 A1 ] [63])) 34 {*movsi_1} (nil)
+    (nil))
+
+(call_insn 17 16 18 3 util_reshape.c:17 (call (mem:QI (symbol_ref:SI ("cf_util_reshape2") [flags 0x41] <function_decl 0x403912a0 cf_util_reshape2>) [0 S1 A8])
+        (const_int 16 [0x10])) 385 {*call_0} (nil)
+    (nil)
+    (nil))
+;; End of basic block 3, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+(note 18 17 27 NOTE_INSN_FUNCTION_END)
+
+(note 27 18 0 NOTE_INSN_DELETED)
+
+
+;; Function cf_util_reshape (cf_util_reshape)
+
+;; Register dispositions:
+58 in 0  59 in 0  60 in 0  61 in 0  62 in 0  
+
+;; Hard regs used:  0 6 7 17
+
+(note 1 0 3 ("util_reshape.c") 23)
+
+(note 3 1 5 2 NOTE_INSN_FUNCTION_BEG)
+
+;; Start of basic block 3, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(note 5 3 6 3 [bb 3] NOTE_INSN_BASIC_BLOCK)
+
+(note 6 5 7 3 ("util_reshape.c") 26)
+
+(insn 7 6 8 3 util_reshape.c:26 (set (reg:SI 0 ax [orig:58 amount.8 ] [58])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 16 [0x10])) [0 amount+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 8 7 9 3 util_reshape.c:26 (parallel [
+            (set (reg:SI 0 ax [59])
+                (ashift:SI (reg:SI 0 ax [orig:58 amount.8 ] [58])
+                    (const_int 3 [0x3])))
+            (clobber (reg:CC 17 flags))
+        ]) 288 {*ashlsi3_1} (nil)
+    (nil))
+
+(insn 9 8 10 3 util_reshape.c:26 (set (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int -4 [0xfffffffc])) [0 iamount+0 S4 A32])
+        (reg:SI 0 ax [59])) 34 {*movsi_1} (nil)
+    (expr_list:REG_EQUAL (ashift:SI (reg:SI 0 ax [orig:58 amount.8 ] [58])
+            (const_int 3 [0x3]))
+        (nil)))
+
+(note 10 9 11 3 ("util_reshape.c") 28)
+
+(insn 11 10 12 3 util_reshape.c:28 (set (reg:SI 0 ax [orig:60 iamount ] [60])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int -4 [0xfffffffc])) [0 iamount+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 12 11 13 3 util_reshape.c:28 (set (mem:SI (plus:SI (reg/f:SI 7 sp)
+                (const_int 8 [0x8])) [0 S4 A32])
+        (reg:SI 0 ax [orig:60 iamount ] [60])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 13 12 14 3 util_reshape.c:28 (set (reg/f:SI 0 ax [orig:61 source ] [61])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 12 [0xc])) [0 source+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 14 13 15 3 util_reshape.c:28 (set (mem:SI (plus:SI (reg/f:SI 7 sp)
+                (const_int 4 [0x4])) [0 S4 A32])
+        (reg/f:SI 0 ax [orig:61 source ] [61])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 15 14 16 3 util_reshape.c:28 (set (reg/f:SI 0 ax [orig:62 dest ] [62])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 8 [0x8])) [0 dest+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 16 15 17 3 util_reshape.c:28 (set (mem:SI (reg/f:SI 7 sp) [0 S4 A32])
+        (reg/f:SI 0 ax [orig:62 dest ] [62])) 34 {*movsi_1} (nil)
+    (nil))
+
+(call_insn 17 16 18 3 util_reshape.c:28 (set (reg:SI 0 ax)
+        (call (mem:QI (symbol_ref:SI ("memcpy") [flags 0x41] <function_decl 0x401efb60 memcpy>) [0 S1 A8])
+            (const_int 12 [0xc]))) 557 {*call_value_0} (nil)
+    (expr_list:REG_EH_REGION (const_int 0 [0x0])
+        (nil))
+    (nil))
+;; End of basic block 3, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+(note 18 17 19 NOTE_INSN_FUNCTION_END)
+
+(note 19 18 27 ("util_reshape.c") 31)
+
+(note 27 19 0 NOTE_INSN_DELETED)
+
+
+;; Function cf_util_reshape2 (cf_util_reshape2)
+
+;; Register dispositions:
+58 in 0  59 in 0  60 in 0  61 in 1  62 in 0  63 in 0  
+64 in 0  65 in 0  66 in 1  67 in 0  68 in 0  69 in 0  
+70 in 0  71 in 0  72 in 0  73 in 0  
+
+;; Hard regs used:  0 1 6 7 17
+
+(note 1 0 3 ("util_reshape.c") 34)
+
+(note 3 1 5 2 NOTE_INSN_FUNCTION_BEG)
+
+;; Start of basic block 3, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(note 5 3 6 3 [bb 3] NOTE_INSN_BASIC_BLOCK)
+
+(note 6 5 7 3 ("util_reshape.c") 37)
+
+(insn 7 6 8 3 util_reshape.c:37 (set (reg:SI 0 ax [orig:64 ddim ] [64])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 16 [0x10])) [0 ddim+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 8 7 9 3 util_reshape.c:37 (set (reg:CCGC 17 flags)
+        (compare:CCGC (reg:SI 0 ax [orig:64 ddim ] [64])
+            (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                    (const_int 20 [0x14])) [0 sdim+0 S4 A32]))) 2 {*cmpsi_1_insn} (nil)
+    (nil))
+
+(jump_insn 9 8 11 3 util_reshape.c:37 (set (pc)
+        (if_then_else (le (reg:CCGC 17 flags)
+                (const_int 0 [0x0]))
+            (label_ref 22)
+            (pc))) 365 {*jcc_1} (nil)
+    (nil))
+;; End of basic block 3, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+;; Start of basic block 4, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(note 11 9 12 4 [bb 4] NOTE_INSN_BASIC_BLOCK)
+
+(note 12 11 13 4 ("util_reshape.c") 39)
+
+(insn 13 12 14 4 util_reshape.c:39 (set (reg:SI 0 ax [orig:65 sdim ] [65])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 20 [0x14])) [0 sdim+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 14 13 15 4 util_reshape.c:39 (set (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int -8 [0xfffffff8])) [0 iamount+0 S4 A32])
+        (reg:SI 0 ax [orig:65 sdim ] [65])) 34 {*movsi_1} (nil)
+    (nil))
+
+(note 15 14 16 4 ("util_reshape.c") 40)
+
+(insn 16 15 17 4 util_reshape.c:40 (set (reg:SI 1 dx [orig:66 sdim ] [66])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 20 [0x14])) [0 sdim+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 17 16 18 4 util_reshape.c:40 (set (reg:SI 0 ax [orig:67 ddim ] [67])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 16 [0x10])) [0 ddim+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 18 17 19 4 util_reshape.c:40 (parallel [
+            (set (reg:SI 0 ax [orig:63 D.2945 ] [63])
+                (minus:SI (reg:SI 0 ax [orig:67 ddim ] [67])
+                    (reg:SI 1 dx [orig:66 sdim ] [66])))
+            (clobber (reg:CC 17 flags))
+        ]) 172 {*subsi_1} (nil)
+    (expr_list:REG_EQUAL (minus:SI (mem/c/i:SI (plus:SI (reg/f:SI 16 argp)
+                    (const_int 8 [0x8])) [0 ddim+0 S4 A32])
+            (mem/c/i:SI (plus:SI (reg/f:SI 16 argp)
+                    (const_int 12 [0xc])) [0 sdim+0 S4 A32]))
+        (nil)))
+
+(insn 19 18 20 4 util_reshape.c:40 (set (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int -4 [0xfffffffc])) [0 izero+0 S4 A32])
+        (reg:SI 0 ax [orig:63 D.2945 ] [63])) 34 {*movsi_1} (nil)
+    (nil))
+
+(jump_insn 20 19 21 4 util_reshape.c:40 (set (pc)
+        (label_ref 29)) 380 {jump} (nil)
+    (nil))
+;; End of basic block 4, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+(barrier 21 20 22)
+
+;; Start of basic block 5, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(code_label 22 21 23 5 68 "" [1 uses])
+
+(note 23 22 24 5 [bb 5] NOTE_INSN_BASIC_BLOCK)
+
+(note 24 23 25 5 ("util_reshape.c") 44)
+
+(insn 25 24 26 5 util_reshape.c:44 (set (reg:SI 0 ax [orig:68 ddim ] [68])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 16 [0x10])) [0 ddim+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 26 25 27 5 util_reshape.c:44 (set (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int -8 [0xfffffff8])) [0 iamount+0 S4 A32])
+        (reg:SI 0 ax [orig:68 ddim ] [68])) 34 {*movsi_1} (nil)
+    (nil))
+
+(note 27 26 28 5 ("util_reshape.c") 45)
+
+(insn 28 27 29 5 util_reshape.c:45 (set (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int -4 [0xfffffffc])) [0 izero+0 S4 A32])
+        (const_int 0 [0x0])) 34 {*movsi_1} (nil)
+    (nil))
+;; End of basic block 5, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+;; Start of basic block 6, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(code_label 29 28 30 6 70 "" [1 uses])
+
+(note 30 29 31 6 [bb 6] NOTE_INSN_BASIC_BLOCK)
+
+(note 31 30 32 6 ("util_reshape.c") 48)
+
+(insn 32 31 33 6 util_reshape.c:48 (set (reg:SI 0 ax [orig:69 iamount ] [69])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int -8 [0xfffffff8])) [0 iamount+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 33 32 34 6 util_reshape.c:48 (parallel [
+            (set (reg:SI 0 ax [orig:62 D.2946 ] [62])
+                (ashift:SI (reg:SI 0 ax [orig:69 iamount ] [69])
+                    (const_int 3 [0x3])))
+            (clobber (reg:CC 17 flags))
+        ]) 288 {*ashlsi3_1} (nil)
+    (expr_list:REG_EQUAL (ashift:SI (mem/c/i:SI (plus:SI (reg/f:SI 20 frame)
+                    (const_int -8 [0xfffffff8])) [0 iamount+0 S4 A32])
+            (const_int 3 [0x3]))
+        (nil)))
+
+(insn 34 33 35 6 util_reshape.c:48 (set (mem:SI (plus:SI (reg/f:SI 7 sp)
+                (const_int 8 [0x8])) [0 S4 A32])
+        (reg:SI 0 ax [orig:62 D.2946 ] [62])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 35 34 36 6 util_reshape.c:48 (set (reg/f:SI 0 ax [orig:70 source ] [70])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 12 [0xc])) [0 source+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 36 35 37 6 util_reshape.c:48 (set (mem:SI (plus:SI (reg/f:SI 7 sp)
+                (const_int 4 [0x4])) [0 S4 A32])
+        (reg/f:SI 0 ax [orig:70 source ] [70])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 37 36 38 6 util_reshape.c:48 (set (reg/f:SI 0 ax [orig:71 dest ] [71])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int 8 [0x8])) [0 dest+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 38 37 39 6 util_reshape.c:48 (set (mem:SI (reg/f:SI 7 sp) [0 S4 A32])
+        (reg/f:SI 0 ax [orig:71 dest ] [71])) 34 {*movsi_1} (nil)
+    (nil))
+
+(call_insn 39 38 40 6 util_reshape.c:48 (set (reg:SI 0 ax)
+        (call (mem:QI (symbol_ref:SI ("memcpy") [flags 0x41] <function_decl 0x401efb60 memcpy>) [0 S1 A8])
+            (const_int 12 [0xc]))) 557 {*call_value_0} (nil)
+    (expr_list:REG_EH_REGION (const_int 0 [0x0])
+        (nil))
+    (nil))
+
+(note 40 39 41 6 ("util_reshape.c") 50)
+
+(insn 41 40 42 6 util_reshape.c:50 (set (reg:CCZ 17 flags)
+        (compare:CCZ (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                    (const_int -4 [0xfffffffc])) [0 izero+0 S4 A32])
+            (const_int 0 [0x0]))) 0 {*cmpsi_ccno_1} (nil)
+    (nil))
+
+(jump_insn 42 41 44 6 util_reshape.c:50 (set (pc)
+        (if_then_else (eq (reg:CCZ 17 flags)
+                (const_int 0 [0x0]))
+            (label_ref:SI 63)
+            (pc))) 365 {*jcc_1} (nil)
+    (nil))
+;; End of basic block 6, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+;; Start of basic block 7, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(note 44 42 45 7 [bb 7] NOTE_INSN_BASIC_BLOCK)
+
+(note 45 44 46 7 ("util_reshape.c") 51)
+
+(insn 46 45 47 7 util_reshape.c:51 (set (reg:SI 0 ax [orig:72 izero ] [72])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int -4 [0xfffffffc])) [0 izero+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 47 46 48 7 util_reshape.c:51 (parallel [
+            (set (reg:SI 1 dx [orig:61 D.2947 ] [61])
+                (ashift:SI (reg:SI 0 ax [orig:72 izero ] [72])
+                    (const_int 3 [0x3])))
+            (clobber (reg:CC 17 flags))
+        ]) 288 {*ashlsi3_1} (nil)
+    (expr_list:REG_EQUAL (ashift:SI (mem/c/i:SI (plus:SI (reg/f:SI 20 frame)
+                    (const_int -4 [0xfffffffc])) [0 izero+0 S4 A32])
+            (const_int 3 [0x3]))
+        (nil)))
+
+(insn 48 47 49 7 util_reshape.c:51 (set (reg:SI 0 ax [orig:73 iamount ] [73])
+        (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                (const_int -8 [0xfffffff8])) [0 iamount+0 S4 A32])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 49 48 51 7 util_reshape.c:51 (parallel [
+            (set (reg:SI 0 ax [orig:60 D.2948 ] [60])
+                (ashift:SI (reg:SI 0 ax [orig:73 iamount ] [73])
+                    (const_int 3 [0x3])))
+            (clobber (reg:CC 17 flags))
+        ]) 288 {*ashlsi3_1} (nil)
+    (expr_list:REG_EQUAL (ashift:SI (mem/c/i:SI (plus:SI (reg/f:SI 20 frame)
+                    (const_int -8 [0xfffffff8])) [0 iamount+0 S4 A32])
+            (const_int 3 [0x3]))
+        (nil)))
+
+(insn 51 49 52 7 util_reshape.c:51 (parallel [
+            (set (reg:SI 0 ax [orig:58 D.2950 ] [58])
+                (plus:SI (reg:SI 0 ax [orig:59 D.2949 ] [59])
+                    (mem/c/i:SI (plus:SI (reg/f:SI 6 bp)
+                            (const_int 8 [0x8])) [0 dest+0 S4 A32])))
+            (clobber (reg:CC 17 flags))
+        ]) 148 {*addsi_1} (nil)
+    (nil))
+
+(insn 52 51 53 7 util_reshape.c:51 (set (mem:SI (plus:SI (reg/f:SI 7 sp)
+                (const_int 8 [0x8])) [0 S4 A32])
+        (reg:SI 1 dx [orig:61 D.2947 ] [61])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 53 52 54 7 util_reshape.c:51 (set (mem:SI (plus:SI (reg/f:SI 7 sp)
+                (const_int 4 [0x4])) [0 S4 A32])
+        (const_int 0 [0x0])) 34 {*movsi_1} (nil)
+    (nil))
+
+(insn 54 53 55 7 util_reshape.c:51 (set (mem:SI (reg/f:SI 7 sp) [0 S4 A32])
+        (reg:SI 0 ax [orig:58 D.2950 ] [58])) 34 {*movsi_1} (nil)
+    (nil))
+
+(call_insn 55 54 58 7 util_reshape.c:51 (set (reg:SI 0 ax)
+        (call (mem:QI (symbol_ref:SI ("memset") [flags 0x41] <function_decl 0x401efe00 memset>) [0 S1 A8])
+            (const_int 12 [0xc]))) 557 {*call_value_0} (nil)
+    (expr_list:REG_EH_REGION (const_int 0 [0x0])
+        (nil))
+    (nil))
+;; End of basic block 7, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+(note 58 55 59 NOTE_INSN_FUNCTION_END)
+
+(note 59 58 63 ("util_reshape.c") 54)
+
+;; Start of basic block 10, registers live: 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+(code_label 63 59 66 10 73 "" [1 uses])
+
+(note 66 63 67 10 [bb 10] NOTE_INSN_BASIC_BLOCK)
+;; End of basic block 10, registers live:
+ 6 [bp] 7 [sp] 16 [argp] 20 [frame]
+
+(note 67 66 0 NOTE_INSN_DELETED)
+

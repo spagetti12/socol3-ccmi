@@ -1,0 +1,698 @@
+#!/bin/sh
+#ulimit -s unlimited
+#
+
+EXPNO=50111
+EXPNO1=50111      # EXPNO with rerun files
+EXPERIMENT_SYEAR=1983
+EXPERIMENT_EYEAR=2013
+
+# Restart:
+RESTART_YEAR=2000          # Set to ${EXPERIMENT_SYEAR} for initial run 
+RESTART_MONTH=06           # Month (01, 02 etc.);  Set to 01 for initial run
+
+EXPERIMENT_EYEAR_1=`expr ${EXPERIMENT_EYEAR} + 1`
+#set -ex
+set -e
+export MPLARGS="verbose=1;check=0"
+export VPP_MBX_SIZE=64000000
+export VPP_STATS=10
+
+#
+# Job file to run echam model on portlandgroup fortran compiler
+# =============================================================
+#
+F_RECLUNIT=BYTE ; export F_RECLUNIT
+MPIPROGINF=detail ; export MPIPROGINF
+F_SYSLEN=600 ; export F_SYSLEN
+#
+NPROCA=8 #NPROCA is always = 8
+NPROCB=6 #NPROCB ... x NPROCA = 16,32,48,64
+NCPUS=$(($NPROCA*$NPROCB))
+NPROMA=101
+#
+RES=42
+LEV=39
+#
+RCP=60 #RCP default for CCMI is RCP 6.0
+#
+# Pressure levels for output files <EXPNO>_chem_m_<YYYY><MM>.nc
+# =============================================================
+rm -f afterburner_levels                 #CHECK WTB
+cat > afterburner_levels << EOL 
+&AFTERBURNER_LEVELS
+  LEVELS = 1, 5, 10, 30, 50, 100, 160, 250, 400, 630, 1000,  1585, 2512,  3981, 
+  6310, 10000, 15000, 20000, 25000, 35000, 45000, 55000, 65000, 75000, 80000, 
+  85000, 90000, 95000, 98000, 100000 /
+EOL
+#
+LSOCOL=.TRUE.     # Switch for SOCOL model
+LCHEM=.TRUE.      # Switch for chemistry module
+#
+
+BC_DIR=/cluster/work/climate/stenkea/echam5/data
+SOLBC_DIR=/cluster/home/ballw/socol_ccmi_will/boundary_conditions/Other_solar_data
+WORK_DIR=/cluster/scratch/ballw/socol_output
+DPATH=$WORK_DIR/run$EXPNO/
+RUNDIR=/cluster/home/ballw/socol_ccmi_will
+#
+################################################################################
+#
+if [ ! -d $DPATH ] ; then 
+mkdir $DPATH 
+fi
+
+cd $DPATH               # output and rerun files are written into $DPATH
+
+#
+MODEL=$RUNDIR/bin/echam5  # <--- path to the executable
+#
+INI=$BC_DIR  #../../boundary_conditions
+NUDGE=$BC_DIR/SOCOL/T42/nudge_files/eraia_T${RES}L${LEV}_netcdf  #../../nudge
+#
+################################################################################
+#
+# specification of file structures
+#
+# stop execution after the first run time error
+F_ERRCNT=0
+export F_ERRCNT
+#
+################################################################################
+#
+rm -f unit.?? sst* ice* rrtadata *.codes atmout chem_initial
+#
+ln -s  ${INI}/T${RES}/T${RES}L${LEV}_jan_spec.nc      unit.23
+ln -s  ${INI}/T${RES}/T${RES}_jan_surf.nc             unit.24
+#
+
+#---------
+# Nudging
+#---------
+Y_SM1=$((EXPERIMENT_SYEAR-1))
+Y_EP1=$((EXPERIMENT_EYEAR+1))
+
+echo "${NUDGE}"
+
+rm -f ndg*.nc
+
+
+ ln -s ${NUDGE}/eraiaT${RES}L${LEV}_${EXPERIMENT_SYEAR}01.nc ndg${Y_SM1}12.nc
+ ln -s ${NUDGE}/eraiaT${RES}L${LEV}_${EXPERIMENT_EYEAR}12.nc ndg${Y_EP1}01.nc
+
+for ((YYYY=${EXPERIMENT_SYEAR}; YYYY<=${EXPERIMENT_EYEAR}; YYYY++)); do
+for ((MM=1; MM<=9; MM++)); do
+nudg_name=eraiaT${RES}L${LEV}_${YYYY}"0"${MM}
+echo "${nudg_name}"
+idate=${YYYY}"0"${MM}
+ln -s ${NUDGE}/${nudg_name}.nc ndg${idate}.nc
+done
+for ((MM=10; MM<=12; MM++)); do
+nudg_name=eraiaT${RES}L${LEV}_${YYYY}${MM}
+echo "${nudg_name}"
+idate=${YYYY}${MM}
+ln -s ${NUDGE}/${nudg_name}.nc ndg${idate}.nc
+done
+done
+
+################################################################################
+#
+#  Initial file for chemical species (MEZON):
+rm -f chem_initial
+
+ln -s  ${INI}/SOCOL/T${RES}/chem_initial/T${RES}L39_20000restc_197412+tropchem+ods.nc chem_initial
+#
+################################################################################
+#
+#  Input files for tropospheric chemistry:
+rm -f  *_emissions  photolysis_rates_messy c5h8_emissions???? ch2o_emissions???? ch3cooh_emissions????
+
+YYY=`expr ${RESTART_YEAR} - 1`
+
+
+for ((YY=${YYY}; YY<=${EXPERIMENT_EYEAR_1}; YY++)); do
+if [ $YY -le 2000 ]; then
+ln -s ${INI}/SOCOL/T${RES}/tropchem/ACCMIP_emissions_Isoprene_T42_${YY}.nc  c5h8_emissions${YY}
+ln -s ${INI}/SOCOL/T${RES}/tropchem/ACCMIP_emissions_Formaldehyde_T42_${YY}.nc  ch2o_emissions${YY}
+else
+ln -s ${INI}/SOCOL/T${RES}/tropchem/RCP60/ACCMIP_emissions_RCP60_Isoprene_T42_${YY}.nc  c5h8_emissions${YY}
+ln -s ${INI}/SOCOL/T${RES}/tropchem/RCP60/ACCMIP_emissions_RCP60_Formaldehyde_T42_${YY}.nc  ch2o_emissions${YY}
+fi
+done
+
+for ((YY=${YYY}; YY<=${EXPERIMENT_EYEAR_1}; YY++)); do
+if [ $YY -le 2008 ]; then
+ln -s ${INI}/SOCOL/T${RES}/tropchem/ACCMIP_emissions_CH3COOH_T42_${YY}.nc  ch3cooh_emissions${YY}
+else
+ln -s ${INI}/SOCOL/T${RES}/tropchem/ACCMIP_emissions_CH3COOH_T42_2008.nc  ch3cooh_emissions${YY}
+fi
+done
+#
+ln -s ${INI}/SOCOL/T${RES}/tropchem/Photolysis_tropchem_T${RES}.nc photolysis_rates_messy
+#
+################################################################################
+## for climatological sst and ice (LAMIP=F) use:  
+#ln -s  ${INI}/T${RES}/hadley/T${RES}_HadISST_sst_clim_1995-2004.nc    unit.20
+#ln -s  ${INI}/T${RES}/hadley/T${RES}_HadISST_sic_clim_1995-2004.nc    unit.96
+
+# for AMIP (variable) sst and ice (LAMIP=T) use:
+
+YYY=`expr ${RESTART_YEAR} - 1`
+
+#for ((YY=${YYY}; YY<=${EXPERIMENT_EYEAR_1}; YY++)); do
+#if [ $YY -le 2005 ]; then
+#    ln -s  ${INI}/T${RES}/cesm1-cam5/ccmi_SOCOLT${RES}_CESM1-CAM5_historical_${YY}_sst.nc  sst${YY}
+#    ln -s  ${INI}/T${RES}/cesm1-cam5/ccmi_SOCOLT${RES}_CESM1-CAM5_historical_${YY}_sic.nc  ice${YY}
+#else
+#    ln -s  ${INI}/T${RES}/cesm1-cam5/rcp60/ccmi_SOCOLT${RES}_CESM1-CAM5_rcp60_${YY}_sst.nc  sst${YY}
+#    ln -s  ${INI}/T${RES}/cesm1-cam5/rcp60/ccmi_SOCOLT${RES}_CESM1-CAM5_rcp60_${YY}_sic.nc  ice${YY}
+#fi
+#done
+
+for ((YY=${YYY}; YY<=${EXPERIMENT_EYEAR_1}; YY++)); do
+    ln -s  ${INI}/T${RES}/hadley/T${RES}_HadISST_sst_${YY}.nc  sst${YY}
+    ln -s  ${INI}/T${RES}/hadley/T${RES}_HadISST_sic_${YY}.nc  ice${YY}
+done 
+
+
+#
+################################################################################
+#
+ln -s  ${INI}/T${RES}/T${RES}_O3clim2.nc    unit.21
+ln -s  ${INI}/SOCOL/T${RES}/misc/OH_ACCENT_T${RES}.nc unit.22
+ln -s  ${INI}/T${RES}/T${RES}_VLTCLIM.nc    unit.90
+ln -s  ${INI}/T${RES}/T${RES}_VGRATCLIM.nc  unit.91
+ln -s  ${INI}/T${RES}/T${RES}_TSLCLIM2.nc   unit.92
+ln -s  ${INI}/T${RES}/surrta_data           rrtadata
+
+#
+################################################################################
+#
+# Boundary conditions for SOCOL:
+
+# Greenhouse gases and ODSs:
+############################
+rm -f co2_y ch4_y n2o_y odsmem_y odscll_y odscls_y odsbr_y co2_trac
+
+ln -s  ${INI}/SOCOL/GHG_ODS/ccmi_ch4_RCP6_socol_1950-2100.txt         ch4_y
+ln -s  ${INI}/SOCOL/GHG_ODS/ccmi_co2_RCP6_socol_1950-2100.txt         co2_y
+ln -s  ${INI}/SOCOL/GHG_ODS/ccmi_n2o_RCP6_socol_1950-2100.txt         n2o_y
+
+ln -s  ${INI}/SOCOL/GHG_ODS/ccmi_odsmem_socol_1950-2100.txt      odsmem_y
+ln -s  ${INI}/SOCOL/GHG_ODS/ccmi_odscls_socol_1950-2100.txt      odscls_y
+ln -s  ${INI}/SOCOL/GHG_ODS/ccmi_odscll_socol_1950-2100.txt      odscll_y
+ln -s  ${INI}/SOCOL/GHG_ODS/ccmi_odsbr_socol_1950-2100.txt       odsbr_y
+
+
+# Solar irradiation, Schumann-Runge bands/Lyman alpha line heating 
+# parameterisation, lookup-tables for photolysis rates:
+#######################################################
+
+#rm -f sun_irrad sun_par phot_* 
+rm -f sun_irrad_y sun_par_y photolysis???? photolysis_mean photolysis_delta_e_corr
+
+ln -s ${SOLBC_DIR}/irrad_echam5/sun_irrad_C1_1966_2013_satire.txt       sun_irrad_y
+ln -s ${SOLBC_DIR}/extra_heating/sun_par_C1_1966-2013_satire.txt           sun_par_y
+
+YY=`expr ${RESTART_YEAR} - 1`
+while [ ${YY} -le ${EXPERIMENT_EYEAR_1} ]; do
+    ln -s ${SOLBC_DIR}/photolysis/satire66/phot_C1_${YY}_satire.nc photolysis${YY}
+    YY=`expr ${YY} + 1`
+done
+
+
+#rm -f sun_irrad sun_par phot_* 
+#rm -f sun_irrad_y sun_par_y photolysis???? photolysis_mean photolysis_delta_e_corr
+
+#ln -s ${SOLBC_DIR}/irrad_echam5/sun_irrad_C1_1966_2013_satire.txt       sun_irrad_y
+#ln -s ${SOLBC_DIR}/extra_heating/sun_par_C1_1966-2013_satire.txt           sun_par_y
+
+#YY=`expr ${RESTART_YEAR} - 1`
+#while [ ${YY} -le ${EXPERIMENT_EYEAR_1} ]; do
+#    ln -s ${SOLBC_DIR}/photolysis/satire/phot_C1_${YY}_satire.nc photolysis${YY}
+#    YY=`expr ${YY} + 1`
+#done
+
+ln -s ${INI}/SOCOL/sun/photolysis_socol_mean_1977_1998.nc photolysis_mean # mean 1977-1998 (two solar cycles)
+
+# Delta-E photolysis corrections:
+ln -s ${INI}/SOCOL/sun/L${LEV}_photolysis_delta_e_corr_socol.nc photolysis_delta_e_corr
+
+
+# Ionization data
+#######################################################
+rm -f geomag_data_1600_2100 ????_ionrate-nitrate.txt monthly_mean_ap gcr_data
+
+ln -s ${INI}/SOCOL/ionization/geomag_data_1600_2100.txt geomag_data_1600_2100
+ln -s ${INI}/SOCOL/ionization/gcr_data_1600_2100_constant.nc gcr_data
+ln -s ${INI}/SOCOL/CCMI_solar_data/ap_index/ap_annual_REF-C2.txt  monthly_mean_ap
+
+YY=`expr ${RESTART_YEAR} - 1`
+while [ ${YY} -le ${EXPERIMENT_EYEAR_1} ]; do
+    ln -s ${INI}/SOCOL/CCMI_solar_data/ionrate/${YY}_ionrate_spe_REF_C1.txt  ${YY}_ionrate-nitrate.txt
+    YY=`expr ${YY} + 1`
+done
+
+# Stratospheric aerosols:
+#########################
+rm -f strataer*
+
+YY=`expr ${RESTART_YEAR} - 1`
+while [ ${YY} -le ${EXPERIMENT_EYEAR_1} ]; do
+    ln -s ${INI}/SOCOL/T${RES}/strat_aerosols/CCMI_SOCOL3_4l_${YY}.nc strataer${YY}
+    YY=`expr ${YY} + 1`
+done
+# background aerosol climatology (1995-2002)
+ln -s  ${INI}/SOCOL/T${RES}/strat_aerosols/T${RES}L${LEV}_sad_nd_ext_omega_g_socol_mean_1995_2002.nc strataerbg
+
+# Troposperic aerosol climatology:
+##################################
+rm -f tropoaer tropoaerclim tropoaer????
+
+
+YY=`expr ${RESTART_YEAR} - 1`
+while [ ${YY} -le ${EXPERIMENT_EYEAR_1} ]; do
+    ln -s ${INI}/SOCOL/T${RES}/tropo_aerosols/T${RES}L${LEV}_GISS_AEROSOLS_${YY}.nc tropoaer${YY}
+    YY=`expr ${YY} + 1`
+done
+
+
+ln -s  ${INI}/SOCOL/T${RES}/tropo_aerosols/T${RES}L${LEV}_tropoaero_socol_clim.nc tropoaerclim
+
+# CO and NOx emissions:
+#######################
+rm -f co_nox_emiss_surf_aircr???? nox_lightning lightn_fac CO_syn_emiss
+
+YY=`expr ${RESTART_YEAR} - 1`
+while [ ${YY} -le ${EXPERIMENT_EYEAR_1} ]; do
+    ln -s ${INI}/SOCOL/T${RES}/co_nox/T${RES}L${LEV}_co_nox_emiss_surf_aircr_socol_${YY}_ccmi.nc co_nox_emiss_surf_aircr${YY}
+    YY=`expr ${YY} + 1`
+done
+
+ln -s  ${INI}/SOCOL/T${RES}/co_nox/T${RES}L${LEV}_nox_lightning_socol.nc nox_lightning
+ln -s  ${INI}/SOCOL/T${RES}/co_nox/T${RES}_fac_lightning_socol.nc lightn_fac
+
+ln -s  ${INI}/SOCOL/T${RES}/misc/CCMI_CO_tracer_T${RES}.nc CO_syn_emiss
+
+
+
+# HEPPA NOX (UPPER LAYER):
+#######################
+# rm -f nox_heppa*
+# 
+# 
+# for MM in 10 11 12; do
+#    ln -s ${INI}/SOCOL/T${RES}/co_nox/nox_heppa_2008${MM}.nc   nox_heppa2008${MM}
+# done
+# for MM in 01 02 03 04 05; do
+#    ln -s ${INI}/SOCOL/T${RES}/co_nox/nox_heppa_2009${MM}.nc   nox_heppa2009${MM}
+# done
+
+
+
+# CH4 emissions:
+#######################
+rm -f ch4_emiss_surf_anthrop???? ch4_emiss_surf_bb???? ch4_emiss_surf_wet????
+
+YY=`expr ${RESTART_YEAR} - 1`
+while [ ${YY} -le ${EXPERIMENT_EYEAR_1} ]; do
+
+    ln -s  ${INI}/SOCOL/T${RES}/ch4/EDGAR_v41_CH4_anthrop_T${RES}_${YY}.nc  ch4_emiss_surf_anthrop${YY}
+    ln -s  ${INI}/SOCOL/T${RES}/ch4/GFED3.1_CH4_BB_T${RES}_${YY}.nc  ch4_emiss_surf_bb${YY}
+    ln -s  ${INI}/SOCOL/T${RES}/ch4/MAIOLICA_CH4_wetlands_T${RES}_${YY}.nc ch4_emiss_surf_wet${YY}
+
+    YY=`expr ${YY} + 1`
+done
+
+# Wetland parameterisation:
+
+ln -s ${INI}/SOCOL/T${RES}/misc/global_wetland_frac_T${RES}.nc unit.40
+ln -s ${INI}/SOCOL/T${RES}/misc/HR_T${RES}.nc unit.41
+ln -s ${INI}/SOCOL/T${RES}/misc/30008_1995_tsurf_annualmean.nc unit.43
+
+# CMDL CH4 climatology
+
+ln -s ${INI}/SOCOL/T${RES}/ch4/CH4_clim_T${RES}.nc unit.44
+
+# NMVOC emissions:
+########################
+rm -f nmvoc_emiss_biogenic???? nmvoc_emiss_bb???? nmvoc_emiss_anthrop????
+
+YY=`expr ${RESTART_YEAR} - 1`
+
+for ((YY=${YY}; YY<=${EXPERIMENT_EYEAR_1}; YY++)); do
+if [ $YY -le 2000 ]; then
+    ln -s ${INI}/SOCOL/T${RES}/nmhc/ACCMIP_emissions_biogenic_NMHC_T42_${YY}.nc  nmvoc_emiss_biogenic${YY}
+    ln -s ${INI}/SOCOL/T${RES}/nmhc/ACCMIP_emissions_anthropogenic_NMHC_T42_${YY}.nc  nmvoc_emiss_anthrop${YY}
+    ln -s ${INI}/SOCOL/T${RES}/nmhc/ACCMIP_emissions_biomassburning_NMHC_T42_${YY}.nc  nmvoc_emiss_bb${YY}
+else
+    ln -s ${INI}/SOCOL/T${RES}/nmhc/RCP60/ACCMIP_emissions_biogenic_RCP60_NMHC_T42_2000.nc  nmvoc_emiss_biogenic${YY}
+    ln -s ${INI}/SOCOL/T${RES}/nmhc/RCP60/ACCMIP_emissions_anthropogenic_RCP60_NMHC_T42_${YY}.nc  nmvoc_emiss_anthrop${YY}
+    ln -s ${INI}/SOCOL/T${RES}/nmhc/RCP60/ACCMIP_emissions_biomassburning_RCP60_NMHC_T42_${YY}.nc  nmvoc_emiss_bb${YY}
+fi
+done
+
+
+
+# QBO:
+######
+rm -f qbo????
+
+
+YY=`expr ${RESTART_YEAR} - 1`
+while [ ${YY} -le ${EXPERIMENT_EYEAR_1} ]; do
+    ln -s  ${INI}/SOCOL/QBO/QBO_socol_${YY}.nc qbo${YY}
+    YY=`expr ${YY} + 1`
+done
+# latitude bands for ozone diagnostics:
+#############################################################
+ln -s $RUNDIR/run/regions4ozone_T42_7regions.nc unit.45
+
+
+################################################################################
+#
+# Prepare rerun files (if necessary):
+if [ ${RESTART_YEAR} -gt ${EXPERIMENT_SYEAR} -o ${RESTART_MONTH} -gt 01 ]; then
+    if [ ${RESTART_MONTH} -eq 01 ]; then
+	MM1=12
+	YY1=`expr ${RESTART_YEAR} - 1`
+    else
+	MM1=`expr ${RESTART_MONTH} - 1`
+	YY1=${RESTART_YEAR}
+    fi
+    if [ ${MM1} -le 9 ]; then
+	MM1=0${MM1}
+    fi
+    
+    if [ ${EXPNO1} -ne ${EXPNO} ]; then
+       cp -f $WORK_DIR/run$EXPNO1/${EXPNO1}_rerun_${YY1}${MM1}_echam.nc.gz $WORK_DIR/run$EXPNO/${EXPNO}_rerun_${YY1}${MM1}_echam.nc.gz
+       cp -f $WORK_DIR/run$EXPNO1/${EXPNO1}_rerun_${YY1}${MM1}_chem1.nc.gz $WORK_DIR/run$EXPNO/${EXPNO}_rerun_${YY1}${MM1}_chem1.nc.gz
+    fi
+
+#     a) ECHAM5:
+    if [ ! -s ${EXPNO}_rerun_${YY1}${MM1}_echam.nc.gz ]; then
+     	echo ${EXPNO}_rerun_${YY1}${MM1}_echam.nc.gz does not exist!
+    	exit
+    fi
+    cp -f ${EXPNO}_rerun_${YY1}${MM1}_echam.nc.gz rerun_${EXPNO}_echam.gz
+    gunzip -f rerun_${EXPNO}_echam.gz
+ 
+
+
+    if [ ${LSOCOL} = .TRUE. -a ${LCHEM} = .TRUE. ]; then 
+#     b) MEZON:
+    	if [ ! -s ${EXPNO}_rerun_${YY1}${MM1}_chem1.nc.gz ]; then
+    	    echo ${EXPNO}_rerun_${YY1}${MM1}_chem1.nc.gz does not exist!
+    	    exit
+    	fi
+    	cp -f ${EXPNO}_rerun_${YY1}${MM1}_chem1.nc.gz rerun_${EXPNO}_tracer.gz
+    	gunzip -f rerun_${EXPNO}_tracer.gz
+
+#     c) chem2 and chem_m streams 
+#        (no restart fields included, but to be provided nevertheless):
+#    	if [ ! -s rerun_${EXPNO}_chem2 ]; then
+#    	    if [ -s $WORK_DIR/rerun_chem/runnr_rerun_chem2.nc ]; then
+#    		cp -f $WORK_DIR/rerun_chem/runnr_rerun_chem2.nc rerun_${EXPNO}_chem2
+#    	    else
+#    		echo Neither ${EXPNO}_rerun_chem2.nc nor $WORK_DIR/rerun_chem/runnr_rerun_chem2.nc exists!
+#    	 	exit
+#    	    fi
+#    	fi
+#    	if [ ! -s rerun_${EXPNO}_chem_m ]; then
+#    	    if [ -s $WORK_DIR/rerun_chem/runnr_rerun_chem_m.nc ]; then
+#    		cp -f $WORK_DIR/rerun_chem/runnr_rerun_chem_m.nc rerun_${EXPNO}_chem_m
+#    	    else
+#    		echo Neither ${EXPNO}_rerun_chem_m.nc nor $WORK_DIR/rerun_chem/runnr_rerun_chem_m.nc exists!
+#    		exit
+#    	    fi
+#    	fi
+    fi
+
+    RERUN=.TRUE.     # Rerun switch; .false. for initial run, .true. for rerun
+else
+    RERUN=.FALSE.
+fi
+rm -f fortran_error_messages
+
+echo ${RERUN}
+
+
+#
+################################################################################
+#
+# Set namelist and call model:
+  
+YY=${RESTART_YEAR}
+echo "${YY} !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+while [ ${YY} -le ${EXPERIMENT_EYEAR} ]; do
+    for ((MM=${RESTART_MONTH}; MM<=12; MM++)); do
+       MM2=${MM}
+       if [ ${MM} -le 9 ]; then
+	   MM2=0${MM}
+       fi
+
+       echo ${MM}!!!!!!!!!!!! ${EXPNO}_${YY}${MM2}.01_chem_m.nc
+
+	if [ ${YY} -gt ${RESTART_YEAR} -o ${MM} -ge ${RESTART_MONTH} ]; then
+	    if [ -s namelist.echam ]; then
+		rm -f namelist.echam
+	    fi
+#  namelist control variables and output control for grid variables
+#  spectral variables are written out by default except liq. water
+#  for production runs set LABORT=.FALSE.
+#
+
+	    cat > namelist.echam << EOF
+&RUNCTL
+  LSOCOL=${LSOCOL}
+  LRESUME=$RERUN,
+  OUT_DATAPATH = "$DPATH"
+  OUT_EXPNAME  = "$EXPNO"
+  OUT_FILETYPE = 2
+  TRAC_FILETYPE = 2
+  DT_START  = ${EXPERIMENT_SYEAR},01,01,12,0,0
+  DT_STOP   = ${EXPERIMENT_EYEAR_1},01,01,0,0,0
+  NO_CYCLES = 1
+  PUTDATA   = 1,'months','first',0
+  PUTRERUN  = 1, 'months', 'last', 0
+  DELTA_TIME = 900
+  LAMIP=.TRUE.
+  LMIDATM=.TRUE.
+  LABORT=.FALSE.
+  NPROCA=${NPROCA}
+  NPROCB=${NPROCB}
+  IZCALC_START=1600
+  IZCALC_STOP = ${EXPERIMENT_SYEAR}
+  LNUDGE = .TRUE.
+/
+&SOCOLCTL
+  LCHEM=${LCHEM}
+  CYEAR=1975
+  LNMVOC_ACCMIP = .TRUE.
+  LCH4_FLUX = .FALSE.
+  LO3ORIG = .TRUE.
+  INTERACTIVELNOX=.TRUE.
+  LPCO2=.FALSE.
+  GCR = .FALSE.
+  SPE = .TRUE.
+  EEP = .TRUE.
+  LSYNTH = .TRUE.
+/
+&O3ORIGCTL
+  I_INTEGRATE = 1
+  I_TRAC_ORIG = 21
+  SN_O3ORIG = 'O3ONPBL_1','O3ONMBL_2','O3OTRBL_3','O3OSMBL_4','O3OSPBL_5','O3ONPFT_6','O3ONMFT_7','O3OTRFT_8','O3OSMFT_9','O3OSPFT_10','O3ONPLS_11','O3ONMLS_12','O3OTRLS_13','O3OTRMS_14',
+              'O3OSMLS_15','O3OSPLS_16','O3ONPUS_17','O3ONMUS_18','O3OTRUS_19','O3OSMUS_20','O3OSPUS_21'
+
+  L_ERR = .FALSE.
+/
+&DYNCTL
+  VCHECK=235.
+  SPDRAG=0.926E-4
+/
+&RADCTL
+  IAERO=10
+  LGADSRH=.TRUE.
+/
+&NDGCTL
+ inudgformat     = 2
+ dt_nudg_start   = ${RESTART_YEAR},01,01,12,0,0
+ dt_nudg_stop    = ${EXPERIMENT_EYEAR},12,31,0,0,0
+ lnudgdbx        = .FALSE.
+ lnudgini        = .FALSE.
+ nudglmin        = 1
+ nudglmax        = 39
+ nudgsmin        = 0
+ nudgsmax        = 42
+ lnudgimp        = .TRUE.
+ nudgd           = 39*0.579
+ nudgt           = 39*1.16
+ nudgv           = 39*4.63
+ nudgp           = 1.16
+ ltintlin        = .FALSE.
+ ldamplin        = .TRUE.
+ nudgdamp        = 1.
+ nudgdsize       = 0.5
+ ndg_file_nc    = "ndg%y4%m2.nc"
+/
+&SET_STREAM_ELEMENT  name = 'amlcorac' lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'friac'    lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'ustri'    lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'vstri'    lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'ustrw'    lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'vstrw'    lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'ustrl'    lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'vstrl'    lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'ahfliac'  lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'ahflwac'  lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'ahfllac'  lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'evapiac'  lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'evapwac'  lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'evaplac'  lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'az0i'     lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'az0w'     lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'az0l'     lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'ahfsiac'  lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'ahfswac'  lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'ahfslac'  lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'alsoi'    lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'alsow'    lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'alsol'    lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'ahfice'   lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'qres'     lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'apmeb'    lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'ws'       lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'relhum'   lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'runoff'   lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'drain'    lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'u10'      lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'v10'      lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'dew2'     lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'wind10'   lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'slm'      lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'ustr'     lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'vstr'     lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'wl'       lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'vdisgw'   lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'grndflux' lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'tsoil'    lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'ahfcon'   lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'ahfres'   lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'siced'    lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'gld'      lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'sni'      lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'wimax'    lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'snmel'    lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'apmegl'   lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'snacl'    lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'fao'      lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'rgcgn'    lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'wsmx'     lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'glac'     lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'snc'      lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'swnirac'   lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'swdifnirac'   lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'swvisac'   lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'swdifvisac'   lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'ocu'   lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'ocv'   lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'abso4'   lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'ao3'   lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'tradl'   lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'sradl'   lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'trafl'   lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'srafl'   lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'tslm1'   lpost = 0  /
+&SET_STREAM_ELEMENT  name = 'vdis'   lpost = 0  /
+EOF
+
+	    # Call model:
+	    date
+            #$MODEL
+	    #gdb $MODEL
+	    #mpirun -x LD_LIBRARY_PATH -np $NCPUS -d xterm -e gdb $MODEL
+           #LD_LIB_PATH=/usr/lib/openmpi
+           # export LD_LIB_PATH
+	    mpirun -n $NCPUS $MODEL
+
+    	    # Rename output files:
+	    # a) ECHAM5:
+#	    mv -f ${EXPNO}_${YY}${MM}.01 ${EXPNO}_${YY}${MM}_echam
+#	    mv -f ${EXPNO}_${YY}${MM}.01.codes ${EXPNO}_echam.codes
+
+	    # b) MEZON:
+#	    if [ ${LSOCOL} = .TRUE. -a ${LCHEM} = .TRUE. ]; then
+#		mv -f ${EXPNO}_${YY}${MM}.01_tracer ${EXPNO}_${YY}${MM}_chem1
+# 		mv -f ${EXPNO}_${YY}${MM}.01_tracer.codes ${EXPNO}_chem1.codes
+# 		mv -f ${EXPNO}_${YY}${MM}.01_chem2 ${EXPNO}_${YY}${MM}_chem
+# 		mv -f ${EXPNO}_${YY}${MM}.01_chem2.codes ${EXPNO}_chem2.codes
+#		mv -f ${EXPNO}_${YY}${MM}.01_chem_m.nc ${EXPNO}_chem_m_${YY}${MM}.nc
+#	    fi
+
+	    # Save restart files:
+            # a) ECHAM5:
+	    cp -f rerun_${EXPNO}_echam ${EXPNO}_rerun_${YY}${MM2}_echam.nc
+	    gzip -f ${EXPNO}_rerun_${YY}${MM2}_echam.nc
+
+
+            # b) MEZON:
+	    if [ ${LSOCOL} = .TRUE. -a ${LCHEM} = .TRUE. ]; then
+		cp -f rerun_${EXPNO}_tracer ${EXPNO}_rerun_${YY}${MM2}_chem1.nc
+		gzip -f ${EXPNO}_rerun_${YY}${MM2}_chem1.nc
+	    
+	           # c) chem2 (MEZON):
+	           cp -f rerun_${EXPNO}_chem2 ${EXPNO}_rerun_${YY}${MM2}_chem2.nc
+	           gzip -f ${EXPNO}_rerun_${YY}${MM2}_chem2.nc
+
+	      # d) ch4:
+		   cp -f rerun_${EXPNO}_ch4 ${EXPNO}_rerun_${YY}${MM2}_ch4.nc
+	           gzip -f ${EXPNO}_rerun_${YY}${MM2}_ch4.nc
+	    fi
+
+
+#	    # Postprocessing for chem_m.nc files:
+#	    if [ ${LSOCOL} = .TRUE. -a ${LCHEM} = .TRUE. ]; then
+
+		# Call echamnetcdf_afterburner (!CLUSTER!):
+		
+#		$WORK_DIR/../burn/echamnetcdf_afterburner $WORK_DIR/run${EXPNO}/${EXPNO}_${YY}${MM2}.01_chem1.nc echamnetcdf_afterburner_out.nc $WORK_DIR/afterburner_levels ${EXPERIMENT_SYEAR} >> fortran_error_messages
+			
+#		if [ ! -s fortran_error_messages ]; then
+#		    mv -f echamnetcdf_afterburner_out.nc ${EXPNO}_${YY}${MM2}.01_chem1.nc
+#                  echo !!!!!!!!!
+#		    rm -f fortran_error_messages  
+#		fi
+		
+#		# Concatenate chem_m.nc files at the end of every year (!CLUSTER!):
+#		if [ ${MM} -eq 12 ]; then
+#		    LNCEX=.TRUE.
+#		    for MI in 01 02 03 04 05 06 07 08 09 10 11 12; do
+#			if [ ! -s ${EXPNO}_chem_m_${YY}${MI}.nc ]; then
+#			    LNCEX=.FALSE.
+#			fi
+#		    done
+#		    if [ ${LNCEX} = .TRUE. ]; then 
+#			ncrcat -n 12,2,1 -O ${EXPNO}_chem_m_${YY}01.nc ${EXPNO}_chem_m_${YY}.nc
+#			if [ $? -eq 0 ]; then 
+#			    rm -f ${EXPNO}_chem_m_${YY}??.nc
+#			fi
+#		    fi
+#		fi
+#	    fi
+
+	    RERUN=.true.
+
+	fi
+
+    done
+
+    YY=`expr ${YY} + 1`
+    RESTART_MONTH=1
+
+done
+echo "end"
+ls -lt
+
+
+
+

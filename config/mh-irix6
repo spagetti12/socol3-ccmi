@@ -1,0 +1,28 @@
+# Irix 6.2 - ECMWF,HKUST,MPI
+# Irix 6.5 - COLA
+
+# Enable CC and F90 only, if not the standard compiler should be used 
+
+ARCH       = sgimips
+
+#MPIROOT    = 
+#MPI_LIB    = -lmpi 
+MPIROOT    = 
+MPI_LIB    = 
+
+NETCDFROOT =  /usr/local/tmp/max
+
+CC       = cc
+CFLAGS   = -ansi -64 -O
+
+#F90     = f90
+FFLAGS   = -align64 -64 -O
+F90FLAGS = -align64 -64 -O -r8 -cpp -OPT:Olimit_opt=on 
+
+DEFOPT   = -D
+
+MODOPT   = -I
+
+LIBS     = -L../lib -lsupport -llapack -lblas 
+
+SRCDIRS  =  blas lapack

@@ -1,0 +1,99 @@
+! socolctl.inc                          !Namelist for SOCOL     !MSSOCOL
+! 
+!     ------------------------------------------------------------------
+NAMELIST /socolctl/    &
+  lchem,               &! .TRUE. for calling chemistry module MEZON;
+                        ! .FALSE. for running only GCM
+  delta_time_chem,     &! time interval between two calls of MEZON [s]
+  lfamily_correct_adv, &! family correction of Cly, Bry, and NOy after advection
+  lco2_var_rad,        &! concentrations changing in time (radiation)
+  lco2_var_chem,       &! concentrations changing in time (chemistry)
+  lch4_var_rad,        &! concentrations changing in time (radiation)
+  lch4_var_chem,       &! concentrations changing in time (chemistry)
+  lch4_coupl,          &! coupling of radiation and chemistry module
+  lch4_nocoupl_3d,     &! no coupling, but precribed 3d-data files in radiation
+                        ! module from former coupled simulation
+  lch4_flux,           &! methane fluxes instead of prescribed concentrations  ! AS
+  lsurfemch4_var_chem, &! CH4 surface emissions changing in time (chemistry)   ! AS
+  lch4_wetland,        &! methane emissions from wetlands  ! AS
+  lch4_isotope,        &! CH4 isotopic composition diagnostic   ! AS
+  lch4_ipcc,           &! IPCC CH4 emission inventory ! AS
+  ln2o_var_rad,        &! concentrations changing in time (radiation)
+  ln2o_var_chem,       &! concentrations changing in time (chemistry)
+  ln2o_coupl,          &! coupling of radiation and chemistry module
+  ln2o_nocoupl_3d,     &! no coupling, but precribed 3d-data files in radiation
+                        ! module from former coupled simulation
+  lodscl_var_rad,      &! concentrations changing in time (radiation)
+  lodscl_var_chem,     &! concentrations changing in time (chemistry)
+  lodscl_coupl,        &! coupling of radiation and chemistry module
+  lodscl_nocoupl_3d,   &! no coupling, but precribed 3d-data files in radiation
+                        ! module from former coupled simulation
+  lodsbr_var_chem,     &! concentrations changing in time (chemistry)
+  lo3_coupl,          &! coupling of radiation and chemistry module
+  lh2o_coupl,         &! coupling of radiation and chemistry module
+  nlevabtropo_h2ogcm, &! Tropopause level + nlevabtropo_seph2o = pressure level,
+                       ! below which GCM field is used for the CTM.
+                       ! !! Only necessary in case that lh2o_coupl=.FALSE. and
+                       !    lchem=.TRUE. !!
+  laircrnox_var_chem,  &! NOx aircraft emissions changing in time (chemistry)
+  lsurfemnox_var_chem, &! NOx surface emissions changing in time (chemistry)
+  lsurfemco_var_chem,  &! CO surface emissions changing in time (chemistry)
+  lnmvoc,              &! additional CO from NMVOC  ! AS
+  lnmvoc_accmip,       &! ACCMIP NMHC emissions     ! AS
+  lsurfemnmvoc_var_chem, &! NMVOC surface emissions changing in time (chemistry) ! AS
+  lsurfemc5h8_var_chem,  &! Isoprene surface emissions changing in time (chemistry) ! AS
+  lsurfemch2o_var_chem,  &! Formaldehyde surface emissions changing in time (chemistry) ! AS
+  lsurfemch3cooh_var_chem,  &! CH3COOH surface emissions changing in time (chemistry) ! AS
+  lstrataer_var_rad,  &! annual and monthly changing concentrations of 
+                       ! stratospheric aerosols (background and volcanoes)
+                       ! for radiation module
+  lstrataer_var_chem, &! ditto for chemistry module
+  lstrataer_bg_rad,   &! stratospheric background aerosol climatology
+                       ! for radiation module
+  lstrataer_bg_chem,  &! ditto for chemistry module
+  ltropaer_var_rad,   &! annual and monthly changing concentrations of
+                       ! tropospheric aerosols for radiation module
+  lsolarvar,          &! annual and monthly changing solar constant
+                       ! (radiation and chemistry)
+  lsrb_lya_heating,   &! Schumman-Runge and Lyman alpha heating
+                       ! parameterization
+  deltaecorr,         &! Delta-E correction factor for photolysis of N2O, N2O5, X11 and X12
+  sun_irrad_const,    &! Solar irradiance for 6 SW spectral bands if 
+                       ! lsolarvar=.FALSE.
+  sun_srb_const,      &! Monthly values of Schumann-Runge parameter if 
+                       ! lsolarvar=.FALSE.
+  sun_lya_const,      &! Monthly values of Lyman-alpha parameter if 
+                       ! lsolarvar=.FALSE.
+  sun_nopho_const,    &! Monthly values of NO-photolysis parameter if 
+                       ! lsolarvar=.FALSE.
+  lphotfull,          &! Switch for full photolysis calculations
+  lsphericdependphot, &! Spherical dependency for photolysis lookup-table
+  lhetchem,           &! Switch for heterogeneous chemistry
+  hetnat_lowlev,      &! Lower boundary for PSCs
+  hetnat_uplev,       &! Upper boundary for PSCs
+  hetnat_north,       &! Boundary for PSCs on northern hemisphere
+  hetnat_south,       &! Boundary for PSCs on southern hemisphere
+  hetice_lowlev,      &! Lower boundary for PSCs
+  hetice_uplev,       &! Upper boundary for PSCs
+  hetice_north,       &! Boundary for PSCs on northern hemisphere
+  hetice_south,       &! Boundary for PSCs on southern hemisphere
+  hetnat_rmode,       &! Mode radius of NAT particles [cm]
+  hetice_ndens,       &! Number of ice particles [1/cm3]
+  lqbonudg,           &! Switch for QBO nudging
+  tauqbonudg,         &! Damping time of QBO nudging
+  cyear,              &! Boundary conditions are fixed at year cyear
+  co2fac,             &! CO2 factor (for ensembles) 
+  lpco2,              &! passive CO2 tracer for age of air calculation
+  vini_pco2,          &! initialization value for passive CO2 tracer
+  gcr,                &! Use Galact. cosmic rays param
+  eep,                &! Use EEP parametrization
+  spe,                &! Use SPE parametrization (AP index)
+  coemissfac,         &! scaling factor for direct CO emissions ! AS
+                       ! default = 1.5_dp
+  ch4emissfac,        &! scaling factor for CH4 emissions ! AS
+                       ! default = 1._dp
+  lext_oh,            &! use external OH distribution ! AS
+  lscav,              &! use scavenging module ! AS
+  interactivelnox,    &! switch for interactive lightning nox eth_ts
+  lo3orig,            &!use ozone transport diagnostic; default is FALSE
+  lsynth           !CCMI synthetic tracers 

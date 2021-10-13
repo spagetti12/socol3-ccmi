@@ -1,0 +1,58 @@
+# NEC SX-6 @ DKRZ or NEC SX-4/5 @ CSCS
+
+# Enable CC and F90 only, if not the standard compiler should be used 
+
+ARCH       = SX
+
+MPIROOT    =
+MPI_LIB    =
+
+case `uname -n` in
+cross|ds*)
+    MPIROOT    = /SX/opt/mpisx/inst
+    MPI_LIB    = -lmpi
+    NETCDFROOT = /pool/SX-6/netcdf/netcdf-3.6.0-p1
+    LIBS       = -L../lib -lsupport -L/SX/opt/MathKeisan/lib -llapack -lblas
+    MARCH      = -sx6
+    ;;
+*)
+    MPIROOT    = /sw/linux/SXcrosskit/opt/mpisx/inst
+    MPI_LIB    = -lmpi
+    NETCDFROOT = /pool/netcdf/netcdf-3.6.0-p1
+    LIBS       = -L../lib -lsupport -L/sw/linux/SXcrosskit/opt/MathKeisan/inst/lib -llapack -lblas
+    MARCH      = -sx6
+    ;;
+esac
+
+case `uname -s` in
+SUPER-UX)
+    CC  = c++
+    F90 = f90
+    ;;
+*)
+    CC  = sxc++
+    F90 = sxf90
+    AR  = sxar
+    AS  = sxas
+esac
+
+CFLAGS   = $MARCH -Chopt
+
+FFLAGS   = $MARCH -Chopt
+F90FLAGS = $MARCH -Popenmp -Chopt -Ep -Wl,-Z 1000000 -pi line=1000 -DHAVE_LIBNETCDF64
+#
+#CFLAGS   = $MARCH -Chopt -ftrace
+#
+#FFLAGS   = $MARCH -Chopt -ftrace
+#F90FLAGS = $MARCH -Chopt -ftrace -Ep -Wl,-Z 1000000 -pi line=1000 -DHAVE_LIBNETCDF64
+
+DEFOPT   = -D
+
+MODOPT   = -I
+
+SRCDIRS  =
+
+
+
+
+

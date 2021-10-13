@@ -1,0 +1,25 @@
+# DEC-alpha - GWDG
+
+# Enable CC and F90 only, if not the standard compiler should be used 
+
+ARCH       = alpha
+
+MPIROOT    = 
+MPI_LIB    = 
+
+NETCDFROOT =  /usr/users/lkornbl
+
+CC       = cc
+CFLAGS   =  -O
+
+F90      = f95
+FFLAGS   = -O
+F90FLAGS = -O -r8 -cpp 
+
+DEFOPT   = -D
+
+MODOPT   = -I
+
+LIBS     = -L../lib -lsupport -llapack -lblas
+
+SRCDIRS  = blas lapack

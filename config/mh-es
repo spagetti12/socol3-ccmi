@@ -1,0 +1,40 @@
+# Earth Simulator, Yokohama (SX-6 binary compatible)
+
+# Enable CC and F90 only, if not the standard compiler should be used 
+
+ARCH       = ES
+
+MPIROOT    = 
+MPI_LIB    =
+
+NETCDFROOT = 
+
+LIBS       = -L../lib -lsupport -llapack -lblas
+
+case `uname -s` in
+ESOS)
+    CC  = c++
+    F90 = f90
+    ;;
+*)
+    CC  = esc++
+    F90 = esf90
+    AR  = esar
+    AS  = esas
+esac
+
+CFLAGS   = -Chopt -DSX 
+
+FFLAGS   = -Chopt
+F90FLAGS = -Chopt -Wf,-A idbl4 -Ep -Wl,-Z 1000000 -pi line=1000 -DHAVE_LIBNETCDF64
+
+DEFOPT   = -D
+
+MODOPT   = -I
+
+SRCDIRS  = blas lapack
+
+
+
+
+
